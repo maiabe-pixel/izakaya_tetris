@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"
+    />
+    <meta name="theme-color" content="#070b12" />
+    <title>居酒屋テトリス</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Orbitron:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Critical: never flash white if the module bundle fails to mount. */
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #070b12;
+        color: #e8f7ff;
+      }
+      #root {
+        min-height: 100dvh;
+      }
+      #boot-status {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        text-align: center;
+        font-family: system-ui, sans-serif;
+        color: #7adfff;
+        pointer-events: none;
+        opacity: 0.85;
+        z-index: 0;
+      }
+      #root:not(:empty) ~ #boot-status,
+      #root:not(:empty) + #boot-status {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="boot-status" aria-live="polite">起動中…</div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function () {
+        var reloaded = false;
+        function markBootFail(msg) {
+          var el = document.getElementById('boot-status');
+          if (el) el.textContent = msg || '読み込みに失敗しました。再試行します…';
+          if (!reloaded) {
+            reloaded = true;
+            try {
+              sessionStorage.setItem('izakaya-boot-reload', '1');
+            } catch (_) {}
+            setTimeout(function () {
+              location.reload();
+            }, 600);
+          }
+        }
+        window.addEventListener(
+          'error',
+          function (e) {
+            var t = e && e.target;
+            if (t && t.tagName === 'SCRIPT') markBootFail();
+          },
+          true,
+        );
+        setTimeout(function () {
+          var root = document.getElementById('root');
+          if (root && root.childNodes.length === 0) {
+            var once = false;
+            try {
+              once = sessionStorage.getItem('izakaya-boot-reload') === '1';
+            } catch (_) {}
+            if (!once) markBootFail();
+            else {
+              var el = document.getElementById('boot-status');
+              if (el)
+                el.textContent =
+                  '起動に失敗しました。ページを再読み込みしてください。';
+            }
+          }
+        }, 4000);
+      })();
+    </script>
+  </body>
+</html>

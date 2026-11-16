@@ -1,0 +1,256 @@
+:root {
+  --bg0: #070b12;
+  --bg1: #0d1524;
+  --panel: rgba(8, 14, 24, 0.88);
+  --cyan: #3de7ff;
+  --magenta: #ff4fd8;
+  --yellow: #ffe566;
+  --pink: #ff6b9d;
+  --text: #e8f7ff;
+  --muted: #8aa3b8;
+  --danger: #ff5c7a;
+  --ok: #5dffb0;
+  --border: rgba(61, 231, 255, 0.35);
+  --glow-cyan: 0 0 18px rgba(61, 231, 255, 0.45);
+  --glow-pink: 0 0 18px rgba(255, 79, 216, 0.4);
+  --font-display: 'M PLUS Rounded 1c', 'Hiragino Sans', sans-serif;
+  --font-neon: 'Orbitron', 'M PLUS Rounded 1c', sans-serif;
+  --radius: 18px;
+  --tap: 48px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 0%, rgba(255, 79, 216, 0.18), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 95% 8%, rgba(61, 231, 255, 0.16), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(255, 229, 102, 0.08), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1) 60%, #05080f);
+  color: var(--text);
+  font-family: var(--font-display);
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.neon-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(90deg, #ff7a6e 0%, #ffe566 45%, #3de7ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(255, 120, 160, 0.45));
+}
+
+.eyebrow {
+  font-family: var(--font-neon);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+}
+
+.btn {
+  min-height: var(--tap);
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--text);
+  padding: 0.7rem 1.2rem;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  border: none;
+  color: #041018;
+  font-weight: 800;
+  background: linear-gradient(90deg, #3de7ff, #ffe566);
+  box-shadow: 0 0 22px rgba(61, 231, 255, 0.45);
+}
+
+.btn-ghost {
+  background: transparent;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--glow-cyan);
+  backdrop-filter: blur(8px);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.stat-box {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.35rem 0.25rem;
+  text-align: center;
+}
+
+.stat-box .label {
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.stat-box .value {
+  font-family: var(--font-neon);
+  color: var(--yellow);
+  font-size: 1.05rem;
+  text-shadow: 0 0 8px rgba(255, 229, 102, 0.5);
+}
+
+/* Roulette */
+.roulette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 6, 14, 0.78);
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.roulette-panel {
+  width: min(420px, 100%);
+  padding: 1.1rem 0.75rem 1.25rem;
+  text-align: center;
+}
+
+.roulette-track-wrap {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0 0.5rem;
+  height: 148px;
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.roulette-track {
+  display: flex;
+  gap: 0.55rem;
+  will-change: transform;
+}
+
+.roulette-pointer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, transparent, var(--yellow), transparent);
+  box-shadow: 0 0 14px rgba(255, 229, 102, 0.85);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.neon-card {
+  flex: 0 0 88px;
+  width: 88px;
+  height: 128px;
+  border-radius: 12px;
+  border: 1px solid rgba(61, 231, 255, 0.45);
+  background:
+    linear-gradient(160deg, rgba(61, 231, 255, 0.12), rgba(0, 0, 0, 0.65)),
+    #0a1220;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  box-shadow: inset 0 0 18px rgba(61, 231, 255, 0.12);
+}
+
+.neon-card.joker {
+  border-color: rgba(255, 154, 60, 0.7);
+  box-shadow: inset 0 0 18px rgba(255, 154, 60, 0.2), 0 0 12px rgba(255, 154, 60, 0.25);
+}
+
+.neon-card.ace {
+  border-color: rgba(255, 79, 216, 0.7);
+  box-shadow: inset 0 0 18px rgba(255, 79, 216, 0.2), 0 0 12px rgba(255, 79, 216, 0.25);
+}
+
+.neon-card .card-label {
+  font-size: 0.72rem;
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 12px rgba(61, 231, 255, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(61, 231, 255, 0.65);
+  }
+}
+
+@keyframes titleIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes clearFlash {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
