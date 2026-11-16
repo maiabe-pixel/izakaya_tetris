@@ -9,7 +9,8 @@
     "typecheck": "tsc -p tsconfig.app.json --noEmit --pretty false",
     "lint": "tsc -p tsconfig.app.json --noEmit --pretty false",
     "preview": "vite preview --host 0.0.0.0 --port 5173",
-    "verify:no-bgm": "node scripts/verify-no-bgm-in-dist.mjs",
+    "verify:bgm": "node scripts/verify-bgm-in-dist.mjs",
+    "verify:no-bgm": "node scripts/verify-bgm-in-dist.mjs",
     "test:matrix": "tsx scripts/phase5-matrix.mts"
   },
   "dependencies": {

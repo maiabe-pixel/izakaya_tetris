@@ -23,16 +23,15 @@ npm install
 npm run dev          # 0.0.0.0:5173
 npm run typecheck
 npm run build
-npm run verify:no-bgm
+npm run verify:bgm
 npm run test:matrix  # または npx tsx scripts/phase5-matrix.mts
 ```
 
 ## BGM
 
-- パスは `src/audio/tracks.ts` のみ
-- `public/audio/*.mp3` は `.gitignore`（リポジトリに含めない）
-- ビルド時 Vite プラグインが `dist` から mp3 を除去
-- `npm run verify:no-bgm` で確認
+- パスは `src/audio/tracks.ts` のみ（`/audio/tetris.mp3`・`/audio/izakaya.mp3`）
+- 著作権フリー音源を `public/audio/` に同梱（公開ビルドにも含める）
+- `npm run verify:bgm` で dist への同梱を確認
 
 ## セーブ
 

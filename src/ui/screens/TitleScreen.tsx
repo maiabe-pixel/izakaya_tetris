@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useAudio } from '../../audio/useAudio';
 import { TitleLogo } from '../TitleLogo';
 
@@ -15,6 +16,11 @@ export function TitleScreen({
   onClearSave,
 }: Props) {
   const audio = useAudio();
+
+  // Title stays quiet until falling/izakaya starts a track.
+  useEffect(() => {
+    audio.stopTrack();
+  }, [audio]);
 
   return (
     <section className="screen panel" style={{ padding: '1.1rem' }}>
