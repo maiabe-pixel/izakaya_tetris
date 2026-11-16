@@ -3,14 +3,17 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
 import {
   applyBgmSettings,
+  ensureBgmGestureRetry,
   getPendingBgm,
   markAudioUnlocked,
   playBgm,
+  preloadBgm,
   stopBgm,
 } from './bgm';
 import {
@@ -41,28 +44,37 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return { ...DEFAULT_AUDIO };
     return loadAudioSettings();
   });
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
 
   useEffect(() => {
     saveAudioSettings(settings);
     void applyBgmSettings(settings);
   }, [settings]);
 
+  useEffect(() => {
+    preloadBgm();
+    return ensureBgmGestureRetry(() => settingsRef.current);
+  }, []);
+
   const unlock = useCallback(() => {
     markAudioUnlocked();
     void resumeAudioContext();
     const pending = getPendingBgm();
-    if (pending) void playBgm(pending, settings);
-  }, [settings]);
+    if (pending) void playBgm(pending, settingsRef.current);
+  }, []);
 
-  useEffect(() => {
-    const onFirst = () => unlock();
-    window.addEventListener('pointerdown', onFirst, { once: true });
-    window.addEventListener('keydown', onFirst, { once: true });
-    return () => {
-      window.removeEventListener('pointerdown', onFirst);
-      window.removeEventListener('keydown', onFirst);
-    };
-  }, [unlock]);
+  const playTrack = useCallback((id: TrackId) => {
+    void playBgm(id, settingsRef.current);
+  }, []);
+
+  const stopTrack = useCallback(() => {
+    void stopBgm();
+  }, []);
+
+  const sfx = useCallback((id: SfxId) => {
+    void playSfx(id, settingsRef.current);
+  }, []);
 
   const api = useMemo<AudioApi>(
     () => ({
@@ -75,17 +87,11 @@ export function AudioProvider({ children }: { children: ReactNode }) {
           bgmVolume: Math.max(0, Math.min(100, bgmVolume)),
         })),
       unlock,
-      playTrack: (id) => {
-        void playBgm(id, settings);
-      },
-      stopTrack: () => {
-        void stopBgm();
-      },
-      sfx: (id) => {
-        void playSfx(id, settings);
-      },
+      playTrack,
+      stopTrack,
+      sfx,
     }),
-    [settings, unlock],
+    [settings, unlock, playTrack, stopTrack, sfx],
   );
 
   return (

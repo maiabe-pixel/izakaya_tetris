@@ -16,11 +16,12 @@ export function TitleScreen({
   onClearSave,
 }: Props) {
   const audio = useAudio();
+  const { stopTrack } = audio;
 
   // Title stays quiet until falling/izakaya starts a track.
   useEffect(() => {
-    audio.stopTrack();
-  }, [audio]);
+    stopTrack();
+  }, [stopTrack]);
 
   return (
     <section className="screen panel" style={{ padding: '1.1rem' }}>

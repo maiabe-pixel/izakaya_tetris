@@ -132,22 +132,32 @@ button {
   text-shadow: 0 0 8px rgba(255, 229, 102, 0.5);
 }
 
-/* Roulette */
+/* Roulette — portaled to body; keep above everything on mobile WebViews */
 .roulette-overlay {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 9999;
   display: grid;
   place-items: center;
-  background: rgba(2, 6, 14, 0.78);
-  padding: 1rem;
-  animation: fadeIn 0.2s ease;
+  background: rgba(2, 6, 14, 0.92);
+  padding: max(0.75rem, env(safe-area-inset-top, 0px)) 0.75rem
+    max(0.75rem, env(safe-area-inset-bottom, 0px));
+  pointer-events: auto;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .roulette-panel {
   width: min(420px, 100%);
+  max-height: min(90dvh, 36rem);
+  overflow: auto;
   padding: 1.1rem 0.75rem 1.25rem;
   text-align: center;
+}
+
+.roulette-title {
+  margin: 0.35rem 0 0;
+  font-size: 1.15rem;
 }
 
 .roulette-track-wrap {
@@ -155,13 +165,29 @@ button {
   overflow: hidden;
   margin: 1rem 0 0.5rem;
   height: 148px;
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  border-radius: 12px;
+  border: 1px solid rgba(61, 231, 255, 0.28);
+  background: rgba(5, 9, 18, 0.95);
+  /* Avoid mask-image — some mobile WebKits paint the strip blank. */
 }
 
 .roulette-track {
   display: flex;
+  align-items: center;
   gap: 0.55rem;
+  height: 100%;
+  padding: 0.55rem;
+  width: max-content;
   will-change: transform;
+}
+
+.roulette-slot {
+  flex: 0 0 auto;
+}
+
+.roulette-slot.is-winner {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 10px rgba(255, 229, 102, 0.65));
 }
 
 .roulette-pointer {
@@ -175,6 +201,28 @@ button {
   box-shadow: 0 0 14px rgba(255, 229, 102, 0.85);
   pointer-events: none;
   z-index: 2;
+}
+
+.roulette-reveal {
+  margin-top: 0.75rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.roulette-reveal.is-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.roulette-result-label {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--yellow);
+  text-shadow: 0 0 10px rgba(255, 229, 102, 0.35);
 }
 
 .neon-card {

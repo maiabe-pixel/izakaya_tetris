@@ -52,6 +52,8 @@ export default function App() {
       const next = createIzakayaState(board, timeLimit);
       setIzakaya(next);
       setScreen('izakaya');
+      // May be deferred until next gesture on mobile — IzakayaScreen retries.
+      audio.playTrack('izakaya');
     }, 700);
     return () => window.clearTimeout(t);
   }, [screen, falling, timeLimit, audio]);
@@ -92,6 +94,8 @@ export default function App() {
             setIzakaya(restoreFromSave(save));
             setTimeLimit(save.timeLimit ?? DEFAULT_TIME_LIMIT);
             setScreen('izakaya');
+            // Start under this tap gesture (iOS); screen effect will reinforce.
+            audio.playTrack('izakaya');
           }}
           onClearSave={() => {
             clearSession();

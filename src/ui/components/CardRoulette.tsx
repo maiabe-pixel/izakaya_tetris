@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { buildCardPool } from '../../game/izakaya/cards';
 import type { Card } from '../../game/types';
 import { NeonCardFace } from './NeonCardFace';
@@ -14,56 +15,87 @@ function cardKey(c: Card, i: number): string {
   return `${c.kind}-${i}`;
 }
 
-export function CardRoulette({ result, onDone, durationMs = 2200 }: Props) {
+/**
+ * Neon strip roulette — portaled to document.body so mobile overflow /
+ * stacking contexts on .screen never hide it.
+ */
+export function CardRoulette({ result, onDone, durationMs = 2400 }: Props) {
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
+
   const strip = useMemo(() => {
     const base = buildCardPool();
     const many: Card[] = [];
-    for (let i = 0; i < 8; i++) many.push(...base);
-    // Ensure result near the end for a clean stop
-    many.push(...base);
+    for (let i = 0; i < 4; i++) many.push(...base);
     many.push(result);
-    return many;
+    many.push(...base.slice(0, 2));
+    return { cards: many, landIndex: many.length - 1 - 2 };
   }, [result]);
 
-  const [offset, setOffset] = useState(0);
-  const cardW = 88;
-  const gap = 8.8; // ~0.55rem
-  const step = cardW + gap;
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [landed, setLanded] = useState(false);
 
   useEffect(() => {
-    const targetIndex = strip.length - 1;
-    const centerPad = typeof window !== 'undefined' ? Math.min(420, window.innerWidth) / 2 - 20 : 180;
-    const end = targetIndex * step - centerPad + cardW / 2;
-    const start = performance.now();
-    let raf = 0;
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / durationMs);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setOffset(end * eased);
-      if (t < 1) raf = requestAnimationFrame(tick);
-      else setTimeout(onDone, 380);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [strip, step, durationMs, onDone]);
+    const track = trackRef.current;
+    const wrap = wrapRef.current;
+    if (!track || !wrap) return;
 
-  return (
-    <div className="roulette-overlay" role="dialog" aria-label="カード抽選">
+    const cardEl = track.children[strip.landIndex] as HTMLElement | undefined;
+    if (!cardEl) return;
+
+    const target =
+      cardEl.offsetLeft + cardEl.offsetWidth / 2 - wrap.clientWidth / 2;
+
+    track.style.transition = 'none';
+    track.style.transform = 'translate3d(0,0,0)';
+    void track.offsetWidth;
+    track.style.transition = `transform ${durationMs}ms cubic-bezier(0.12, 0.75, 0.08, 1)`;
+    track.style.transform = `translate3d(${-Math.max(0, target)}px,0,0)`;
+
+    const landTimer = window.setTimeout(() => setLanded(true), durationMs + 40);
+    const doneTimer = window.setTimeout(() => onDoneRef.current(), durationMs + 700);
+    return () => {
+      window.clearTimeout(landTimer);
+      window.clearTimeout(doneTimer);
+    };
+  }, [strip.landIndex, durationMs]);
+
+  const label =
+    result.kind === 'mino'
+      ? `${result.mino} カード`
+      : result.kind === 'shapePick'
+        ? 'ジョーカー（好きな形）'
+        : 'エース（何も置けない）';
+
+  const node = (
+    <div className="roulette-overlay" role="dialog" aria-modal="true" aria-label="カード抽選">
       <div className="panel roulette-panel">
         <div className="eyebrow">NEON DRAW</div>
-        <h2 style={{ margin: '0.35rem 0 0' }}>カードを引く</h2>
-        <div className="roulette-track-wrap">
-          <div className="roulette-pointer" />
-          <div
-            className="roulette-track"
-            style={{ transform: `translateX(${-offset}px)` }}
-          >
-            {strip.map((c, i) => (
-              <NeonCardFace key={cardKey(c, i)} card={c} />
+        <h2 className="roulette-title">カードを引く</h2>
+        <div className="roulette-track-wrap" ref={wrapRef}>
+          <div className="roulette-pointer" aria-hidden="true" />
+          <div className="roulette-track" ref={trackRef}>
+            {strip.cards.map((c, i) => (
+              <div
+                key={cardKey(c, i)}
+                className={
+                  landed && i === strip.landIndex ? 'roulette-slot is-winner' : 'roulette-slot'
+                }
+              >
+                <NeonCardFace card={c} />
+              </div>
             ))}
           </div>
+        </div>
+        <div className={`roulette-reveal${landed ? ' is-show' : ''}`} aria-live="polite">
+          <NeonCardFace card={result} />
+          <p className="roulette-result-label">{label}</p>
         </div>
       </div>
     </div>
   );
+
+  if (typeof document === 'undefined') return node;
+  return createPortal(node, document.body);
 }

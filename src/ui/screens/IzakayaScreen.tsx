@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAudio } from '../../audio/useAudio';
 import { DRAG_AIM_THRESHOLD_PX } from '../../game/constants';
 import { ALL_MINOS } from '../../game/falling/minos';
@@ -41,15 +41,33 @@ export function IzakayaScreen({
   onTitleClear,
 }: Props) {
   const audio = useAudio();
+  const { playTrack, unlock, sfx } = audio;
   const [name, setName] = useState('');
   const [roulette, setRoulette] = useState<Card | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
   const prevPhase = useRef(state.phase);
+  const rouletteCardRef = useRef<Card | null>(null);
 
+  // Request izakaya BGM on enter; mobile may defer until next gesture.
   useEffect(() => {
-    audio.playTrack('izakaya');
-  }, [audio]);
+    unlock();
+    playTrack('izakaya');
+  }, [playTrack, unlock]);
+
+  // First tap/order/draw inside izakaya retries BGM under a real user gesture.
+  useEffect(() => {
+    const kick = () => {
+      unlock();
+      playTrack('izakaya');
+    };
+    window.addEventListener('pointerdown', kick, { once: true });
+    window.addEventListener('touchstart', kick, { once: true, passive: true });
+    return () => {
+      window.removeEventListener('pointerdown', kick);
+      window.removeEventListener('touchstart', kick);
+    };
+  }, [playTrack, unlock]);
 
   useEffect(() => {
     let last = performance.now();
@@ -67,9 +85,9 @@ export function IzakayaScreen({
             !next.cleared &&
             next.stats.usedCount > s.stats.usedCount
           ) {
-            audio.sfx('timeoutPlace');
+            sfx('timeoutPlace');
           }
-          if (next.cleared) audio.sfx('clear');
+          if (next.cleared) sfx('clear');
           stateRef.current = next;
           setState(next);
         }
@@ -79,7 +97,7 @@ export function IzakayaScreen({
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [audio, setState]);
+  }, [sfx, setState]);
 
   const cost = useMemo(() => drawCost(state.excluded), [state.excluded]);
   const canDraw =
@@ -99,21 +117,25 @@ export function IzakayaScreen({
 
   const beginRoulette = () => {
     if (!canDraw) return;
-    audio.sfx('cardDraw');
+    unlock();
+    playTrack('izakaya');
+    sfx('cardDraw');
     const card = drawCard(state.excluded);
+    rouletteCardRef.current = card;
     setRoulette(card);
   };
 
-  const finishRoulette = () => {
-    if (!roulette) return;
-    const card = roulette;
+  const finishRoulette = useCallback(() => {
+    const card = rouletteCardRef.current;
+    if (!card) return;
+    rouletteCardRef.current = null;
     setRoulette(null);
     const next = draw(stateRef.current, Math.random, card);
     stateRef.current = next;
     setState(next);
-    if (card.kind === 'empty') audio.sfx('emptyCard');
-    else audio.sfx('cardDecide');
-  };
+    if (card.kind === 'empty') sfx('emptyCard');
+    else sfx('cardDecide');
+  }, [setState, sfx]);
 
   const remainingSec = Math.ceil(state.remainingMs / 1000);
 
@@ -163,9 +185,9 @@ export function IzakayaScreen({
           const next = placeAtTap(before, x, y);
           stateRef.current = next;
           setState(next);
-          if (next.cleared) audio.sfx('clear');
+          if (next.cleared) sfx('clear');
           else if (next.stats.usedCount > before.stats.usedCount)
-            audio.sfx('hardDrop');
+            sfx('hardDrop');
         }}
         onHoverCell={(x, y) => {
           const next = aimFromCell(stateRef.current, x, y);
@@ -192,7 +214,7 @@ export function IzakayaScreen({
                   const next = pickShape(stateRef.current, m);
                   stateRef.current = next;
                   setState(next);
-                  audio.sfx('cardDecide');
+                  sfx('cardDecide');
                 }}
               >
                 {m}
@@ -211,7 +233,7 @@ export function IzakayaScreen({
               const next = rotatePlacing(stateRef.current);
               stateRef.current = next;
               setState(next);
-              audio.sfx('rotate');
+              sfx('rotate');
             }}
           >
             回転
@@ -232,11 +254,13 @@ export function IzakayaScreen({
               type="button"
               className="btn"
               onClick={() => {
+                unlock();
+                playTrack('izakaya');
                 const next = recordOrder(stateRef.current, 'food', name);
                 stateRef.current = next;
                 setState(next);
                 setName('');
-                audio.sfx('order');
+                sfx('order');
               }}
             >
               食 +1
@@ -245,11 +269,13 @@ export function IzakayaScreen({
               type="button"
               className="btn"
               onClick={() => {
+                unlock();
+                playTrack('izakaya');
                 const next = recordOrder(stateRef.current, 'drink', name);
                 stateRef.current = next;
                 setState(next);
                 setName('');
-                audio.sfx('order');
+                sfx('order');
               }}
             >
               飲 +1

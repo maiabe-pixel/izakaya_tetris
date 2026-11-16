@@ -21,12 +21,13 @@ type Props = {
 
 export function FallingScreen({ state, setState, timeLimit }: Props) {
   const audio = useAudio();
+  const { playTrack } = audio;
   const stateRef = useRef(state);
   stateRef.current = state;
 
   useEffect(() => {
-    audio.playTrack('falling');
-  }, [audio]);
+    playTrack('falling');
+  }, [playTrack]);
 
   useEffect(() => {
     let acc = 0;
