@@ -319,12 +319,21 @@ test('reload-has-no-undo', () => {
 });
 
 // ---------- 16.6 other ----------
-test('dining-gains-resource-empty-name', () => {
+test('dining-requires-non-empty-name', () => {
   let st = createIzakayaState(createEmptyBoard(FALLING_H), 7);
-  st = recordOrder(st, 'food', '');
+  const blocked = recordOrder(st, 'food', '   ');
+  assert.equal(blocked.resources, 0);
+  assert.equal(blocked.stats.foodCount, 0);
+  assert.equal(blocked.orders.length, 0);
+  st = recordOrder(st, 'food', '枝豆');
   assert.equal(st.resources, 1);
   assert.equal(st.stats.foodCount, 1);
-  assert.equal(st.orders.length, 0);
+  assert.equal(st.orders.length, 1);
+  assert.equal(st.orders[0]?.name, '枝豆');
+  st = recordOrder(st, 'drink', 'ハイボール');
+  assert.equal(st.resources, 2);
+  assert.equal(st.stats.drinkCount, 1);
+  assert.equal(st.orders[0]?.name, 'ハイボール');
 });
 
 test('draw-blocked-without-resource', () => {

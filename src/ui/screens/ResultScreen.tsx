@@ -14,9 +14,6 @@ export function ResultScreen({ stats, orders, onTitle }: Props) {
     1,
     Math.round(((stats.clearedAt ?? Date.now()) - stats.startedAt) / 60000),
   );
-  const foodNames = orders.filter((o) => o.kind === 'food').map((o) => o.name);
-  const drinkNames = orders.filter((o) => o.kind === 'drink').map((o) => o.name);
-
   return (
     <section className="screen panel" style={{ padding: '1.1rem' }}>
       <TitleLogo compact tagline="" />
@@ -60,22 +57,14 @@ export function ResultScreen({ stats, orders, onTitle }: Props) {
           <div className="value">{elapsedMin}分</div>
         </div>
       </div>
-      {foodNames.length > 0 ? (
+      {orders.length > 0 ? (
         <div>
-          <p className="hint">食の名前</p>
+          <p className="hint">注文履歴</p>
           <ul className="order-list">
-            {foodNames.map((n, i) => (
-              <li key={`f-${i}`}>{n}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-      {drinkNames.length > 0 ? (
-        <div>
-          <p className="hint">飲の名前</p>
-          <ul className="order-list">
-            {drinkNames.map((n, i) => (
-              <li key={`d-${i}`}>{n}</li>
+            {orders.map((o, i) => (
+              <li key={`${o.at}-${i}`}>
+                {o.kind === 'food' ? '食' : '飲'} — {o.name}
+              </li>
             ))}
           </ul>
         </div>

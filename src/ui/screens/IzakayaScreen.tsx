@@ -245,15 +245,21 @@ export function IzakayaScreen({
         <>
           <input
             className="field"
-            placeholder="名前（任意）"
+            placeholder="名前（必須）"
+            aria-label="注文の名前（必須）"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          {!name.trim() ? (
+            <p className="hint">名前を入力してから食／飲を記録してください</p>
+          ) : null}
           <div className="row">
             <button
               type="button"
               className="btn"
+              disabled={!name.trim()}
               onClick={() => {
+                if (!name.trim()) return;
                 unlock();
                 playTrack('izakaya');
                 const next = recordOrder(stateRef.current, 'food', name);
@@ -268,7 +274,9 @@ export function IzakayaScreen({
             <button
               type="button"
               className="btn"
+              disabled={!name.trim()}
               onClick={() => {
+                if (!name.trim()) return;
                 unlock();
                 playTrack('izakaya');
                 const next = recordOrder(stateRef.current, 'drink', name);
@@ -326,13 +334,16 @@ export function IzakayaScreen({
       ) : null}
 
       {state.orders.length > 0 ? (
-        <ul className="order-list">
-          {state.orders.map((o, i) => (
-            <li key={`${o.at}-${i}`}>
-              {o.kind === 'food' ? '食' : '飲'} — {o.name}
-            </li>
-          ))}
-        </ul>
+        <div>
+          <p className="hint">注文履歴</p>
+          <ul className="order-list">
+            {state.orders.map((o, i) => (
+              <li key={`${o.at}-${i}`}>
+                {o.kind === 'food' ? '食' : '飲'} — {o.name}
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
 
       <div className="stack">

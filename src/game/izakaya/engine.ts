@@ -124,16 +124,14 @@ export function recordOrder(
 ): IzakayaState {
   if (state.cleared || state.phase !== 'idle') return state;
   const trimmed = name.trim();
+  if (trimmed.length === 0) return state;
   const stats = { ...state.stats };
   if (kind === 'food') stats.foodCount += 1;
   else stats.drinkCount += 1;
-  const orders =
-    trimmed.length > 0
-      ? [{ kind, name: trimmed, at: Date.now() }, ...state.orders].slice(
-          0,
-          ORDER_HISTORY_MAX,
-        )
-      : state.orders;
+  const orders = [
+    { kind, name: trimmed, at: Date.now() },
+    ...state.orders,
+  ].slice(0, ORDER_HISTORY_MAX);
   return {
     ...state,
     resources: state.resources + 1,
