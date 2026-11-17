@@ -48,11 +48,11 @@ export function ResultScreen({ stats, orders, onTitle }: Props) {
           <div className="value">{stats.drawCount}</div>
         </div>
         <div className="stat-box">
-          <div className="label">特殊</div>
+          <div className="label">エース</div>
           <div className="value">{stats.shapePickCount}</div>
         </div>
         <div className="stat-box">
-          <div className="label">無効</div>
+          <div className="label">ジョーカー</div>
           <div className="value">{stats.emptyCardCount}</div>
         </div>
         <div className="stat-box">

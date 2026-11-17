@@ -30,8 +30,9 @@ export function drawCard(
   return pool[i]!;
 }
 
+/** Player-facing names: Ace = shape-pick, Joker = empty/skip. */
 export function cardLabel(card: Card): string {
   if (card.kind === 'mino') return card.mino;
-  if (card.kind === 'shapePick') return 'ジョーカー';
-  return 'エース';
+  if (card.kind === 'shapePick') return 'エース';
+  return 'ジョーカー';
 }

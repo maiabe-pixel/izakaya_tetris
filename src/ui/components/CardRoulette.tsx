@@ -65,8 +65,8 @@ export function CardRoulette({ result, onDone, durationMs = 2400 }: Props) {
     result.kind === 'mino'
       ? `${result.mino} カード`
       : result.kind === 'shapePick'
-        ? 'ジョーカー（好きな形）'
-        : 'エース（何も置けない）';
+        ? 'エース（好きなミノ）'
+        : 'ジョーカー（スカ）';
 
   const node = (
     <div className="roulette-overlay" role="dialog" aria-modal="true" aria-label="カード抽選">

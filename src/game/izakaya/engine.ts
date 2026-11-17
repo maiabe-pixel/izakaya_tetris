@@ -198,7 +198,7 @@ export function draw(
         ...base.stats,
         emptyCardCount: base.stats.emptyCardCount + 1,
       },
-      message: 'エース — 何も置けない',
+      message: 'ジョーカー — スカ（何も置けない）',
     };
   }
 
@@ -215,7 +215,7 @@ export function draw(
         ...base.stats,
         shapePickCount: base.stats.shapePickCount + 1,
       },
-      message: 'ジョーカー — 形を選んでください',
+      message: 'エース — 好きなミノを選んでください',
     };
   }
 

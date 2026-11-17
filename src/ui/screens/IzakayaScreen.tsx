@@ -203,7 +203,7 @@ export function IzakayaScreen({
 
       {state.phase === 'pickingShape' ? (
         <div className="stack">
-          <p className="hint">形を選んでください</p>
+          <p className="hint">エース — 好きなミノを選んでください</p>
           <div className="exclude-grid">
             {ALL_MINOS.map((m) => (
               <button

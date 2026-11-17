@@ -24,7 +24,7 @@ import {
 } from '../src/game/falling/board.ts';
 import { createFallingState } from '../src/game/falling/engine.ts';
 import { TRACKS } from '../src/audio/tracks.ts';
-import { drawCost } from '../src/game/izakaya/cards.ts';
+import { cardLabel, drawCost } from '../src/game/izakaya/cards.ts';
 import {
   createIzakayaState,
   draw,
@@ -337,6 +337,19 @@ test('draw-blocked-without-resource', () => {
 test('exclude-minos-only-cost', () => {
   assert.equal(drawCost([]), 1);
   assert.equal(drawCost(['I', 'O']), 3);
+});
+
+test('ace-is-shape-pick-joker-is-empty', () => {
+  assert.equal(cardLabel({ kind: 'shapePick' }), 'エース');
+  assert.equal(cardLabel({ kind: 'empty' }), 'ジョーカー');
+  let st = createIzakayaState(createEmptyBoard(FALLING_H), 7);
+  st = { ...st, resources: 2 };
+  const ace = draw(st, Math.random, { kind: 'shapePick' });
+  assert.equal(ace.phase, 'pickingShape');
+  assert.ok(ace.message?.includes('エース'));
+  const joker = draw({ ...st, resources: 2 }, Math.random, { kind: 'empty' });
+  assert.equal(joker.phase, 'idle');
+  assert.ok(joker.message?.includes('ジョーカー'));
 });
 
 test('expand-7-empty-rows', () => {
