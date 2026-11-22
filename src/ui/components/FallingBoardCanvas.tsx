@@ -22,7 +22,7 @@ function drawBoard(
   const h = board.length;
   const w = board[0]?.length ?? 10;
   ctx.clearRect(0, 0, w * cell, h * cell);
-  ctx.fillStyle = '#05080f';
+  ctx.fillStyle = '#10121b';
   ctx.fillRect(0, 0, w * cell, h * cell);
 
   for (let y = 0; y < h; y++) {

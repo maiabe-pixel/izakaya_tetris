@@ -24,6 +24,7 @@ import type { IzakayaState } from '../../game/izakaya/types';
 import type { Card, MinoType } from '../../game/types';
 import { CardRoulette } from '../components/CardRoulette';
 import { IzakayaBoardCanvas } from '../components/IzakayaBoardCanvas';
+import { MinoGlyph } from '../components/MinoGlyph';
 
 type Props = {
   state: IzakayaState;
@@ -44,18 +45,17 @@ export function IzakayaScreen({
   const { playTrack, unlock, sfx } = audio;
   const [name, setName] = useState('');
   const [roulette, setRoulette] = useState<Card | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const stateRef = useRef(state);
   stateRef.current = state;
   const prevPhase = useRef(state.phase);
   const rouletteCardRef = useRef<Card | null>(null);
 
-  // Request izakaya BGM on enter; mobile may defer until next gesture.
   useEffect(() => {
     unlock();
     playTrack('izakaya');
   }, [playTrack, unlock]);
 
-  // First tap/order/draw inside izakaya retries BGM under a real user gesture.
   useEffect(() => {
     const kick = () => {
       unlock();
@@ -106,6 +106,11 @@ export function IzakayaScreen({
     state.resources >= cost &&
     !roulette;
   const canUndo = state.phase === 'idle' && !!state.undo && !state.cleared;
+  const nameOk = name.trim().length > 0;
+  const timerWarn =
+    state.phase === 'placing' && !state.cleared && state.remainingMs < 3000;
+  const remainingSec = Math.ceil(state.remainingMs / 1000);
+  const placing = state.phase === 'placing' && !state.cleared;
 
   const aimFromCell = (s: IzakayaState, x: number, y: number) => {
     const hit =
@@ -137,37 +142,52 @@ export function IzakayaScreen({
     else sfx('cardDecide');
   }, [setState, sfx]);
 
-  const remainingSec = Math.ceil(state.remainingMs / 1000);
+  const submitOrder = (kind: 'food' | 'drink') => {
+    if (!nameOk) return;
+    unlock();
+    playTrack('izakaya');
+    const next = recordOrder(stateRef.current, kind, name);
+    stateRef.current = next;
+    setState(next);
+    setName('');
+    sfx('order');
+  };
 
   return (
-    <section className="screen">
+    <section
+      className={`screen izakaya-screen${placing ? ' is-placing' : ''}${
+        timerWarn ? ' timer-warn' : ''
+      }`}
+    >
       {roulette ? (
-        <CardRoulette result={roulette} onDone={finishRoulette} />
+        <CardRoulette
+          result={roulette}
+          onDone={finishRoulette}
+          durationMs={1400}
+        />
       ) : null}
 
-      <div className="stat-grid">
-        <div className="stat-box">
-          <div className="label">資源</div>
-          <div className="value">{state.resources}</div>
-        </div>
-        <div className="stat-box">
-          <div className="label">注文</div>
-          <div className="value">
-            {state.stats.foodCount + state.stats.drinkCount}
+      <div className="izakaya-hud">
+        <div className="stat-grid">
+          <div className="stat-box">
+            <div className="label">資源</div>
+            <div className="value">{state.resources}</div>
           </div>
-        </div>
-        <div className="stat-box">
-          <div className="label">使用</div>
-          <div className="value">{state.stats.usedCount}</div>
-        </div>
-        <div className="stat-box">
-          <div className="label">残り</div>
-          <div
-            className={`value ${
-              state.phase === 'placing' && remainingSec <= 2 ? 'timer-urgent' : ''
-            }`}
-          >
-            {state.phase === 'placing' ? remainingSec : '—'}
+          <div className="stat-box">
+            <div className="label">注文</div>
+            <div className="value">
+              {state.stats.foodCount + state.stats.drinkCount}
+            </div>
+          </div>
+          <div className="stat-box">
+            <div className="label">使用</div>
+            <div className="value">{state.stats.usedCount}</div>
+          </div>
+          <div className={`stat-box${timerWarn ? ' is-urgent' : ''}`}>
+            <div className="label">残り</div>
+            <div className={`value${timerWarn ? ' timer-urgent' : ''}`}>
+              {placing ? remainingSec : '—'}
+            </div>
           </div>
         </div>
       </div>
@@ -175,41 +195,66 @@ export function IzakayaScreen({
       {state.cleared ? (
         <div className="clear-banner">最下段クリア！</div>
       ) : null}
-      {state.message ? <p className="hint">{state.message}</p> : null}
+      {state.message ? <p className="hint izakaya-msg">{state.message}</p> : null}
 
-      <IzakayaBoardCanvas
-        state={state}
-        dragThreshold={DRAG_AIM_THRESHOLD_PX}
-        onTapCell={(x, y) => {
-          const before = stateRef.current;
-          const next = placeAtTap(before, x, y);
-          stateRef.current = next;
-          setState(next);
-          if (next.cleared) sfx('clear');
-          else if (next.stats.usedCount > before.stats.usedCount)
-            sfx('hardDrop');
-        }}
-        onHoverCell={(x, y) => {
-          const next = aimFromCell(stateRef.current, x, y);
-          stateRef.current = next;
-          setState(next);
-        }}
-        onDragAim={(x, y) => {
-          const next = aimFromCell(stateRef.current, x, y);
-          stateRef.current = next;
-          setState(next);
-        }}
-      />
+      <div className="izakaya-playfield">
+        <div className="board-wrap neon-board-frame">
+          <IzakayaBoardCanvas
+            state={state}
+            dragThreshold={DRAG_AIM_THRESHOLD_PX}
+            onTapCell={(x, y) => {
+              const before = stateRef.current;
+              const next = placeAtTap(before, x, y);
+              stateRef.current = next;
+              setState(next);
+              if (next.cleared) sfx('clear');
+              else if (next.stats.usedCount > before.stats.usedCount)
+                sfx('hardDrop');
+            }}
+            onHoverCell={(x, y) => {
+              const next = aimFromCell(stateRef.current, x, y);
+              stateRef.current = next;
+              setState(next);
+            }}
+            onDragAim={(x, y) => {
+              const next = aimFromCell(stateRef.current, x, y);
+              stateRef.current = next;
+              setState(next);
+            }}
+          />
+        </div>
+
+        {placing ? (
+          <div className="izakaya-place-bar">
+            <div className={`neon-timer${timerWarn ? ' is-warn' : ''}`}>
+              <span className="neon-timer-label">TIME</span>
+              <span className="neon-timer-value">{remainingSec}</span>
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary place-rotate"
+              onClick={() => {
+                const next = rotatePlacing(stateRef.current);
+                stateRef.current = next;
+                setState(next);
+                sfx('rotate');
+              }}
+            >
+              回転
+            </button>
+          </div>
+        ) : null}
+      </div>
 
       {state.phase === 'pickingShape' ? (
-        <div className="stack">
+        <div className="stack shape-pick-panel">
           <p className="hint">エース — 好きなミノを選んでください</p>
-          <div className="exclude-grid">
+          <div className="mino-card-grid">
             {ALL_MINOS.map((m) => (
               <button
                 key={m}
                 type="button"
-                className="btn"
+                className="mino-shape-card"
                 onClick={() => {
                   const next = pickShape(stateRef.current, m);
                   stateRef.current = next;
@@ -217,109 +262,81 @@ export function IzakayaScreen({
                   sfx('cardDecide');
                 }}
               >
-                {m}
+                <MinoGlyph type={m} />
+                <span>{m}</span>
               </button>
             ))}
           </div>
         </div>
       ) : null}
 
-      {state.phase === 'placing' ? (
-        <div className="row">
-          <button
-            type="button"
-            className="btn"
-            onClick={() => {
-              const next = rotatePlacing(stateRef.current);
-              stateRef.current = next;
-              setState(next);
-              sfx('rotate');
-            }}
-          >
-            回転
-          </button>
-        </div>
-      ) : null}
-
       {state.phase === 'idle' && !state.cleared ? (
-        <>
-          <input
-            className="field"
-            placeholder="名前（必須）"
-            aria-label="注文の名前（必須）"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          {!name.trim() ? (
-            <p className="hint">名前を入力してから食／飲を記録してください</p>
-          ) : null}
-          <div className="row">
-            <button
-              type="button"
-              className="btn"
-              disabled={!name.trim()}
-              onClick={() => {
-                if (!name.trim()) return;
-                unlock();
-                playTrack('izakaya');
-                const next = recordOrder(stateRef.current, 'food', name);
-                stateRef.current = next;
-                setState(next);
-                setName('');
-                sfx('order');
-              }}
-            >
-              食 +1
-            </button>
-            <button
-              type="button"
-              className="btn"
-              disabled={!name.trim()}
-              onClick={() => {
-                if (!name.trim()) return;
-                unlock();
-                playTrack('izakaya');
-                const next = recordOrder(stateRef.current, 'drink', name);
-                stateRef.current = next;
-                setState(next);
-                setName('');
-                sfx('order');
-              }}
-            >
-              飲 +1
-            </button>
+        <div className="izakaya-idle">
+          <div className="order-slip">
+            <div className="order-slip-head">本日のご注文</div>
+            <input
+              className="field order-slip-field"
+              placeholder="例）枝豆 / ハイボール"
+              aria-label="注文の名前（必須）"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {!nameOk ? (
+              <p className="hint">名前を入れてから伝票を切ってください</p>
+            ) : null}
+            <div className="row">
+              <button
+                type="button"
+                className="btn order-food"
+                disabled={!nameOk}
+                onClick={() => submitOrder('food')}
+              >
+                食べた！
+              </button>
+              <button
+                type="button"
+                className="btn order-drink"
+                disabled={!nameOk}
+                onClick={() => submitOrder('drink')}
+              >
+                飲んだ！
+              </button>
+            </div>
           </div>
 
           <p className="hint">除外（消費 {cost}）・カードは常に 10 枚から</p>
-          <div className="exclude-grid">
+          <div className="mino-card-grid">
             {ALL_MINOS.map((m: MinoType) => (
               <button
                 key={m}
                 type="button"
-                className={`btn ${state.excluded.includes(m) ? 'on' : ''}`}
+                className={`mino-shape-card${
+                  state.excluded.includes(m) ? ' is-on' : ''
+                }`}
                 onClick={() => {
                   const next = toggleExclude(stateRef.current, m);
                   stateRef.current = next;
                   setState(next);
                 }}
               >
-                {m}
+                <MinoGlyph type={m} />
+                <span>{m}</span>
               </button>
             ))}
           </div>
 
-          <div className="row">
+          <div className="row izakaya-actions">
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary draw-cta"
               disabled={!canDraw}
               onClick={beginRoulette}
             >
-              カードを引く ({cost})
+              運命の一枚を引く！ ({cost})
             </button>
             <button
               type="button"
-              className="btn"
+              className="btn undo-cta"
               disabled={!canUndo}
               onClick={() => {
                 const next = undoPlace(stateRef.current);
@@ -327,15 +344,21 @@ export function IzakayaScreen({
                 setState(next);
               }}
             >
-              1手戻す
+              今のナシ！
             </button>
           </div>
-        </>
+        </div>
       ) : null}
 
-      {state.orders.length > 0 ? (
-        <div>
-          <p className="hint">注文履歴</p>
+      {state.orders.length > 0 && !placing ? (
+        <details
+          className="order-history-fold"
+          open={historyOpen}
+          onToggle={(e) =>
+            setHistoryOpen((e.target as HTMLDetailsElement).open)
+          }
+        >
+          <summary>注文履歴（{state.orders.length}）</summary>
           <ul className="order-list">
             {state.orders.map((o, i) => (
               <li key={`${o.at}-${i}`}>
@@ -343,20 +366,22 @@ export function IzakayaScreen({
               </li>
             ))}
           </ul>
-        </div>
+        </details>
       ) : null}
 
-      <div className="stack">
-        <button type="button" className="btn" onClick={onResetIzakaya}>
-          居酒屋だけやり直す
-        </button>
-        <button type="button" className="btn" onClick={onRestartFalling}>
-          落下からやり直す
-        </button>
-        <button type="button" className="btn" onClick={onTitleClear}>
-          タイトルへ（保存削除）
-        </button>
-      </div>
+      {!placing ? (
+        <div className="stack izakaya-menu-actions">
+          <button type="button" className="btn" onClick={onResetIzakaya}>
+            居酒屋だけやり直す
+          </button>
+          <button type="button" className="btn" onClick={onRestartFalling}>
+            落下からやり直す
+          </button>
+          <button type="button" className="btn" onClick={onTitleClear}>
+            タイトルへ（保存削除）
+          </button>
+        </div>
+      ) : null}
     </section>
   );
 }

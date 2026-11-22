@@ -19,7 +19,7 @@ function cardKey(c: Card, i: number): string {
  * Neon strip roulette — portaled to document.body so mobile overflow /
  * stacking contexts on .screen never hide it.
  */
-export function CardRoulette({ result, onDone, durationMs = 2400 }: Props) {
+export function CardRoulette({ result, onDone, durationMs = 1400 }: Props) {
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
 
@@ -72,7 +72,7 @@ export function CardRoulette({ result, onDone, durationMs = 2400 }: Props) {
     <div className="roulette-overlay" role="dialog" aria-modal="true" aria-label="カード抽選">
       <div className="panel roulette-panel">
         <div className="eyebrow">NEON DRAW</div>
-        <h2 className="roulette-title">カードを引く</h2>
+        <h2 className="roulette-title">運命の一枚</h2>
         <div className="roulette-track-wrap" ref={wrapRef}>
           <div className="roulette-pointer" aria-hidden="true" />
           <div className="roulette-track" ref={trackRef}>

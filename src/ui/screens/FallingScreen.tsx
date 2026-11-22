@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAudio } from '../../audio/useAudio';
 import {
   hardDrop,
@@ -19,11 +19,15 @@ type Props = {
   timeLimit: number;
 };
 
+type FlashKind = 'score' | 'clear' | null;
+
 export function FallingScreen({ state, setState, timeLimit }: Props) {
   const audio = useAudio();
   const { playTrack } = audio;
   const stateRef = useRef(state);
   stateRef.current = state;
+  const prevStats = useRef({ score: state.score, lines: state.lines });
+  const [flash, setFlash] = useState<FlashKind>(null);
 
   useEffect(() => {
     playTrack('falling');
@@ -82,7 +86,23 @@ export function FallingScreen({ state, setState, timeLimit }: Props) {
     return () => window.removeEventListener('keydown', onKey);
   }, [audio, setState]);
 
-  const apply = (fn: (s: FallingState) => FallingState, sfx?: Parameters<typeof audio.sfx>[0]) => {
+  // Light score / line-clear FX (visual only)
+  useEffect(() => {
+    const prev = prevStats.current;
+    let kind: FlashKind = null;
+    if (state.lines > prev.lines) kind = 'clear';
+    else if (state.score > prev.score) kind = 'score';
+    prevStats.current = { score: state.score, lines: state.lines };
+    if (!kind) return;
+    setFlash(kind);
+    const t = window.setTimeout(() => setFlash(null), 520);
+    return () => window.clearTimeout(t);
+  }, [state.score, state.lines]);
+
+  const apply = (
+    fn: (s: FallingState) => FallingState,
+    sfx?: Parameters<typeof audio.sfx>[0],
+  ) => {
     const next = fn(stateRef.current);
     stateRef.current = next;
     setState(next);
@@ -90,38 +110,71 @@ export function FallingScreen({ state, setState, timeLimit }: Props) {
   };
 
   return (
-    <section className="screen">
-      <div className="stat-grid">
-        <div className="stat-box">
-          <div className="label">得点</div>
-          <div className="value">{state.score}</div>
+    <section className="screen falling-screen">
+      <div className="arcade-cabinet">
+        <div className="arcade-marquee">
+          <span className="eyebrow">ARCADE DROP</span>
+          <span className="arcade-marquee-title">落下チャレンジ</span>
         </div>
-        <div className="stat-box">
-          <div className="label">消去行</div>
-          <div className="value">{state.lines}</div>
+
+        <div className="score-panel">
+          <div className="stat-box">
+            <div className="label">SCORE</div>
+            <div className="value">{state.score}</div>
+          </div>
+          <div className="stat-box">
+            <div className="label">LINES</div>
+            <div className="value">{state.lines}</div>
+          </div>
+          <div className="stat-box">
+            <div className="label">LV</div>
+            <div className="value">{state.level + 1}</div>
+          </div>
+          <div className="stat-box">
+            <div className="label">居酒屋</div>
+            <div className="value">{timeLimit}s</div>
+          </div>
         </div>
-        <div className="stat-box">
-          <div className="label">速度</div>
-          <div className="value">{state.level + 1}</div>
+
+        <div className="arcade-stage">
+          <NextPreview type={state.next} />
+          <div
+            className={`board-wrap arcade-bezel${flash ? ` fx-${flash}` : ''}${
+              state.gameOver ? ' fx-go' : ''
+            }`}
+          >
+            <FallingBoardCanvas state={state} />
+            {flash === 'clear' ? (
+              <div className="arcade-fx arcade-fx-clear" aria-hidden="true">
+                CLEAR!
+              </div>
+            ) : null}
+            {flash === 'score' ? (
+              <div className="arcade-fx arcade-fx-score" aria-hidden="true">
+                +SCORE
+              </div>
+            ) : null}
+            {state.gameOver ? (
+              <div className="arcade-go" role="status">
+                <div className="arcade-go-label">GAME OVER</div>
+                <div className="arcade-go-copy">ここからが、本番。</div>
+              </div>
+            ) : null}
+          </div>
         </div>
-        <div className="stat-box">
-          <div className="label">制限</div>
-          <div className="value">{timeLimit}s</div>
-        </div>
+
+        {state.gameOver ? (
+          <p className="hint arcade-go-hint">ネオン横丁の居酒屋へ移動中…</p>
+        ) : (
+          <FallingControls
+            onLeft={() => apply(moveLeft, 'move')}
+            onRight={() => apply(moveRight, 'move')}
+            onRotate={() => apply(rotateCw, 'rotate')}
+            onSoft={() => apply(softDrop, 'move')}
+            onHard={() => apply(hardDrop, 'hardDrop')}
+          />
+        )}
       </div>
-      <NextPreview type={state.next} />
-      <FallingBoardCanvas state={state} />
-      {state.gameOver ? (
-        <p className="hint">積んだ…居酒屋モードへ</p>
-      ) : (
-        <FallingControls
-          onLeft={() => apply(moveLeft, 'move')}
-          onRight={() => apply(moveRight, 'move')}
-          onRotate={() => apply(rotateCw, 'rotate')}
-          onSoft={() => apply(softDrop, 'move')}
-          onHard={() => apply(hardDrop, 'hardDrop')}
-        />
-      )}
     </section>
   );
 }

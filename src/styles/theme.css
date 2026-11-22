@@ -352,3 +352,39 @@ button {
     transform: rotate(2.5deg);
   }
 }
+
+@keyframes arcadePop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -40%) scale(0.85);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -55%) scale(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -70%) scale(1);
+  }
+}
+
+@keyframes goIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes warnPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 107, 155, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(255, 107, 155, 0.85);
+  }
+}

@@ -399,6 +399,375 @@
   color: var(--gold);
 }
 
+/* ---------- Phase D: Falling arcade ---------- */
+.falling-screen {
+  gap: 0.65rem;
+}
+
+.arcade-cabinet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.75rem 0.7rem 0.85rem;
+  border-radius: 18px;
+  border: 2px solid rgba(93, 228, 232, 0.35);
+  background:
+    linear-gradient(180deg, rgba(93, 228, 232, 0.08), transparent 28%),
+    linear-gradient(180deg, #161a28, #0c0e16);
+  box-shadow:
+    0 0 0 1px rgba(255, 107, 155, 0.12) inset,
+    0 0 28px rgba(93, 228, 232, 0.12);
+}
+
+.arcade-marquee {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(245, 201, 107, 0.28);
+}
+
+.arcade-marquee-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: var(--ivory);
+  text-shadow: 0 0 12px rgba(255, 107, 155, 0.4);
+}
+
+.score-panel {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+}
+
+.arcade-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.next-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.next-preview-label {
+  font-family: var(--font-neon);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--cyan);
+}
+
+.next-preview-box {
+  min-width: 4.5rem;
+  min-height: 2.6rem;
+  display: grid;
+  place-items: center;
+  padding: 0.25rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.arcade-bezel {
+  position: relative;
+  padding: 0.35rem;
+  border-radius: 12px;
+  border: 2px solid rgba(93, 228, 232, 0.4);
+  background: #0a0c14;
+  box-shadow: 0 0 18px rgba(93, 228, 232, 0.15);
+}
+
+.arcade-bezel.fx-clear {
+  box-shadow: 0 0 28px rgba(245, 201, 107, 0.55);
+}
+
+.arcade-bezel.fx-score {
+  box-shadow: 0 0 22px rgba(93, 228, 232, 0.45);
+}
+
+.arcade-bezel.fx-go {
+  box-shadow: 0 0 30px rgba(255, 107, 155, 0.45);
+}
+
+.arcade-fx {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  font-family: var(--font-neon);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  animation: arcadePop 0.52s ease both;
+  z-index: 2;
+}
+
+.arcade-fx-clear {
+  color: var(--gold);
+  font-size: 1.35rem;
+  text-shadow: 0 0 16px rgba(245, 201, 107, 0.8);
+}
+
+.arcade-fx-score {
+  color: var(--cyan);
+  font-size: 1.05rem;
+  text-shadow: 0 0 12px rgba(93, 228, 232, 0.7);
+}
+
+.arcade-go {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.35rem;
+  background: rgba(10, 12, 20, 0.72);
+  text-align: center;
+  animation: goIn 0.45s ease both;
+  z-index: 3;
+  border-radius: 8px;
+}
+
+.arcade-go-label {
+  font-family: var(--font-neon);
+  color: var(--pink);
+  letter-spacing: 0.2em;
+  font-size: 0.95rem;
+  text-shadow: var(--glow-pink);
+}
+
+.arcade-go-copy {
+  font-family: var(--font-display);
+  color: var(--ivory);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 14px rgba(245, 201, 107, 0.45);
+}
+
+.arcade-go-hint {
+  margin-top: 0.15rem;
+}
+
+.arcade-pad {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.arcade-pad-row {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.arcade-pad-row > .pad-btn {
+  flex: 1;
+  min-height: 52px;
+  font-size: 1.05rem;
+}
+
+.pad-hard {
+  flex: 1.55;
+  min-height: 56px;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Phase E: Izakaya neon ---------- */
+.izakaya-screen {
+  gap: 0.65rem;
+}
+
+.izakaya-screen.is-placing {
+  /* Keep board + place controls in first view; hide long menus while timer runs */
+  overflow: hidden;
+  max-height: 100dvh;
+}
+
+.izakaya-screen.is-placing .izakaya-idle,
+.izakaya-screen.is-placing .izakaya-menu-actions,
+.izakaya-screen.is-placing .order-history-fold {
+  display: none;
+}
+
+.izakaya-playfield {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.neon-board-frame {
+  padding: 0.3rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 155, 0.35);
+  background: rgba(8, 10, 18, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(93, 228, 232, 0.15) inset,
+    0 0 22px rgba(255, 107, 155, 0.12);
+}
+
+.izakaya-place-bar {
+  display: flex;
+  width: min(320px, 100%);
+  gap: 0.55rem;
+  align-items: stretch;
+}
+
+.neon-timer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.45);
+  min-height: 52px;
+}
+
+.neon-timer-label {
+  font-family: var(--font-neon);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+.neon-timer-value {
+  font-family: var(--font-neon);
+  font-size: 1.35rem;
+  color: var(--gold);
+}
+
+.neon-timer.is-warn {
+  border-color: var(--pink);
+  animation: warnPulse 0.7s ease infinite;
+}
+
+.neon-timer.is-warn .neon-timer-value {
+  color: var(--pink);
+}
+
+.place-rotate {
+  flex: 1.2;
+  min-height: 52px;
+}
+
+.order-slip {
+  padding: 0.85rem 0.85rem 0.95rem;
+  border-radius: 14px;
+  border: 1px dashed rgba(245, 201, 107, 0.45);
+  background:
+    linear-gradient(180deg, rgba(245, 201, 107, 0.08), transparent 40%),
+    rgba(12, 14, 22, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.order-slip-head {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(245, 201, 107, 0.35);
+}
+
+.order-slip-field::placeholder {
+  color: rgba(244, 231, 210, 0.4);
+}
+
+.order-food {
+  border-color: rgba(255, 107, 155, 0.45);
+}
+
+.order-drink {
+  border-color: rgba(93, 228, 232, 0.45);
+}
+
+.mino-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.mino-shape-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 58px;
+  padding: 0.35rem 0.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: rgba(8, 10, 18, 0.7);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.mino-shape-card.is-on {
+  border-color: var(--pink);
+  box-shadow: var(--glow-pink);
+  color: var(--pink);
+  background: rgba(255, 107, 155, 0.1);
+}
+
+.draw-cta {
+  flex: 1.6;
+  font-size: 0.92rem;
+}
+
+.undo-cta {
+  flex: 1;
+  border-color: rgba(245, 201, 107, 0.35);
+}
+
+.order-history-fold {
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 0.35rem 0.7rem 0.55rem;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.order-history-fold summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 0.35rem 0;
+  list-style: none;
+}
+
+.order-history-fold summary::-webkit-details-marker {
+  display: none;
+}
+
+.order-history-fold summary::after {
+  content: ' ▾';
+  color: var(--cyan);
+}
+
+.order-history-fold[open] summary::after {
+  content: ' ▴';
+}
+
+.stat-box.is-urgent {
+  border-color: var(--pink);
+  animation: warnPulse 0.7s ease infinite;
+}
+
+.izakaya-screen.timer-warn .neon-board-frame {
+  border-color: rgba(255, 107, 155, 0.7);
+  box-shadow: 0 0 24px rgba(255, 107, 155, 0.28);
+}
+
 @media (min-width: 900px) {
   .app-shell {
     width: min(480px, 100%);
@@ -422,5 +791,9 @@
 
   .title-logo h1 {
     font-size: clamp(1.55rem, 7vw, 2rem);
+  }
+
+  .arcade-marquee-title {
+    font-size: 0.95rem;
   }
 }
