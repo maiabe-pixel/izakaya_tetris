@@ -71,7 +71,7 @@ export function IzakayaBoardCanvas({
 
     // Divider between extra rows and original falling zone
     const divY = IZAKAYA_EXTRA_ROWS * cell;
-    ctx.strokeStyle = 'rgba(255, 80, 180, 0.85)';
+    ctx.strokeStyle = 'rgba(255, 107, 155, 0.9)';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, divY);
@@ -82,8 +82,8 @@ export function IzakayaBoardCanvas({
     if (state.phase === 'placing') {
       const paint = (landing: Landing, strong: boolean) => {
         ctx.globalAlpha = strong ? 0.55 : 0.28;
-        ctx.fillStyle = strong ? '#ffe566' : '#3de7ff';
-        ctx.strokeStyle = strong ? '#ffe566' : 'rgba(61,231,255,0.7)';
+        ctx.fillStyle = strong ? '#F5C96B' : '#5DE4E8';
+        ctx.strokeStyle = strong ? '#F5C96B' : 'rgba(93,228,232,0.75)';
         for (const p of landing.cells) {
           ctx.fillRect(p.x * cell + 1, p.y * cell + 1, cell - 2, cell - 2);
           ctx.strokeRect(p.x * cell + 1, p.y * cell + 1, cell - 2, cell - 2);

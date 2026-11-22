@@ -43,14 +43,14 @@ export function NeonCardFace({ card }: { card: Card }) {
   if (card.kind === 'shapePick') {
     return (
       <div className="neon-card ace" data-card="ace">
-        <div style={{ fontSize: '1.6rem', color: '#ff4fd8' }}>A</div>
+        <div style={{ fontSize: '1.6rem', color: '#FF6B9B' }}>A</div>
         <div className="card-label">エース</div>
       </div>
     );
   }
   return (
     <div className="neon-card joker" data-card="joker">
-      <div style={{ fontSize: '1.6rem', color: '#ff9a3c' }}>★</div>
+      <div style={{ fontSize: '1.6rem', color: '#F5C96B' }}>★</div>
       <div className="card-label">ジョーカー</div>
     </div>
   );

@@ -3,6 +3,7 @@ import {
   TIME_LIMIT_OPTIONS,
   type TimeLimitSeconds,
 } from '../../game/constants';
+import { NeonAlleyDecor } from '../components/NeonAlleyDecor';
 import { TitleLogo } from '../TitleLogo';
 
 type Props = {
@@ -12,6 +13,14 @@ type Props = {
   onConfirm: () => void;
 };
 
+const CATCHPHRASES: Record<TimeLimitSeconds, string> = {
+  3: '即決の鬼',
+  5: 'せっかちさん',
+  7: 'いつもの一杯',
+  10: 'ちょっと考える',
+  15: '慎重派',
+};
+
 export function TimeLimitScreen({
   value = DEFAULT_TIME_LIMIT,
   onChange,
@@ -19,34 +28,43 @@ export function TimeLimitScreen({
   onConfirm,
 }: Props) {
   return (
-    <section className="screen panel" style={{ padding: '1.1rem' }}>
+    <section className="screen panel playstyle-screen">
+      <NeonAlleyDecor />
       <TitleLogo compact tagline="" />
-      <h2 style={{ margin: 0, textAlign: 'center' }}>配置の制限時間</h2>
+      <h2>本日の遊び方</h2>
       <p className="hint">
-        居酒屋モードでミノを置くときの秒数です。初期値は7秒です。
+        居酒屋でミノを置くときの制限時間です。お好みの一杯を選んでください（初期は
+        {DEFAULT_TIME_LIMIT}秒）。
       </p>
-      <div className="stack">
-        {TIME_LIMIT_OPTIONS.map((s) => (
-          <button
-            key={s}
-            type="button"
-            className="btn"
-            style={{
-              borderColor: value === s ? 'var(--magenta)' : undefined,
-              boxShadow: value === s ? 'var(--glow-pink)' : undefined,
-            }}
-            onClick={() => onChange(s)}
-          >
-            {s}秒
-          </button>
-        ))}
+      <div className="menu-tag-list" role="listbox" aria-label="制限時間">
+        {TIME_LIMIT_OPTIONS.map((s) => {
+          const selected = value === s;
+          return (
+            <button
+              key={s}
+              type="button"
+              role="option"
+              aria-selected={selected}
+              className={`menu-tag${selected ? ' is-selected' : ''}`}
+              onClick={() => onChange(s)}
+            >
+              <span className="sec">{s}秒</span>
+              <span className="catch">{CATCHPHRASES[s]}</span>
+              {s === DEFAULT_TIME_LIMIT ? (
+                <span className="tag-chip">おすすめ</span>
+              ) : (
+                <span className="tag-chip">メニュー</span>
+              )}
+            </button>
+          );
+        })}
       </div>
       <div className="row">
         <button type="button" className="btn" onClick={onBack}>
           戻る
         </button>
         <button type="button" className="btn btn-primary" onClick={onConfirm}>
-          決定して落下へ
+          これでいく！
         </button>
       </div>
     </section>
