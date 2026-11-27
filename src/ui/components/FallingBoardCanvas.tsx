@@ -12,6 +12,11 @@ type Props = {
   state: FallingState;
 };
 
+/** Visible gap reserved below the neon board frame before the control row. */
+const BOARD_CLEARANCE_PX = 28;
+/** Neon host border + padding around the canvas (both axes). */
+const HOST_CHROME_PX = 10;
+
 function paintCell(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -84,23 +89,33 @@ function drawBoard(
 
 /**
  * cellSize = floor(min(availW/10, availH/20)) so the full 10×20 stays
- * visible with square cells. Recalcs on host resize / visualViewport.
+ * visible with square cells. availH is clamped to space above controls.
  */
 export function FallingBoardCanvas({ state }: Props) {
-  const hostRef = useRef<HTMLDivElement>(null);
+  const budgetRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cols = state.board[0]?.length ?? BOARD_W;
   const rows = state.board.length || FALLING_H;
   const [cell, setCell] = useState(12);
 
   useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
+    const budget = budgetRef.current;
+    if (!budget) return;
 
     const measure = () => {
-      const rect = host.getBoundingClientRect();
-      const availW = Math.max(0, rect.width);
-      const availH = Math.max(0, rect.height);
+      const rect = budget.getBoundingClientRect();
+      // Exclude control row from height budget; reserve clearance + neon chrome.
+      const pad = document.querySelector('.falling-screen .fall-pad');
+      let rawH = Math.max(0, rect.height);
+      if (pad) {
+        const padTop = pad.getBoundingClientRect().top;
+        rawH = Math.max(0, Math.min(rawH, padTop - rect.top));
+      }
+      const availW = Math.max(0, rect.width - HOST_CHROME_PX);
+      const availH = Math.max(
+        0,
+        rawH - BOARD_CLEARANCE_PX - HOST_CHROME_PX,
+      );
       if (availW < 2 || availH < 2) return;
       const next = Math.max(
         4,
@@ -111,7 +126,9 @@ export function FallingBoardCanvas({ state }: Props) {
 
     measure();
     const ro = new ResizeObserver(() => measure());
-    ro.observe(host);
+    ro.observe(budget);
+    const pad = document.querySelector('.falling-screen .fall-pad');
+    if (pad) ro.observe(pad);
     const vv = window.visualViewport;
     vv?.addEventListener('resize', measure);
     vv?.addEventListener('scroll', measure);
@@ -144,8 +161,10 @@ export function FallingBoardCanvas({ state }: Props) {
   }, [state, cell, cols, rows]);
 
   return (
-    <div className="board-wrap fall-board-host" ref={hostRef}>
-      <canvas ref={canvasRef} />
+    <div className="fall-board-budget" ref={budgetRef}>
+      <div className="board-wrap fall-board-host">
+        <canvas ref={canvasRef} />
+      </div>
     </div>
   );
 }
