@@ -34,6 +34,93 @@ type Props = {
   onTitleClear: () => void;
 };
 
+const EXCLUDE_TOP: MinoType[] = ['I', 'O', 'T', 'S'];
+const EXCLUDE_BOT: MinoType[] = ['Z', 'J', 'L'];
+
+function StatIcon({ kind }: { kind: 'res' | 'order' | 'use' | 'time' }) {
+  if (kind === 'res') {
+    return (
+      <svg className="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <ellipse cx="12" cy="14" rx="7" ry="5" fill="#6dff7a" opacity="0.95" />
+        <ellipse cx="9" cy="13" rx="2.2" ry="1.4" fill="#3aa84a" />
+        <ellipse cx="14" cy="15" rx="2" ry="1.2" fill="#3aa84a" />
+        <path
+          d="M12 6c0 3 2 5 2 5"
+          stroke="#8dff9a"
+          strokeWidth="1.6"
+          fill="none"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+  if (kind === 'order') {
+    return (
+      <svg className="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect
+          x="6"
+          y="3"
+          width="12"
+          height="18"
+          rx="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
+        <path
+          d="M9 8h6M9 12h6M9 16h4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+  if (kind === 'use') {
+    return (
+      <svg className="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M7 9h10l-.8 9.2a2 2 0 0 1-2 1.8H9.8a2 2 0 0 1-2-1.8L7 9z"
+          fill="#ffc45c"
+          stroke="#ffe6a8"
+          strokeWidth="1"
+        />
+        <path
+          d="M8 9c0-2.2 1.8-4 4-4s4 1.8 4 4"
+          fill="none"
+          stroke="#ffe6a8"
+          strokeWidth="1.5"
+        />
+        <ellipse cx="12" cy="9.2" rx="4.2" ry="1.4" fill="#fff8e8" opacity="0.9" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <rect
+        x="4"
+        y="6"
+        width="10"
+        height="14"
+        rx="1.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <rect
+        x="10"
+        y="4"
+        width="10"
+        height="14"
+        rx="1.5"
+        fill="rgba(193,77,255,0.25)"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+    </svg>
+  );
+}
+
 export function IzakayaScreen({
   state,
   setState,
@@ -153,11 +240,29 @@ export function IzakayaScreen({
     sfx('order');
   };
 
+  const renderExcludeCard = (m: MinoType) => (
+    <button
+      key={m}
+      type="button"
+      className={`mino-shape-card izk-exclude-card is-${m.toLowerCase()}${
+        state.excluded.includes(m) ? ' is-on' : ''
+      }`}
+      onClick={() => {
+        const next = toggleExclude(stateRef.current, m);
+        stateRef.current = next;
+        setState(next);
+      }}
+    >
+      <MinoGlyph type={m} size={9} />
+      <span>{m}</span>
+    </button>
+  );
+
   return (
     <section
-      className={`screen izakaya-screen${placing ? ' is-placing' : ''}${
-        timerWarn ? ' timer-warn' : ''
-      }`}
+      className={`screen izakaya-screen izakaya-bg${
+        placing ? ' is-placing' : ''
+      }${timerWarn ? ' timer-warn' : ''}`}
     >
       {roulette ? (
         <CardRoulette
@@ -167,221 +272,278 @@ export function IzakayaScreen({
         />
       ) : null}
 
-      <div className="izakaya-hud">
-        <div className="stat-grid">
-          <div className="stat-box">
-            <div className="label">資源</div>
-            <div className="value">{state.resources}</div>
-          </div>
-          <div className="stat-box">
-            <div className="label">注文</div>
-            <div className="value">
-              {state.stats.foodCount + state.stats.drinkCount}
-            </div>
-          </div>
-          <div className="stat-box">
-            <div className="label">使用</div>
-            <div className="value">{state.stats.usedCount}</div>
-          </div>
-          <div className={`stat-box${timerWarn ? ' is-urgent' : ''}`}>
-            <div className="label">残り</div>
-            <div className={`value${timerWarn ? ' timer-urgent' : ''}`}>
-              {placing ? remainingSec : '—'}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {state.cleared ? (
-        <div className="clear-banner">最下段クリア！</div>
-      ) : null}
-      {state.message ? <p className="hint izakaya-msg">{state.message}</p> : null}
-
-      <div className="izakaya-playfield">
-        <div className="board-wrap neon-board-frame">
-          <IzakayaBoardCanvas
-            state={state}
-            dragThreshold={DRAG_AIM_THRESHOLD_PX}
-            onTapCell={(x, y) => {
-              const before = stateRef.current;
-              const next = placeAtTap(before, x, y);
-              stateRef.current = next;
-              setState(next);
-              if (next.cleared) sfx('clear');
-              else if (next.stats.usedCount > before.stats.usedCount)
-                sfx('hardDrop');
-            }}
-            onHoverCell={(x, y) => {
-              const next = aimFromCell(stateRef.current, x, y);
-              stateRef.current = next;
-              setState(next);
-            }}
-            onDragAim={(x, y) => {
-              const next = aimFromCell(stateRef.current, x, y);
-              stateRef.current = next;
-              setState(next);
-            }}
+      <div className="izakaya-bg-stage">
+        <div className="izakaya-bg-frame">
+          <img
+            className="izakaya-bg-image"
+            src="/images/izakaya-background.png"
+            alt=""
+            draggable={false}
           />
-        </div>
 
-        {placing ? (
-          <div className="izakaya-place-bar">
-            <div className={`neon-timer${timerWarn ? ' is-warn' : ''}`}>
-              <span className="neon-timer-label">TIME</span>
-              <span className="neon-timer-value">{remainingSec}</span>
+          <div className="izakaya-bg-ui">
+            <div className="izakaya-hud">
+              <div className="stat-grid izk-stat-grid">
+                <div className="stat-box izk-stat is-res">
+                  <StatIcon kind="res" />
+                  <div className="label">資源</div>
+                  <div className="value">{state.resources}</div>
+                </div>
+                <div className="stat-box izk-stat is-order">
+                  <StatIcon kind="order" />
+                  <div className="label">注文</div>
+                  <div className="value">
+                    {state.stats.foodCount + state.stats.drinkCount}
+                  </div>
+                </div>
+                <div className="stat-box izk-stat is-use">
+                  <StatIcon kind="use" />
+                  <div className="label">使用</div>
+                  <div className="value">{state.stats.usedCount}</div>
+                </div>
+                <div
+                  className={`stat-box izk-stat is-time${
+                    timerWarn ? ' is-urgent' : ''
+                  }`}
+                >
+                  <StatIcon kind="time" />
+                  <div className="label">残り</div>
+                  <div className={`value${timerWarn ? ' timer-urgent' : ''}`}>
+                    {placing ? remainingSec : '—'}
+                  </div>
+                </div>
+              </div>
             </div>
-            <button
-              type="button"
-              className="btn btn-primary place-rotate"
-              onClick={() => {
-                const next = rotatePlacing(stateRef.current);
-                stateRef.current = next;
-                setState(next);
-                sfx('rotate');
-              }}
-            >
-              回転
-            </button>
-          </div>
-        ) : null}
-      </div>
 
-      {state.phase === 'pickingShape' ? (
-        <div className="stack shape-pick-panel">
-          <p className="hint">エース — 好きなミノを選んでください</p>
-          <div className="mino-card-grid">
-            {ALL_MINOS.map((m) => (
-              <button
-                key={m}
-                type="button"
-                className="mino-shape-card"
-                onClick={() => {
-                  const next = pickShape(stateRef.current, m);
-                  stateRef.current = next;
-                  setState(next);
-                  sfx('cardDecide');
-                }}
-              >
-                <MinoGlyph type={m} />
-                <span>{m}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {state.phase === 'idle' && !state.cleared ? (
-        <div className="izakaya-idle">
-          <div className="order-slip">
-            <div className="order-slip-head">本日のご注文</div>
-            <input
-              className="field order-slip-field"
-              placeholder="例）枝豆 / ハイボール"
-              aria-label="注文の名前（必須）"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            {!nameOk ? (
-              <p className="hint">名前を入れてから伝票を切ってください</p>
+            {state.cleared ? (
+              <div className="clear-banner">最下段クリア！</div>
             ) : null}
-            <div className="row">
-              <button
-                type="button"
-                className="btn order-food"
-                disabled={!nameOk}
-                onClick={() => submitOrder('food')}
-              >
-                食べた！
-              </button>
-              <button
-                type="button"
-                className="btn order-drink"
-                disabled={!nameOk}
-                onClick={() => submitOrder('drink')}
-              >
-                飲んだ！
-              </button>
+            {state.message ? (
+              <p className="hint izakaya-msg">{state.message}</p>
+            ) : null}
+
+            <div className="izakaya-body">
+              <div className="izakaya-main">
+                <div className="izakaya-playfield">
+                  <div className="izakaya-board-frame neon-board-frame">
+                    <IzakayaBoardCanvas
+                      state={state}
+                      maxWidth={placing ? 300 : 188}
+                      dragThreshold={DRAG_AIM_THRESHOLD_PX}
+                      onTapCell={(x, y) => {
+                        const before = stateRef.current;
+                        const next = placeAtTap(before, x, y);
+                        stateRef.current = next;
+                        setState(next);
+                        if (next.cleared) sfx('clear');
+                        else if (next.stats.usedCount > before.stats.usedCount)
+                          sfx('hardDrop');
+                      }}
+                      onHoverCell={(x, y) => {
+                        const next = aimFromCell(stateRef.current, x, y);
+                        stateRef.current = next;
+                        setState(next);
+                      }}
+                      onDragAim={(x, y) => {
+                        const next = aimFromCell(stateRef.current, x, y);
+                        stateRef.current = next;
+                        setState(next);
+                      }}
+                    />
+                  </div>
+
+                  {placing ? (
+                    <div className="izakaya-place-bar">
+                      <div
+                        className={`neon-timer${timerWarn ? ' is-warn' : ''}`}
+                      >
+                        <span className="neon-timer-label">TIME</span>
+                        <span className="neon-timer-value">{remainingSec}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn btn-primary place-rotate"
+                        onClick={() => {
+                          const next = rotatePlacing(stateRef.current);
+                          stateRef.current = next;
+                          setState(next);
+                          sfx('rotate');
+                        }}
+                      >
+                        回転
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+
+                {state.phase === 'idle' && !state.cleared ? (
+                  <div className="izakaya-side">
+                    <div className="order-slip izk-order-panel">
+                      <div className="order-slip-head">本日のご注文</div>
+                      <input
+                        className="field order-slip-field"
+                        placeholder="例）枝豆 / ハイボール"
+                        aria-label="注文の名前（必須）"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      {!nameOk ? (
+                        <p className="hint order-name-hint">
+                          名前を入れてから伝票を切ってください
+                        </p>
+                      ) : null}
+                      <div className="row izk-order-btns">
+                        <button
+                          type="button"
+                          className="btn order-food"
+                          disabled={!nameOk}
+                          onClick={() => submitOrder('food')}
+                        >
+                          <span className="order-btn-ico" aria-hidden="true">
+                            枝
+                          </span>
+                          食べた！
+                        </button>
+                        <button
+                          type="button"
+                          className="btn order-drink"
+                          disabled={!nameOk}
+                          onClick={() => submitOrder('drink')}
+                        >
+                          <span className="order-btn-ico" aria-hidden="true">
+                            杯
+                          </span>
+                          飲んだ！
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="izk-exclude" aria-label="除外ミノ">
+                      <div className="mino-card-grid izk-exclude-row">
+                        {EXCLUDE_TOP.map(renderExcludeCard)}
+                      </div>
+                      <div className="mino-card-grid izk-exclude-row is-three">
+                        {EXCLUDE_BOT.map(renderExcludeCard)}
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              {state.phase === 'pickingShape' ? (
+                <div className="stack shape-pick-panel">
+                  <p className="hint">エース — 好きなミノを選んでください</p>
+                  <div className="mino-card-grid">
+                    {ALL_MINOS.map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        className="mino-shape-card"
+                        onClick={() => {
+                          const next = pickShape(stateRef.current, m);
+                          stateRef.current = next;
+                          setState(next);
+                          sfx('cardDecide');
+                        }}
+                      >
+                        <MinoGlyph type={m} />
+                        <span>{m}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {state.phase === 'idle' && !state.cleared ? (
+                <div className="izakaya-idle">
+                  <div className="row izakaya-actions">
+                    <button
+                      type="button"
+                      className="btn btn-primary draw-cta"
+                      disabled={!canDraw}
+                      onClick={beginRoulette}
+                    >
+                      <span className="draw-cta-ico" aria-hidden="true">
+                        ♠
+                      </span>
+                      運命の一枚を引く！({cost})
+                    </button>
+                    <button
+                      type="button"
+                      className="btn undo-cta"
+                      disabled={!canUndo}
+                      onClick={() => {
+                        const next = undoPlace(stateRef.current);
+                        stateRef.current = next;
+                        setState(next);
+                      }}
+                    >
+                      <span className="undo-cta-ico" aria-hidden="true">
+                        ↺
+                      </span>
+                      今のナシ！
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
+              {state.orders.length > 0 && !placing ? (
+                <details
+                  className="order-history-fold"
+                  open={historyOpen}
+                  onToggle={(e) =>
+                    setHistoryOpen((e.target as HTMLDetailsElement).open)
+                  }
+                >
+                  <summary>注文履歴（{state.orders.length}）</summary>
+                  <ul className="order-list">
+                    {state.orders.map((o, i) => (
+                      <li key={`${o.at}-${i}`}>
+                        {o.kind === 'food' ? '食' : '飲'} — {o.name}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
+
+              {!placing ? (
+                <div className="stack izakaya-menu-actions">
+                  <button
+                    type="button"
+                    className="btn izk-menu-btn"
+                    onClick={onResetIzakaya}
+                  >
+                    <span className="izk-menu-ico" aria-hidden="true">
+                      ⌇
+                    </span>
+                    居酒屋だけやり直す
+                  </button>
+                  <button
+                    type="button"
+                    className="btn izk-menu-btn"
+                    onClick={onRestartFalling}
+                  >
+                    <span className="izk-menu-ico" aria-hidden="true">
+                      ↻
+                    </span>
+                    落下からやり直す
+                  </button>
+                  <button
+                    type="button"
+                    className="btn izk-menu-btn"
+                    onClick={onTitleClear}
+                  >
+                    <span className="izk-menu-ico" aria-hidden="true">
+                      ⌂
+                    </span>
+                    タイトルへ（保存削除）
+                  </button>
+                </div>
+              ) : null}
             </div>
           </div>
-
-          <p className="hint">除外（消費 {cost}）・カードは常に 10 枚から</p>
-          <div className="mino-card-grid">
-            {ALL_MINOS.map((m: MinoType) => (
-              <button
-                key={m}
-                type="button"
-                className={`mino-shape-card${
-                  state.excluded.includes(m) ? ' is-on' : ''
-                }`}
-                onClick={() => {
-                  const next = toggleExclude(stateRef.current, m);
-                  stateRef.current = next;
-                  setState(next);
-                }}
-              >
-                <MinoGlyph type={m} />
-                <span>{m}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="row izakaya-actions">
-            <button
-              type="button"
-              className="btn btn-primary draw-cta"
-              disabled={!canDraw}
-              onClick={beginRoulette}
-            >
-              運命の一枚を引く！ ({cost})
-            </button>
-            <button
-              type="button"
-              className="btn undo-cta"
-              disabled={!canUndo}
-              onClick={() => {
-                const next = undoPlace(stateRef.current);
-                stateRef.current = next;
-                setState(next);
-              }}
-            >
-              今のナシ！
-            </button>
-          </div>
         </div>
-      ) : null}
-
-      {state.orders.length > 0 && !placing ? (
-        <details
-          className="order-history-fold"
-          open={historyOpen}
-          onToggle={(e) =>
-            setHistoryOpen((e.target as HTMLDetailsElement).open)
-          }
-        >
-          <summary>注文履歴（{state.orders.length}）</summary>
-          <ul className="order-list">
-            {state.orders.map((o, i) => (
-              <li key={`${o.at}-${i}`}>
-                {o.kind === 'food' ? '食' : '飲'} — {o.name}
-              </li>
-            ))}
-          </ul>
-        </details>
-      ) : null}
-
-      {!placing ? (
-        <div className="stack izakaya-menu-actions">
-          <button type="button" className="btn" onClick={onResetIzakaya}>
-            居酒屋だけやり直す
-          </button>
-          <button type="button" className="btn" onClick={onRestartFalling}>
-            落下からやり直す
-          </button>
-          <button type="button" className="btn" onClick={onTitleClear}>
-            タイトルへ（保存削除）
-          </button>
-        </div>
-      ) : null}
+      </div>
     </section>
   );
 }

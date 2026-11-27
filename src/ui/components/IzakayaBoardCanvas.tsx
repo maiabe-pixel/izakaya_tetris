@@ -54,36 +54,61 @@ export function IzakayaBoardCanvas({
     if (!ctx) return;
     const board = state.board;
     ctx.clearRect(0, 0, w * cell, h * cell);
-    ctx.fillStyle = '#05080f';
+    ctx.fillStyle = '#080810';
     ctx.fillRect(0, 0, w * cell, h * cell);
 
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.045)';
         ctx.strokeRect(x * cell, y * cell, cell, cell);
         const c = board[y][x];
         if (c) {
-          ctx.fillStyle = MINO_COLORS[c] ?? '#fff';
-          ctx.fillRect(x * cell + 1, y * cell + 1, cell - 2, cell - 2);
+          const base = MINO_COLORS[c] ?? '#fff';
+          const pad = Math.max(1, Math.floor(cell * 0.08));
+          const bx = x * cell + pad;
+          const by = y * cell + pad;
+          const bw = cell - pad * 2;
+          const bh = cell - pad * 2;
+          const grad = ctx.createLinearGradient(bx, by, bx, by + bh);
+          grad.addColorStop(0, '#ffffff');
+          grad.addColorStop(0.18, base);
+          grad.addColorStop(0.72, base);
+          grad.addColorStop(1, '#000000');
+          ctx.fillStyle = grad;
+          ctx.globalAlpha = 0.92;
+          ctx.fillRect(bx, by, bw, bh);
+          ctx.globalAlpha = 1;
+          // Soft outer neon edge (visual only)
+          ctx.strokeStyle = base;
+          ctx.globalAlpha = 0.35;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(bx + 0.5, by + 0.5, bw - 1, bh - 1);
+          ctx.globalAlpha = 1;
+          // Highlight core
+          ctx.fillStyle = 'rgba(255,255,255,0.35)';
+          ctx.fillRect(bx + 1, by + 1, Math.max(1, bw * 0.35), Math.max(1, bh * 0.22));
         }
       }
     }
 
     // Divider between extra rows and original falling zone
     const divY = IZAKAYA_EXTRA_ROWS * cell;
-    ctx.strokeStyle = 'rgba(255, 107, 155, 0.9)';
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 22, 132, 0.95)';
+    ctx.shadowColor = 'rgba(255, 22, 132, 0.85)';
+    ctx.shadowBlur = 8;
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, divY);
     ctx.lineTo(w * cell, divY);
     ctx.stroke();
-    ctx.lineWidth = 1;
+    ctx.restore();
 
     if (state.phase === 'placing') {
       const paint = (landing: Landing, strong: boolean) => {
         ctx.globalAlpha = strong ? 0.55 : 0.28;
-        ctx.fillStyle = strong ? '#F5C96B' : '#5DE4E8';
-        ctx.strokeStyle = strong ? '#F5C96B' : 'rgba(93,228,232,0.75)';
+        ctx.fillStyle = strong ? '#FFAD32' : '#29DFF2';
+        ctx.strokeStyle = strong ? '#FFAD32' : 'rgba(41,223,242,0.75)';
         for (const p of landing.cells) {
           ctx.fillRect(p.x * cell + 1, p.y * cell + 1, cell - 2, cell - 2);
           ctx.strokeRect(p.x * cell + 1, p.y * cell + 1, cell - 2, cell - 2);
