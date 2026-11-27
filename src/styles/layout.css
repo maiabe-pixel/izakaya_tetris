@@ -72,7 +72,8 @@
 
 /* ---------- Title (baked background image) ---------- */
 .app-shell:has(.title-bg),
-.app-shell:has(.izakaya-bg) {
+.app-shell:has(.izakaya-bg),
+.app-shell:has(.falling-bg) {
   width: 100%;
   max-width: none;
   height: 100dvh;
@@ -782,101 +783,328 @@
   color: var(--gold);
 }
 
-/* ---------- Phase D: Falling arcade ---------- */
+/* ---------- Phase D: Falling arcade (IZ-38 visual redesign) ---------- */
 .falling-screen {
-  gap: 0.65rem;
+  --fall-pink: #ff1684;
+  --fall-gold: #ffc34d;
+  --fall-orange: #ff941f;
+  --fall-cyan: #28e7ff;
+  --fall-cream: #fff3e0;
+  --fall-wine: #210b1b;
+  --fall-board: #080810;
+  gap: 0;
+  color: var(--fall-cream);
 }
 
-.arcade-cabinet {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  padding: 0.75rem 0.7rem 0.85rem;
-  border-radius: 18px;
-  border: 2px solid rgba(93, 228, 232, 0.35);
-  background:
-    linear-gradient(180deg, rgba(93, 228, 232, 0.08), transparent 28%),
-    linear-gradient(180deg, #161a28, #0c0e16);
-  box-shadow:
-    0 0 0 1px rgba(255, 107, 155, 0.12) inset,
-    0 0 28px rgba(93, 228, 232, 0.12);
+.falling-bg {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
 }
 
-.arcade-marquee {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  padding: 0.35rem 0.5rem;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(245, 201, 107, 0.28);
-}
-
-.arcade-marquee-title {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  letter-spacing: 0.08em;
-  color: var(--ivory);
-  text-shadow: 0 0 12px rgba(255, 107, 155, 0.4);
-}
-
-.score-panel {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.35rem;
-}
-
-.arcade-stage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.next-preview {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-
-.next-preview-label {
-  font-family: var(--font-neon);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-  color: var(--cyan);
-}
-
-.next-preview-box {
-  min-width: 4.5rem;
-  min-height: 2.6rem;
+.falling-bg-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: grid;
   place-items: center;
-  padding: 0.25rem 0.45rem;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  padding:
+    max(0px, env(safe-area-inset-top))
+    max(0px, env(safe-area-inset-right))
+    max(0px, env(safe-area-inset-bottom))
+    max(0px, env(safe-area-inset-left));
+  box-sizing: border-box;
+  /* Soft letterbox — no heavy dark filter on art */
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 40%, rgba(40, 14, 28, 0.3), transparent 70%),
+    linear-gradient(180deg, #140810 0%, #0a0608 55%, #050308 100%);
 }
 
-.arcade-bezel {
+.falling-bg-stage::before {
+  content: '';
+  position: absolute;
+  inset: -6%;
+  background: url('/images/drop-mode-bg.png') center / cover no-repeat;
+  filter: blur(26px) brightness(0.55) saturate(1);
+  opacity: 0.38;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.falling-bg-frame {
   position: relative;
-  padding: 0.35rem;
+  z-index: 1;
+  aspect-ratio: 941 / 1672;
+  width: min(
+    100%,
+    calc(
+      (100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))
+        * 941 / 1672
+    )
+  );
+  max-height: 100%;
+  height: auto;
+  overflow: hidden;
+  border-radius: 0;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+}
+
+.falling-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.falling-bg-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 3.2% 3.4% 2.4%;
+  box-sizing: border-box;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.falling-bg-ui > * {
+  pointer-events: auto;
+}
+
+.falling-screen .arcade-cabinet {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.falling-screen .arcade-marquee {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.12rem;
+  padding: 0.15rem 0.35rem 0.2rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.falling-screen .fall-eyebrow {
+  font-family: var(--font-neon);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  color: var(--fall-cyan);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(40, 231, 255, 0.85),
+    0 0 14px rgba(40, 231, 255, 0.45);
+}
+
+.falling-screen .arcade-marquee-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 4.2vw, 1.15rem);
+  letter-spacing: 0.08em;
+  color: #fff3e0;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 22, 132, 0.9),
+    0 0 16px rgba(255, 195, 77, 0.55),
+    0 0 24px rgba(255, 22, 132, 0.35);
+}
+
+.falling-screen .score-panel.fall-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.32rem;
+}
+
+.falling-screen .fall-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.04rem;
+  padding: 0.3rem 0.15rem 0.32rem;
   border-radius: 12px;
-  border: 2px solid rgba(93, 228, 232, 0.4);
-  background: #0a0c14;
-  box-shadow: 0 0 18px rgba(93, 228, 232, 0.15);
+  background: rgba(33, 11, 27, 0.72);
+  border: 1.5px solid rgba(255, 243, 224, 0.22);
+  text-align: center;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.08);
 }
 
-.arcade-bezel.fx-clear {
-  box-shadow: 0 0 28px rgba(245, 201, 107, 0.55);
+.falling-screen .fall-stat-ico {
+  width: 0.9rem;
+  height: 0.9rem;
+  color: inherit;
 }
 
-.arcade-bezel.fx-score {
-  box-shadow: 0 0 22px rgba(93, 228, 232, 0.45);
+.falling-screen .fall-stat .label {
+  font-family: var(--font-ui);
+  font-size: 0.52rem;
+  letter-spacing: 0.06em;
+  color: var(--fall-cream);
+  opacity: 0.88;
 }
 
-.arcade-bezel.fx-go {
-  box-shadow: 0 0 30px rgba(255, 107, 155, 0.45);
+.falling-screen .fall-stat .value {
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 0.98rem;
+  line-height: 1.05;
+  color: var(--fall-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 195, 77, 0.85),
+    0 0 14px rgba(255, 148, 31, 0.4);
+}
+
+.falling-screen .fall-stat.is-score,
+.falling-screen .fall-stat.is-lv {
+  border-color: rgba(255, 195, 77, 0.92);
+  color: var(--fall-gold);
+  box-shadow:
+    inset 0 0 12px rgba(255, 195, 77, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 10px rgba(255, 195, 77, 0.55),
+    0 0 18px rgba(255, 148, 31, 0.28);
+}
+
+.falling-screen .fall-stat.is-lines,
+.falling-screen .fall-stat.is-izakaya {
+  border-color: rgba(255, 22, 132, 0.92);
+  color: var(--fall-pink);
+  box-shadow:
+    inset 0 0 12px rgba(255, 22, 132, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 10px rgba(255, 22, 132, 0.6),
+    0 0 18px rgba(255, 22, 132, 0.28);
+}
+
+.falling-screen .arcade-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  overflow: hidden;
+}
+
+.falling-screen .fall-next.next-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.falling-screen .fall-next .next-preview-label {
+  font-family: var(--font-neon);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--fall-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 195, 77, 0.75),
+    0 0 12px rgba(40, 231, 255, 0.35);
+}
+
+.falling-screen .fall-next .next-preview-box {
+  min-width: 3.8rem;
+  min-height: 2.2rem;
+  display: grid;
+  place-items: center;
+  padding: 0.2rem 0.4rem;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 195, 77, 0.75);
+  background: rgba(33, 11, 27, 0.72);
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 10px rgba(255, 195, 77, 0.35),
+    0 0 14px rgba(40, 231, 255, 0.22);
+}
+
+.falling-screen .arcade-bezel.fall-board-frame {
+  position: relative;
+  flex: 0 1 auto;
+  max-height: 100%;
+  min-height: 0;
+  padding: 0.1rem;
+  border-radius: 12px;
+  border: 2px solid #ff4da6;
+  background: rgba(8, 8, 16, 0.94);
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.75),
+    inset 0 0 10px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 12px rgba(255, 22, 132, 0.75),
+    0 0 26px rgba(255, 22, 132, 0.4),
+    0 0 40px rgba(255, 22, 132, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.falling-screen .fall-board-frame .board-wrap {
+  margin: 0;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.falling-screen .fall-board-frame canvas {
+  border: none;
+  border-radius: 6px;
+  box-shadow: none;
+  background: var(--fall-board);
+  max-width: 100%;
+  max-height: min(52dvh, 100%);
+  width: auto;
+  height: auto;
+  aspect-ratio: 1 / 2;
+}
+
+.falling-screen .arcade-bezel.fx-clear {
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 28px rgba(255, 195, 77, 0.65);
+}
+
+.falling-screen .arcade-bezel.fx-score {
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 22px rgba(40, 231, 255, 0.55);
+}
+
+.falling-screen .arcade-bezel.fx-go {
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 30px rgba(255, 22, 132, 0.55);
 }
 
 .arcade-fx {
@@ -893,15 +1121,15 @@
 }
 
 .arcade-fx-clear {
-  color: var(--gold);
+  color: var(--fall-gold, #ffc34d);
   font-size: 1.35rem;
-  text-shadow: 0 0 16px rgba(245, 201, 107, 0.8);
+  text-shadow: 0 0 16px rgba(255, 195, 77, 0.8);
 }
 
 .arcade-fx-score {
-  color: var(--cyan);
+  color: var(--fall-cyan, #28e7ff);
   font-size: 1.05rem;
-  text-shadow: 0 0 12px rgba(93, 228, 232, 0.7);
+  text-shadow: 0 0 12px rgba(40, 231, 255, 0.7);
 }
 
 .arcade-go {
@@ -919,46 +1147,153 @@
 
 .arcade-go-label {
   font-family: var(--font-neon);
-  color: var(--pink);
+  color: var(--fall-pink, #ff1684);
   letter-spacing: 0.2em;
   font-size: 0.95rem;
-  text-shadow: var(--glow-pink);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 12px rgba(255, 22, 132, 0.8);
 }
 
 .arcade-go-copy {
   font-family: var(--font-display);
-  color: var(--ivory);
+  color: var(--fall-cream, #fff3e0);
   font-size: 1.15rem;
   letter-spacing: 0.06em;
-  text-shadow: 0 0 14px rgba(245, 201, 107, 0.45);
+  text-shadow: 0 0 14px rgba(255, 195, 77, 0.45);
 }
 
-.arcade-go-hint {
-  margin-top: 0.15rem;
+.falling-screen .arcade-go-hint {
+  margin: 0;
+  text-align: center;
+  color: rgba(255, 243, 224, 0.78);
 }
 
-.arcade-pad {
+.falling-screen .arcade-pad.fall-pad {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  /* Leave bottom-left beer/edamame visible */
+  width: min(100%, 92%);
+  margin: 0 auto;
 }
 
-.arcade-pad-row {
+.falling-screen .arcade-pad-row {
   display: flex;
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
-.arcade-pad-row > .pad-btn {
+.falling-screen .arcade-pad-row > .pad-btn {
   flex: 1;
-  min-height: 52px;
-  font-size: 1.05rem;
 }
 
-.pad-hard {
+.falling-screen .fall-pad-btn {
+  min-height: 46px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #fff3e0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  white-space: nowrap;
+  background: rgba(33, 11, 27, 0.78);
+}
+
+.falling-screen .fall-pad-btn .pad-ico {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+}
+
+.falling-screen .fall-pad-btn.is-cyan {
+  border: 1.5px solid var(--fall-cyan);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(40, 231, 255, 0.55),
+    0 0 20px rgba(40, 231, 255, 0.25);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(40, 231, 255, 0.7);
+}
+
+.falling-screen .fall-pad-btn.is-pink {
+  border: 1.5px solid var(--fall-pink);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(255, 22, 132, 0.55),
+    0 0 20px rgba(255, 22, 132, 0.25);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 22, 132, 0.7);
+}
+
+.falling-screen .fall-pad-btn.is-gold {
+  border: 1.5px solid var(--fall-orange);
+  color: #ffe6b0;
+  background: linear-gradient(180deg, rgba(90, 42, 18, 0.92), rgba(36, 16, 10, 0.9));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 230, 160, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(255, 148, 31, 0.5),
+    0 0 20px rgba(255, 148, 31, 0.25);
+  text-shadow:
+    0 0 3px #fff8e0,
+    0 0 8px rgba(255, 195, 77, 0.65);
+}
+
+.falling-screen .fall-pad-btn.is-hard.pad-hard {
   flex: 1.55;
-  min-height: 56px;
-  font-size: 1rem;
+  min-height: 48px;
+  border: 2.5px solid #ffffff;
+  color: #fff;
+  background: linear-gradient(180deg, #ff6bb8 0%, #ff1684 52%, #c4005c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 0 0 1px rgba(255, 200, 230, 0.65),
+    0 0 14px rgba(255, 22, 132, 0.85),
+    0 0 28px rgba(255, 22, 132, 0.45);
+  text-shadow:
+    0 0 3px #fff,
+    0 1px 0 rgba(120, 0, 60, 0.35);
+  font-size: 0.88rem;
   letter-spacing: 0.02em;
+}
+
+@media (min-width: 720px) {
+  .falling-bg-frame {
+    width: min(420px, calc((100dvh - 2rem) * 941 / 1672));
+    border-radius: 12px;
+    overflow: hidden;
+  }
+}
+
+@media (max-height: 720px) {
+  .falling-screen .arcade-cabinet {
+    gap: 0.28rem;
+  }
+
+  .falling-screen .fall-pad-btn {
+    min-height: 40px;
+    font-size: 0.82rem;
+  }
+
+  .falling-screen .fall-pad-btn.is-hard.pad-hard {
+    min-height: 42px;
+    font-size: 0.78rem;
+  }
+
+  .falling-screen .fall-stat .value {
+    font-size: 0.88rem;
+  }
+
+  .falling-screen .fall-board-frame canvas {
+    max-height: min(48dvh, 100%);
+  }
 }
 
 /* ---------- Phase E: Izakaya neon (IZ-36 + IZ-37 brush-up) ---------- */
