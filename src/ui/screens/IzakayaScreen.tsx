@@ -91,7 +91,14 @@ function StatIcon({ kind }: { kind: 'res' | 'order' | 'use' | 'time' }) {
           stroke="#ffe6a8"
           strokeWidth="1.5"
         />
-        <ellipse cx="12" cy="9.2" rx="4.2" ry="1.4" fill="#fff8e8" opacity="0.9" />
+        <ellipse
+          cx="12"
+          cy="9.2"
+          rx="4.2"
+          ry="1.4"
+          fill="#fff8e8"
+          opacity="0.9"
+        />
       </svg>
     );
   }
@@ -113,9 +120,191 @@ function StatIcon({ kind }: { kind: 'res' | 'order' | 'use' | 'time' }) {
         width="10"
         height="14"
         rx="1.5"
-        fill="rgba(193,77,255,0.25)"
+        fill="rgba(255,22,132,0.2)"
         stroke="currentColor"
         strokeWidth="1.6"
+      />
+    </svg>
+  );
+}
+
+function ReceiptIcon() {
+  return (
+    <svg className="order-head-ico" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M7 3.5h10v17l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2V3.5z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 8h4M10 11.5h4M10 15h3"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function MealIcon() {
+  return (
+    <svg className="order-btn-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <ellipse cx="12" cy="15" rx="7.5" ry="5.2" fill="#6dff7a" />
+      <ellipse cx="9.2" cy="14" rx="2.4" ry="1.5" fill="#2f9a45" />
+      <ellipse cx="14.5" cy="16" rx="2.2" ry="1.3" fill="#2f9a45" />
+      <path
+        d="M12 6.5c.2 3.2 2.4 5.2 2.4 5.2"
+        stroke="#b8ffc4"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function BeerIcon() {
+  return (
+    <svg className="order-btn-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M7.5 9h9l-.7 9.5a2 2 0 0 1-2 1.7H10.2a2 2 0 0 1-2-1.7L7.5 9z"
+        fill="#ffc45c"
+        stroke="#ffe6a8"
+        strokeWidth="1"
+      />
+      <path
+        d="M8.5 9c0-2.1 1.7-3.8 3.8-3.8S16.1 6.9 16.1 9"
+        fill="none"
+        stroke="#ffe6a8"
+        strokeWidth="1.4"
+      />
+      <ellipse cx="12.2" cy="9.1" rx="4" ry="1.35" fill="#fff8e8" />
+      <path
+        d="M16.5 11.2h2.2a1.6 1.6 0 0 1 1.6 1.6v3.2a1.6 1.6 0 0 1-1.6 1.6H16"
+        fill="none"
+        stroke="#ffe6a8"
+        strokeWidth="1.3"
+      />
+    </svg>
+  );
+}
+
+function CardsIcon() {
+  return (
+    <svg className="draw-cta-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <rect
+        x="4"
+        y="6"
+        width="10"
+        height="14"
+        rx="1.6"
+        fill="rgba(255,255,255,0.12)"
+        stroke="#fff"
+        strokeWidth="1.5"
+      />
+      <rect
+        x="9"
+        y="3.5"
+        width="10"
+        height="14"
+        rx="1.6"
+        fill="rgba(255,22,132,0.35)"
+        stroke="#fff"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M12.5 8.2h3.2M12.5 11h3.2"
+        stroke="#fff"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function RewindIcon() {
+  return (
+    <svg className="undo-cta-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M7.5 8.5H5.2V6.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6 12a7 7 0 1 0 1.6-4.5L5.2 8.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function NorenIcon() {
+  return (
+    <svg className="izk-menu-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M4 5h16"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+      <path
+        d="M6 5v12c0 1.2.8 1.6 1.5.7L9 15.2l1.5 2.5c.7.9 1.5.5 1.5-.7V5M13 5v12c0 1.2.8 1.6 1.5.7L16 15.2l1.5 2.5c.7.9 1.5.5 1.5-.7V5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ResetIcon() {
+  return (
+    <svg className="izk-menu-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M19.2 12a7.2 7.2 0 1 1-2.1-5.1"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
+      <path
+        d="M19.5 4.8v4.4h-4.4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function HomeIcon() {
+  return (
+    <svg className="izk-menu-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M4.5 11.2 12 4.8l7.5 6.4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7 10.8V19h10v-8.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -302,7 +491,7 @@ export function IzakayaScreen({
                   <div className="value">{state.stats.usedCount}</div>
                 </div>
                 <div
-                  className={`stat-box izk-stat is-time${
+                  className={`stat-box izk-stat is-remain${
                     timerWarn ? ' is-urgent' : ''
                   }`}
                 >
@@ -379,7 +568,10 @@ export function IzakayaScreen({
                 {state.phase === 'idle' && !state.cleared ? (
                   <div className="izakaya-side">
                     <div className="order-slip izk-order-panel">
-                      <div className="order-slip-head">本日のご注文</div>
+                      <div className="order-slip-head">
+                        <ReceiptIcon />
+                        <span>本日のご注文</span>
+                      </div>
                       <input
                         className="field order-slip-field"
                         placeholder="例）枝豆 / ハイボール"
@@ -387,11 +579,13 @@ export function IzakayaScreen({
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
-                      {!nameOk ? (
-                        <p className="hint order-name-hint">
-                          名前を入れてから伝票を切ってください
-                        </p>
-                      ) : null}
+                      <p
+                        className={`hint order-name-hint${
+                          nameOk ? ' is-ok' : ''
+                        }`}
+                      >
+                        名前を入れてから伝票を切ってください
+                      </p>
                       <div className="row izk-order-btns">
                         <button
                           type="button"
@@ -399,10 +593,8 @@ export function IzakayaScreen({
                           disabled={!nameOk}
                           onClick={() => submitOrder('food')}
                         >
-                          <span className="order-btn-ico" aria-hidden="true">
-                            枝
-                          </span>
-                          食べた！
+                          <MealIcon />
+                          <span>食べた！</span>
                         </button>
                         <button
                           type="button"
@@ -410,15 +602,16 @@ export function IzakayaScreen({
                           disabled={!nameOk}
                           onClick={() => submitOrder('drink')}
                         >
-                          <span className="order-btn-ico" aria-hidden="true">
-                            杯
-                          </span>
-                          飲んだ！
+                          <BeerIcon />
+                          <span>飲んだ！</span>
                         </button>
                       </div>
                     </div>
 
                     <div className="izk-exclude" aria-label="除外ミノ">
+                      <p className="izk-exclude-label">
+                        除外（消費 {cost}）・カードは常に 10 枚から
+                      </p>
                       <div className="mino-card-grid izk-exclude-row">
                         {EXCLUDE_TOP.map(renderExcludeCard)}
                       </div>
@@ -463,10 +656,8 @@ export function IzakayaScreen({
                       disabled={!canDraw}
                       onClick={beginRoulette}
                     >
-                      <span className="draw-cta-ico" aria-hidden="true">
-                        ♠
-                      </span>
-                      運命の一枚を引く！({cost})
+                      <CardsIcon />
+                      <span>運命の一枚を引く！({cost})</span>
                     </button>
                     <button
                       type="button"
@@ -478,10 +669,8 @@ export function IzakayaScreen({
                         setState(next);
                       }}
                     >
-                      <span className="undo-cta-ico" aria-hidden="true">
-                        ↺
-                      </span>
-                      今のナシ！
+                      <RewindIcon />
+                      <span>今のナシ！</span>
                     </button>
                   </div>
                 </div>
@@ -513,30 +702,24 @@ export function IzakayaScreen({
                     className="btn izk-menu-btn"
                     onClick={onResetIzakaya}
                   >
-                    <span className="izk-menu-ico" aria-hidden="true">
-                      ⌇
-                    </span>
-                    居酒屋だけやり直す
+                    <NorenIcon />
+                    <span>居酒屋だけやり直す</span>
                   </button>
                   <button
                     type="button"
                     className="btn izk-menu-btn"
                     onClick={onRestartFalling}
                   >
-                    <span className="izk-menu-ico" aria-hidden="true">
-                      ↻
-                    </span>
-                    落下からやり直す
+                    <ResetIcon />
+                    <span>落下からやり直す</span>
                   </button>
                   <button
                     type="button"
                     className="btn izk-menu-btn"
                     onClick={onTitleClear}
                   >
-                    <span className="izk-menu-ico" aria-hidden="true">
-                      ⌂
-                    </span>
-                    タイトルへ（保存削除）
+                    <HomeIcon />
+                    <span>タイトルへ（保存削除）</span>
                   </button>
                 </div>
               ) : null}

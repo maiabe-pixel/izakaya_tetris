@@ -59,8 +59,8 @@ export function IzakayaBoardCanvas({
 
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-        ctx.strokeStyle = 'rgba(255,255,255,0.045)';
-        ctx.strokeRect(x * cell, y * cell, cell, cell);
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.strokeRect(x * cell + 0.5, y * cell + 0.5, cell - 1, cell - 1);
         const c = board[y][x];
         if (c) {
           const base = MINO_COLORS[c] ?? '#fff';
