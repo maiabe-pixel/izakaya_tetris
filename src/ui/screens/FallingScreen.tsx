@@ -195,90 +195,88 @@ export function FallingScreen({ state, setState, timeLimit }: Props) {
   return (
     <section className="screen falling-screen falling-bg">
       <div className="falling-bg-stage">
-        <div className="falling-bg-frame">
-          <img
-            className="falling-bg-image"
-            src="/images/drop-mode-bg.png"
-            alt=""
-            draggable={false}
-          />
-          <div className="falling-bg-ui">
-            <div className="arcade-cabinet">
-              <div className="arcade-marquee">
-                <span className="eyebrow fall-eyebrow">ARCADE DROP</span>
-                <span className="arcade-marquee-title">落下チャレンジ</span>
-              </div>
-
-              <div className="score-panel fall-stat-grid">
-                <div className="stat-box fall-stat is-score">
-                  <StatIcon kind="score" />
-                  <div className="label">SCORE</div>
-                  <div className="value">{state.score}</div>
-                </div>
-                <div className="stat-box fall-stat is-lines">
-                  <StatIcon kind="lines" />
-                  <div className="label">LINES</div>
-                  <div className="value">{state.lines}</div>
-                </div>
-                <div className="stat-box fall-stat is-lv">
-                  <StatIcon kind="lv" />
-                  <div className="label">LV</div>
-                  <div className="value">{state.level + 1}</div>
-                </div>
-                <div className="stat-box fall-stat is-izakaya">
-                  <StatIcon kind="izakaya" />
-                  <div className="label">居酒屋</div>
-                  <div className="value">{timeLimit}s</div>
-                </div>
-              </div>
-
-              <div className="arcade-stage">
-                <NextPreview type={state.next} />
-                <div
-                  className={`arcade-bezel fall-board-frame${
-                    flash ? ` fx-${flash}` : ''
-                  }${state.gameOver ? ' fx-go' : ''}`}
-                >
-                  <FallingBoardCanvas state={state} />
-                  {flash === 'clear' ? (
-                    <div
-                      className="arcade-fx arcade-fx-clear"
-                      aria-hidden="true"
-                    >
-                      CLEAR!
-                    </div>
-                  ) : null}
-                  {flash === 'score' ? (
-                    <div
-                      className="arcade-fx arcade-fx-score"
-                      aria-hidden="true"
-                    >
-                      +SCORE
-                    </div>
-                  ) : null}
-                  {state.gameOver ? (
-                    <div className="arcade-go" role="status">
-                      <div className="arcade-go-label">GAME OVER</div>
-                      <div className="arcade-go-copy">ここからが、本番。</div>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-
-              {state.gameOver ? (
-                <p className="hint arcade-go-hint">
-                  ネオン横丁の居酒屋へ移動中…
-                </p>
-              ) : (
-                <FallingControls
-                  onLeft={() => apply(moveLeft, 'move')}
-                  onRight={() => apply(moveRight, 'move')}
-                  onRotate={() => apply(rotateCw, 'rotate')}
-                  onSoft={() => apply(softDrop, 'move')}
-                  onHard={() => apply(hardDrop, 'hardDrop')}
-                />
-              )}
+        <img
+          className="falling-bg-image"
+          src="/images/drop-mode-bg-v2.png"
+          alt=""
+          draggable={false}
+        />
+        <div className="falling-bg-ui">
+          <div className="arcade-cabinet">
+            <div className="arcade-marquee">
+              <span className="eyebrow fall-eyebrow">ARCADE DROP</span>
+              <span className="arcade-marquee-title">落下チャレンジ</span>
             </div>
+
+            <div className="score-panel fall-stat-grid">
+              <div className="stat-box fall-stat is-score">
+                <StatIcon kind="score" />
+                <div className="label">SCORE</div>
+                <div className="value">{state.score}</div>
+              </div>
+              <div className="stat-box fall-stat is-lines">
+                <StatIcon kind="lines" />
+                <div className="label">LINES</div>
+                <div className="value">{state.lines}</div>
+              </div>
+              <div className="stat-box fall-stat is-lv">
+                <StatIcon kind="lv" />
+                <div className="label">LV</div>
+                <div className="value">{state.level + 1}</div>
+              </div>
+              <div className="stat-box fall-stat is-izakaya">
+                <StatIcon kind="izakaya" />
+                <div className="label">居酒屋</div>
+                <div className="value">{timeLimit}s</div>
+              </div>
+            </div>
+
+            <div className="arcade-stage">
+              <NextPreview type={state.next} />
+              <div
+                className={`arcade-bezel fall-board-frame${
+                  flash ? ` fx-${flash}` : ''
+                }${state.gameOver ? ' fx-go' : ''}`}
+              >
+                <FallingBoardCanvas state={state} />
+                {flash === 'clear' ? (
+                  <div
+                    className="arcade-fx arcade-fx-clear"
+                    aria-hidden="true"
+                  >
+                    CLEAR!
+                  </div>
+                ) : null}
+                {flash === 'score' ? (
+                  <div
+                    className="arcade-fx arcade-fx-score"
+                    aria-hidden="true"
+                  >
+                    +SCORE
+                  </div>
+                ) : null}
+                {state.gameOver ? (
+                  <div className="arcade-go" role="status">
+                    <div className="arcade-go-label">GAME OVER</div>
+                    <div className="arcade-go-copy">ここからが、本番。</div>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
+            {state.gameOver ? (
+              <p className="hint arcade-go-hint">
+                ネオン横丁の居酒屋へ移動中…
+              </p>
+            ) : (
+              <FallingControls
+                onLeft={() => apply(moveLeft, 'move')}
+                onRight={() => apply(moveRight, 'move')}
+                onRotate={() => apply(rotateCw, 'rotate')}
+                onSoft={() => apply(softDrop, 'move')}
+                onHard={() => apply(hardDrop, 'hardDrop')}
+              />
+            )}
           </div>
         </div>
       </div>
