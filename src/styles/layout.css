@@ -800,9 +800,10 @@
   position: relative;
   flex: 1;
   min-height: 0;
-  height: 100%;
-  max-height: 100%;
-  overflow: hidden;
+  /* Prefer visualViewport height (iOS Safari chrome) over 100vh */
+  height: var(--fall-vvh, 100dvh);
+  max-height: var(--fall-vvh, 100dvh);
+  overflow: visible;
   padding: 0;
   border: none;
   background: transparent;
@@ -813,9 +814,10 @@
   position: relative;
   width: 100%;
   height: 100%;
+  max-height: 100%;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  overflow: visible;
   padding:
     max(0px, env(safe-area-inset-top))
     max(0px, env(safe-area-inset-right))
@@ -842,17 +844,13 @@
 .falling-bg-frame {
   position: relative;
   z-index: 1;
-  aspect-ratio: 941 / 1672;
-  width: min(
-    100%,
-    calc(
-      (100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))
-        * 941 / 1672
-    )
-  );
+  /* Fill visible height first so board+controls stay on-screen */
+  height: 100%;
   max-height: 100%;
-  height: auto;
-  overflow: hidden;
+  width: min(100%, calc(100% * 941 / 1672 * 1.15), 440px);
+  max-width: 100%;
+  aspect-ratio: auto;
+  overflow: visible;
   border-radius: 0;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
 }
@@ -862,7 +860,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center center;
   pointer-events: none;
   user-select: none;
@@ -875,9 +873,9 @@
   z-index: 2;
   display: flex;
   flex-direction: column;
-  padding: 3.2% 3.4% 2.4%;
+  padding: 1.6% 3% 1.4%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
   pointer-events: none;
 }
 
@@ -888,9 +886,10 @@
 .falling-screen .arcade-cabinet {
   flex: 1 1 auto;
   min-height: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.28rem;
   padding: 0;
   border: none;
   border-radius: 0;
@@ -899,11 +898,12 @@
 }
 
 .falling-screen .arcade-marquee {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.12rem;
-  padding: 0.15rem 0.35rem 0.2rem;
+  gap: 0.05rem;
+  padding: 0.05rem 0.25rem 0.08rem;
   border: none;
   border-radius: 0;
   background: transparent;
@@ -911,8 +911,8 @@
 
 .falling-screen .fall-eyebrow {
   font-family: var(--font-neon);
-  font-size: 0.62rem;
-  letter-spacing: 0.22em;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
   color: var(--fall-cyan);
   text-shadow:
     0 0 3px #fff,
@@ -922,7 +922,7 @@
 
 .falling-screen .arcade-marquee-title {
   font-family: var(--font-display);
-  font-size: clamp(0.95rem, 4.2vw, 1.15rem);
+  font-size: clamp(0.82rem, 3.6vw, 1.02rem);
   letter-spacing: 0.08em;
   color: #fff3e0;
   text-shadow:
@@ -933,9 +933,10 @@
 }
 
 .falling-screen .score-panel.fall-stat-grid {
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.32rem;
+  gap: 0.28rem;
 }
 
 .falling-screen .fall-stat {
@@ -943,9 +944,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.04rem;
-  padding: 0.3rem 0.15rem 0.32rem;
-  border-radius: 12px;
+  gap: 0.02rem;
+  padding: 0.22rem 0.12rem 0.24rem;
+  border-radius: 10px;
   background: rgba(33, 11, 27, 0.72);
   border: 1.5px solid rgba(255, 243, 224, 0.22);
   text-align: center;
@@ -953,14 +954,14 @@
 }
 
 .falling-screen .fall-stat-ico {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 0.8rem;
+  height: 0.8rem;
   color: inherit;
 }
 
 .falling-screen .fall-stat .label {
   font-family: var(--font-ui);
-  font-size: 0.52rem;
+  font-size: 0.48rem;
   letter-spacing: 0.06em;
   color: var(--fall-cream);
   opacity: 0.88;
@@ -969,7 +970,7 @@
 .falling-screen .fall-stat .value {
   font-family: var(--font-ui);
   font-weight: 800;
-  font-size: 0.98rem;
+  font-size: 0.88rem;
   line-height: 1.05;
   color: var(--fall-gold);
   text-shadow:
@@ -1006,21 +1007,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  overflow: hidden;
+  justify-content: flex-start;
+  gap: 0.22rem;
+  /* Never clip the board — size cells down instead */
+  overflow: visible;
 }
 
 .falling-screen .fall-next.next-preview {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.32rem;
 }
 
 .falling-screen .fall-next .next-preview-label {
   font-family: var(--font-neon);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
   color: var(--fall-gold);
   text-shadow:
     0 0 3px #fff,
@@ -1029,12 +1032,12 @@
 }
 
 .falling-screen .fall-next .next-preview-box {
-  min-width: 3.8rem;
-  min-height: 2.2rem;
+  min-width: 3.2rem;
+  min-height: 1.85rem;
   display: grid;
   place-items: center;
-  padding: 0.2rem 0.4rem;
-  border-radius: 10px;
+  padding: 0.12rem 0.32rem;
+  border-radius: 8px;
   border: 1.5px solid rgba(255, 195, 77, 0.75);
   background: rgba(33, 11, 27, 0.72);
   box-shadow:
@@ -1046,10 +1049,12 @@
 
 .falling-screen .arcade-bezel.fall-board-frame {
   position: relative;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
+  width: min(100%, 100%);
+  max-width: 100%;
   max-height: 100%;
   min-height: 0;
-  padding: 0.1rem;
+  padding: 0.08rem;
   border-radius: 12px;
   border: 2px solid #ff4da6;
   background: rgba(8, 8, 16, 0.94);
@@ -1064,26 +1069,30 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  overflow: visible;
 }
 
-.falling-screen .fall-board-frame .board-wrap {
+.falling-screen .fall-board-host.board-wrap {
   margin: 0;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
-.falling-screen .fall-board-frame canvas {
+.falling-screen .fall-board-host canvas {
   border: none;
   border-radius: 6px;
   box-shadow: none;
   background: var(--fall-board);
-  max-width: 100%;
-  max-height: min(52dvh, 100%);
-  width: auto;
-  height: auto;
-  aspect-ratio: 1 / 2;
+  /* Logical size set in JS from availW/10 × availH/20 */
+  max-width: none;
+  max-height: none;
+  display: block;
 }
 
 .falling-screen .arcade-bezel.fx-clear {
@@ -1172,16 +1181,15 @@
 .falling-screen .arcade-pad.fall-pad {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.28rem;
   flex: 0 0 auto;
-  /* Leave bottom-left beer/edamame visible */
-  width: min(100%, 92%);
+  width: min(100%, 94%);
   margin: 0 auto;
 }
 
 .falling-screen .arcade-pad-row {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.28rem;
 }
 
 .falling-screen .arcade-pad-row > .pad-btn {
@@ -1189,9 +1197,9 @@
 }
 
 .falling-screen .fall-pad-btn {
-  min-height: 46px;
+  min-height: 44px;
   border-radius: 999px;
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   font-weight: 800;
   color: #fff3e0;
   display: inline-flex;
@@ -1248,7 +1256,7 @@
 
 .falling-screen .fall-pad-btn.is-hard.pad-hard {
   flex: 1.55;
-  min-height: 48px;
+  min-height: 44px;
   border: 2.5px solid #ffffff;
   color: #fff;
   background: linear-gradient(180deg, #ff6bb8 0%, #ff1684 52%, #c4005c 100%);
@@ -1260,39 +1268,34 @@
   text-shadow:
     0 0 3px #fff,
     0 1px 0 rgba(120, 0, 60, 0.35);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   letter-spacing: 0.02em;
 }
 
 @media (min-width: 720px) {
   .falling-bg-frame {
-    width: min(420px, calc((100dvh - 2rem) * 941 / 1672));
+    width: min(420px, 100%);
     border-radius: 12px;
-    overflow: hidden;
   }
 }
 
 @media (max-height: 720px) {
   .falling-screen .arcade-cabinet {
-    gap: 0.28rem;
+    gap: 0.2rem;
   }
 
   .falling-screen .fall-pad-btn {
-    min-height: 40px;
-    font-size: 0.82rem;
-  }
-
-  .falling-screen .fall-pad-btn.is-hard.pad-hard {
-    min-height: 42px;
+    min-height: 44px;
     font-size: 0.78rem;
   }
 
-  .falling-screen .fall-stat .value {
-    font-size: 0.88rem;
+  .falling-screen .fall-pad-btn.is-hard.pad-hard {
+    min-height: 44px;
+    font-size: 0.74rem;
   }
 
-  .falling-screen .fall-board-frame canvas {
-    max-height: min(48dvh, 100%);
+  .falling-screen .fall-stat .value {
+    font-size: 0.8rem;
   }
 }
 

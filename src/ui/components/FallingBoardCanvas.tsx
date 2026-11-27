@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { MINO_COLORS } from '../../game/constants';
+import { useEffect, useRef, useState } from 'react';
+import { BOARD_W, FALLING_H, MINO_COLORS } from '../../game/constants';
 import {
   activeCells,
   ghostY,
@@ -10,7 +10,6 @@ import type { Board } from '../../game/types';
 
 type Props = {
   state: FallingState;
-  maxWidth?: number;
 };
 
 function paintCell(
@@ -51,9 +50,8 @@ function drawBoard(
   cell: number,
 ) {
   const h = board.length;
-  const w = board[0]?.length ?? 10;
+  const w = board[0]?.length ?? BOARD_W;
   ctx.clearRect(0, 0, w * cell, h * cell);
-  // Near-black navy fill
   ctx.fillStyle = '#080810';
   ctx.fillRect(0, 0, w * cell, h * cell);
 
@@ -84,23 +82,70 @@ function drawBoard(
   }
 }
 
-export function FallingBoardCanvas({ state, maxWidth = 320 }: Props) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  const w = state.board[0]?.length ?? 10;
-  const h = state.board.length;
-  const cell = Math.floor(Math.min(maxWidth / w, 28));
+/**
+ * cellSize = floor(min(availW/10, availH/20)) so the full 10×20 stays
+ * visible with square cells. Recalcs on host resize / visualViewport.
+ */
+export function FallingBoardCanvas({ state }: Props) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cols = state.board[0]?.length ?? BOARD_W;
+  const rows = state.board.length || FALLING_H;
+  const [cell, setCell] = useState(12);
 
   useEffect(() => {
-    const canvas = ref.current;
+    const host = hostRef.current;
+    if (!host) return;
+
+    const measure = () => {
+      const rect = host.getBoundingClientRect();
+      const availW = Math.max(0, rect.width);
+      const availH = Math.max(0, rect.height);
+      if (availW < 2 || availH < 2) return;
+      const next = Math.max(
+        4,
+        Math.floor(Math.min(availW / cols, availH / rows)),
+      );
+      setCell((prev) => (prev === next ? prev : next));
+    };
+
+    measure();
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(host);
+    const vv = window.visualViewport;
+    vv?.addEventListener('resize', measure);
+    vv?.addEventListener('scroll', measure);
+    window.addEventListener('resize', measure);
+    window.addEventListener('orientationchange', measure);
+    return () => {
+      ro.disconnect();
+      vv?.removeEventListener('resize', measure);
+      vv?.removeEventListener('scroll', measure);
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('orientationchange', measure);
+    };
+  }, [cols, rows]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const cssW = cols * cell;
+    const cssH = rows * cell;
+    canvas.width = Math.max(1, Math.floor(cssW * dpr));
+    canvas.height = Math.max(1, Math.floor(cssH * dpr));
+    canvas.style.width = `${cssW}px`;
+    canvas.style.height = `${cssH}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     drawBoard(ctx, state.board, state.active, cell);
-  }, [state, cell]);
+  }, [state, cell, cols, rows]);
 
   return (
-    <div className="board-wrap">
-      <canvas ref={ref} width={w * cell} height={h * cell} />
+    <div className="board-wrap fall-board-host" ref={hostRef}>
+      <canvas ref={canvasRef} />
     </div>
   );
 }

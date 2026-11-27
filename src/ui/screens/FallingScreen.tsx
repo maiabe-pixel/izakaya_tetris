@@ -94,6 +94,28 @@ export function FallingScreen({ state, setState, timeLimit }: Props) {
     playTrack('falling');
   }, [playTrack]);
 
+  // Keep falling chrome inside the visible viewport (iOS Safari UI chrome).
+  useEffect(() => {
+    const root = document.documentElement;
+    const syncVvh = () => {
+      const h = window.visualViewport?.height ?? window.innerHeight;
+      root.style.setProperty('--fall-vvh', `${Math.round(h)}px`);
+    };
+    syncVvh();
+    const vv = window.visualViewport;
+    vv?.addEventListener('resize', syncVvh);
+    vv?.addEventListener('scroll', syncVvh);
+    window.addEventListener('resize', syncVvh);
+    window.addEventListener('orientationchange', syncVvh);
+    return () => {
+      vv?.removeEventListener('resize', syncVvh);
+      vv?.removeEventListener('scroll', syncVvh);
+      window.removeEventListener('resize', syncVvh);
+      window.removeEventListener('orientationchange', syncVvh);
+      root.style.removeProperty('--fall-vvh');
+    };
+  }, []);
+
   useEffect(() => {
     let acc = 0;
     let last = performance.now();
@@ -213,11 +235,11 @@ export function FallingScreen({ state, setState, timeLimit }: Props) {
               <div className="arcade-stage">
                 <NextPreview type={state.next} />
                 <div
-                  className={`board-wrap arcade-bezel fall-board-frame${
+                  className={`arcade-bezel fall-board-frame${
                     flash ? ` fx-${flash}` : ''
                   }${state.gameOver ? ' fx-go' : ''}`}
                 >
-                  <FallingBoardCanvas state={state} maxWidth={280} />
+                  <FallingBoardCanvas state={state} />
                   {flash === 'clear' ? (
                     <div
                       className="arcade-fx arcade-fx-clear"
