@@ -77,7 +77,7 @@ export function TitleScreen({
               onClick={onStart}
             >
               <PlayIcon />
-              <span>いざ、開店！</span>
+              <span>スタート！</span>
             </button>
 
             <button
