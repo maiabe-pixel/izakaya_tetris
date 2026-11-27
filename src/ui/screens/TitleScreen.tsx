@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useAudio } from '../../audio/useAudio';
-import { NeonAlleyDecor } from '../components/NeonAlleyDecor';
-import { TitleLogo } from '../TitleLogo';
 
 type Props = {
   hasSave: boolean;
@@ -21,6 +19,18 @@ function GearIcon() {
   );
 }
 
+function PlayIcon() {
+  return (
+    <svg className="title-play-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M8 5.5v13l11-6.5L8 5.5z" />
+    </svg>
+  );
+}
+
+/**
+ * Title = baked art background + local FX masks + absolute % UI.
+ * Do not redraw logo / beer / minos / décor in CSS/SVG.
+ */
 export function TitleScreen({
   hasSave,
   onStart,
@@ -31,79 +41,134 @@ export function TitleScreen({
   const { stopTrack } = audio;
   const [gearOpen, setGearOpen] = useState(false);
 
-  // Title stays quiet until falling/izakaya starts a track.
   useEffect(() => {
     stopTrack();
   }, [stopTrack]);
 
   return (
-    <section className="screen panel title-screen">
-      <NeonAlleyDecor />
-      <TitleLogo sign />
+    <section className="screen title-screen title-bg">
+      <div className="title-bg-stage">
+        <div className="title-bg-frame">
+          {/* Layer 1 — baked scene (1024×1536, aspect 2/3) */}
+          <img
+            className="title-bg-image"
+            src="/images/title-background.png"
+            alt=""
+            decoding="async"
+            draggable={false}
+          />
 
-      <div className="title-fill">
-        <span className="alley-tag">OPEN · NEON YOKOCHO</span>
-      </div>
-
-      <div className="title-cta-block">
-        <button type="button" className="btn btn-primary" onClick={onStart}>
-          いざ、開店！
-        </button>
-        {hasSave ? (
-          <button type="button" className="btn" onClick={onContinue}>
-            続きから (居酒屋)
-          </button>
-        ) : null}
-
-        <div className={`gear-panel${gearOpen ? ' is-open' : ''}`}>
-          <button
-            type="button"
-            className="gear-panel-toggle"
-            aria-expanded={gearOpen}
-            onClick={() => setGearOpen((v) => !v)}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <GearIcon />
-              音の設定
-            </span>
-            <span aria-hidden="true">{gearOpen ? '▲' : '▼'}</span>
-          </button>
-          <div className="gear-panel-body">
-            <div className="row">
-              <button
-                type="button"
-                className="btn"
-                onClick={() => audio.setBgmOn(!audio.settings.bgmOn)}
-              >
-                BGM {audio.settings.bgmOn ? 'ON' : 'OFF'}
-              </button>
-              <button
-                type="button"
-                className="btn"
-                onClick={() => audio.setSfxOn(!audio.settings.sfxOn)}
-              >
-                効果音 {audio.settings.sfxOn ? 'ON' : 'OFF'}
-              </button>
-            </div>
-            <label className="hint" style={{ textAlign: 'left' }}>
-              BGM音量 {audio.settings.bgmVolume}
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={audio.settings.bgmVolume}
-                onChange={(e) => audio.setBgmVolume(Number(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--cyan)' }}
-              />
-            </label>
+          {/* Layer 2 — local translucent glow only (no global grade) */}
+          <div className="title-bg-fx" aria-hidden="true">
+            <div className="title-fx-logo" />
+            <div className="title-fx-beer" />
+            <div className="title-fx-foam" />
+            <div className="title-fx-mino title-fx-mino-cyan" />
+            <div className="title-fx-mino title-fx-mino-pink" />
+            <div className="title-fx-mino title-fx-mino-purple" />
+            <div className="title-fx-mino title-fx-mino-gold" />
           </div>
-        </div>
 
-        {hasSave ? (
-          <button type="button" className="btn btn-ghost" onClick={onClearSave}>
-            保存データを消す
-          </button>
-        ) : null}
+          {/* Layer 3 — controls (container-relative %) */}
+          <div className="title-bg-ui">
+            <button
+              type="button"
+              className="title-btn title-btn-start"
+              onClick={onStart}
+            >
+              <PlayIcon />
+              <span>いざ、開店！</span>
+            </button>
+
+            <button
+              type="button"
+              className="title-btn title-btn-continue"
+              onClick={onContinue}
+              disabled={!hasSave}
+            >
+              続きから（居酒屋）
+            </button>
+
+            <button
+              type="button"
+              className="title-btn title-btn-audio"
+              aria-expanded={gearOpen}
+              onClick={() => setGearOpen(true)}
+            >
+              <span className="title-btn-audio-label">
+                <GearIcon />
+                音の設定
+              </span>
+              <span aria-hidden="true">▼</span>
+            </button>
+          </div>
+
+          {gearOpen ? (
+            <div
+              className="title-audio-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-label="音の設定"
+            >
+              <button
+                type="button"
+                className="title-audio-backdrop"
+                aria-label="閉じる"
+                onClick={() => setGearOpen(false)}
+              />
+              <div className="title-audio-panel">
+                <div className="title-audio-head">
+                  <strong>音の設定</strong>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    onClick={() => setGearOpen(false)}
+                  >
+                    閉じる
+                  </button>
+                </div>
+                <div className="row">
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => audio.setBgmOn(!audio.settings.bgmOn)}
+                  >
+                    BGM {audio.settings.bgmOn ? 'ON' : 'OFF'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => audio.setSfxOn(!audio.settings.sfxOn)}
+                  >
+                    効果音 {audio.settings.sfxOn ? 'ON' : 'OFF'}
+                  </button>
+                </div>
+                <label className="hint" style={{ textAlign: 'left' }}>
+                  BGM音量 {audio.settings.bgmVolume}
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={audio.settings.bgmVolume}
+                    onChange={(e) =>
+                      audio.setBgmVolume(Number(e.target.value))
+                    }
+                    style={{ width: '100%', accentColor: '#ff4da6' }}
+                  />
+                </label>
+                {hasSave ? (
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    onClick={onClearSave}
+                  >
+                    保存データを消す
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+        </div>
       </div>
     </section>
   );
