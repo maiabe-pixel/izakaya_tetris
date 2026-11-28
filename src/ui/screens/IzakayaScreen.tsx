@@ -572,39 +572,41 @@ export function IzakayaScreen({
                         <ReceiptIcon />
                         <span>本日のご注文</span>
                       </div>
-                      <input
-                        className="field order-slip-field"
-                        placeholder="例）枝豆 / ハイボール"
-                        aria-label="注文の名前（必須）"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                      <p
-                        className={`hint order-name-hint${
-                          nameOk ? ' is-ok' : ''
-                        }`}
-                      >
-                        名前を入れてから伝票を切ってください
-                      </p>
-                      <div className="row izk-order-btns">
-                        <button
-                          type="button"
-                          className="btn order-food"
-                          disabled={!nameOk}
-                          onClick={() => submitOrder('food')}
+                      <div className="order-slip-body">
+                        <input
+                          className="field order-slip-field"
+                          placeholder="例）枝豆 / ハイボール"
+                          aria-label="注文の名前（必須）"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                        <p
+                          className={`hint order-name-hint${
+                            nameOk ? ' is-ok' : ''
+                          }`}
                         >
-                          <MealIcon />
-                          <span>食べた！</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="btn order-drink"
-                          disabled={!nameOk}
-                          onClick={() => submitOrder('drink')}
-                        >
-                          <BeerIcon />
-                          <span>飲んだ！</span>
-                        </button>
+                          注文名を入力して伝票を切ろう！
+                        </p>
+                        <div className="row izk-order-btns">
+                          <button
+                            type="button"
+                            className="btn order-food"
+                            disabled={!nameOk}
+                            onClick={() => submitOrder('food')}
+                          >
+                            <MealIcon />
+                            <span>食べた！</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="btn order-drink"
+                            disabled={!nameOk}
+                            onClick={() => submitOrder('drink')}
+                          >
+                            <BeerIcon />
+                            <span>飲んだ！</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
 

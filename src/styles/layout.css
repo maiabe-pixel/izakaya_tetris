@@ -2349,24 +2349,24 @@
   min-height: 52px;
 }
 
-/* Order panel: crop PNG transparent margins, keep opaque aspect */
+/* Order panel: crop PNG transparent margins, keep opaque aspect.
+   UI uses panel-relative % insets / cqh so heading/body track the wood PNG
+   (padding-% is width-based and drifts vs the bg on tall iPhone viewports). */
 .izakaya-screen .izk-order-panel.order-slip {
   position: relative;
   isolation: isolate;
+  container-type: size;
+  container-name: order-panel;
   aspect-ratio: 1238 / 946;
   width: 100%;
-  /* Content insets inside wood (after margin crop) */
-  padding: 12% 10% 9%;
+  padding: 0;
   border: none;
   border-radius: 0;
   background: transparent;
-  display: flex;
-  flex-direction: column;
-  gap: 0.28rem;
+  display: block;
   min-height: 0;
   flex: 0 0 auto;
   box-shadow: none;
-  justify-content: flex-start;
 }
 
 .izakaya-screen .izk-order-panel.order-slip::before {
@@ -2380,26 +2380,55 @@
   filter: drop-shadow(0 0 8px rgba(255, 140, 40, 0.4));
 }
 
+/* Top wooden neon signboard: center group on tab wood mid (~10.3% H) */
 .izakaya-screen .order-slip-head {
+  position: absolute;
+  left: 17%;
+  right: 17%;
+  /* Optical center of arched plaque sits slightly below wood mid */
+  top: 10.85%;
+  height: auto;
+  transform: translateY(-50%);
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.28rem;
-  flex: 0 0 auto;
+  gap: 0.22em;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   white-space: nowrap;
   font-family: var(--font-ui);
   font-weight: 800;
-  font-size: clamp(0.7rem, 2.8vw, 0.86rem);
+  /* Fit inside tab wood band (~5% panel H); avoid downward overflow into neon */
+  font-size: clamp(0.52rem, 5.9cqh, 0.84rem);
   letter-spacing: 0.04em;
   color: var(--izk-cream);
   text-shadow: 0 0 6px rgba(255, 200, 120, 0.35);
-  margin: 0;
-  line-height: 1.15;
+  line-height: 1;
+}
+
+/* Main wood body below tab + body neon frame */
+.izakaya-screen .order-slip-body {
+  position: absolute;
+  left: 11%;
+  right: 11%;
+  top: 29%;
+  bottom: 10%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+  gap: 1.5cqh;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 1cqh 0;
 }
 
 .izakaya-screen .order-head-ico {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 0.9em;
+  height: 0.9em;
   color: var(--izk-gold);
   flex: 0 0 auto;
   filter: drop-shadow(0 0 4px rgba(255, 173, 50, 0.55));
@@ -2407,14 +2436,16 @@
 
 .izakaya-screen .order-slip-field {
   flex: 0 0 auto;
+  width: 100%;
   min-height: 0;
-  height: 2rem;
+  height: clamp(1.55rem, 14cqh, 2rem);
   border-radius: 8px;
   border: 1px solid rgba(255, 173, 50, 0.55);
   background: rgba(42, 22, 14, 0.72);
   color: var(--izk-cream);
-  font-size: 0.72rem;
-  padding: 0.3rem 0.55rem;
+  font-size: clamp(0.62rem, 5cqh, 0.72rem);
+  padding: 0.25em 0.55em;
+  box-sizing: border-box;
 }
 
 .izakaya-screen .order-slip-field::placeholder {
@@ -2423,42 +2454,47 @@
 
 .izakaya-screen .order-name-hint {
   flex: 0 0 auto;
-  font-size: 0.58rem;
+  font-size: clamp(0.48rem, 4.4cqh, 0.62rem);
   margin: 0;
   color: var(--izk-cream);
   opacity: 0.85;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  line-height: 1.25;
+  word-break: keep-all;
 }
 
 .izakaya-screen .order-name-hint.is-ok {
   opacity: 0.4;
 }
 
-.izk-order-btns {
+.izakaya-screen .izk-order-btns {
+  display: flex;
+  align-items: stretch;
   gap: 0.35rem;
-  margin-top: auto;
+  margin-top: 0;
   flex: 0 0 auto;
+  width: 100%;
 }
 
 .izakaya-screen .order-food,
 .izakaya-screen .order-drink {
   flex: 1 1 0;
   min-width: 0;
-  min-height: 34px;
-  height: 34px;
-  padding: 0 0.35rem;
-  font-size: 0.72rem;
+  min-height: clamp(28px, 22cqh, 34px);
+  height: clamp(28px, 22cqh, 34px);
+  padding: 0 0.28rem;
+  font-size: clamp(0.58rem, 5cqh, 0.72rem);
   font-weight: 800;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.22rem;
+  gap: 0.18em;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .izakaya-screen .order-food span,
@@ -2809,9 +2845,8 @@
 
   .izakaya-screen .order-food,
   .izakaya-screen .order-drink {
-    height: 30px;
-    min-height: 30px;
-    font-size: 0.66rem;
+    /* Keep both buttons equal; cqh clamp from base rule still applies */
+    font-size: clamp(0.55rem, 4.8cqh, 0.66rem);
   }
 }
 
