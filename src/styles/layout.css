@@ -762,6 +762,19 @@
   opacity: 0.85;
 }
 
+/* IZ-45: never show the old top-right 酒 lantern if a stale node remains */
+.drink-menu-ambient-lantern,
+.drink-menu-screen .drink-menu-ambient-lantern {
+  display: none !important;
+  content: none !important;
+}
+
+.drink-menu-ambient-lantern::before,
+.drink-menu-ambient-lantern::after {
+  content: none !important;
+  display: none !important;
+}
+
 .drink-menu-header,
 .drink-menu-board {
   position: relative;
