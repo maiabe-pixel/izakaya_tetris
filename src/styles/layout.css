@@ -2322,12 +2322,16 @@
   filter: drop-shadow(0 0 8px rgba(255, 140, 40, 0.4));
 }
 
-/* Wooden tab: gold / warm-white + soft neon (CSS only) */
+/* Wooden tab: gold / warm-white + soft neon (CSS only).
+   Optical center H/V in the hanging wooden plaque (PNG unchanged).
+   Plaque wood between its own top/bottom neon tubes ≈ mid 13.2% of
+   panel (390×844). 10.25% sat high under the top tube; 13.2% equalizes
+   glyph↔neon margins (~7–9px). */
 .izakaya-screen .order-slip-head {
   position: absolute;
   left: 17%;
   right: 17%;
-  top: 10.25%;
+  top: 13.2%;
   height: auto;
   transform: translateY(-50%);
   z-index: 1;
@@ -2341,7 +2345,7 @@
   white-space: nowrap;
   font-family: var(--font-ui);
   font-weight: 800;
-  font-size: clamp(0.48rem, 4.9cqh, 0.8rem);
+  font-size: clamp(0.48rem, 4.8cqh, 0.78rem);
   letter-spacing: 0.04em;
   color: #fff4e0;
   text-shadow:
@@ -2397,7 +2401,7 @@
 }
 
 .izakaya-screen .order-slip-field::placeholder {
-  color: rgba(255, 245, 232, 0.72);
+  color: rgba(255, 248, 236, 0.9);
   opacity: 1;
 }
 
