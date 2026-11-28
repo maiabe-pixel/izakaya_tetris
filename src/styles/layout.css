@@ -73,7 +73,8 @@
 /* ---------- Title (baked background image) ---------- */
 .app-shell:has(.title-bg),
 .app-shell:has(.izakaya-bg),
-.app-shell:has(.falling-bg) {
+.app-shell:has(.falling-bg),
+.app-shell:has(.drink-menu-screen) {
   width: 100%;
   max-width: none;
   height: 100dvh;
@@ -703,84 +704,431 @@
   color: var(--muted);
 }
 
-/* Time-limit / 本日の遊び方 */
-.playstyle-screen {
+/* ---------- IZ-42: 本日の一杯 (time-limit / drink menu) ---------- */
+.drink-menu-screen.playstyle-screen {
+  --dm-pink: #ff1684;
+  --dm-cyan: #28e7ff;
+  --dm-gold: #ffc34d;
+  --dm-cream: #fff3e0;
   position: relative;
   overflow: hidden;
-  padding: 1.1rem 1rem 1.2rem;
-  gap: 0.9rem;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  width: min(100%, 420px);
+  margin: 0 auto;
+  padding:
+    max(0.45rem, env(safe-area-inset-top, 0px))
+    max(0.7rem, env(safe-area-inset-right, 0px))
+    max(0.55rem, env(safe-area-inset-bottom, 0px))
+    max(0.7rem, env(safe-area-inset-left, 0px));
+  gap: 0.45rem;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -5%, rgba(255, 22, 132, 0.16), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 80%, rgba(40, 231, 255, 0.1), transparent 50%),
+    linear-gradient(180deg, #140810 0%, #0a060c 55%, #050308 100%);
 }
 
-.playstyle-screen h2 {
-  margin: 0;
-  text-align: center;
+.drink-menu-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.drink-menu-ambient-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 107, 155, 0.18), transparent 28%),
+    radial-gradient(circle at 88% 12%, rgba(255, 80, 60, 0.2), transparent 26%);
+}
+
+.drink-menu-ambient-sakura {
+  position: absolute;
+  top: -2%;
+  left: -4%;
+  width: 38%;
+  height: 22%;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(255, 140, 180, 0.45) 0 3px, transparent 4px),
+    radial-gradient(circle at 55% 25%, rgba(255, 120, 170, 0.4) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 70% 55%, rgba(255, 160, 190, 0.35) 0 3px, transparent 4px);
+  filter: blur(0.2px);
+  opacity: 0.85;
+}
+
+.drink-menu-ambient-lantern {
+  position: absolute;
+  top: 1.2%;
+  right: 3%;
+  width: 1.55rem;
+  height: 2.3rem;
+  border-radius: 0.35rem;
+  background: linear-gradient(180deg, #ff5a6a, #c41028);
+  box-shadow:
+    0 0 10px rgba(255, 60, 80, 0.7),
+    0 0 22px rgba(255, 40, 60, 0.35);
+}
+
+.drink-menu-ambient-lantern::after {
+  content: '酒';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  color: var(--ivory);
-  text-shadow: 0 0 14px rgba(93, 228, 232, 0.35);
+  font-size: 0.72rem;
+  color: #ffe6a0;
+  text-shadow: 0 0 6px rgba(255, 220, 120, 0.7);
 }
 
-.menu-tag-list {
+.drink-menu-header,
+.drink-menu-board,
+.drink-menu-actions {
+  position: relative;
+  z-index: 1;
+}
+
+.drink-menu-header {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.08rem;
+  text-align: center;
 }
 
-.menu-tag {
+.drink-menu-eyebrow {
+  font-family: var(--font-neon);
+  font-size: 0.55rem;
+  letter-spacing: 0.28em;
+  color: var(--dm-cyan);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(40, 231, 255, 0.75);
+}
+
+.drink-menu-brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 6.5vw, 1.85rem);
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke: 0.045em var(--dm-pink);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 22, 132, 0.95),
+    0 0 22px rgba(255, 22, 132, 0.65),
+    0 0 36px rgba(255, 22, 132, 0.35);
+}
+
+.drink-menu-tagline {
+  margin: 0.05rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.68rem, 2.8vw, 0.82rem);
+  letter-spacing: 0.08em;
+  color: var(--dm-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 195, 77, 0.7);
+}
+
+.drink-menu-board {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 0.55rem 0.55rem 0.6rem;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 77, 166, 0.85);
+  background: rgba(12, 6, 14, 0.78);
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 0 18px rgba(255, 22, 132, 0.35),
+    0 0 36px rgba(255, 22, 132, 0.18);
+  overflow: hidden;
+}
+
+.drink-menu-board-title {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  min-height: 56px;
-  width: 100%;
-  padding: 0.65rem 0.95rem;
-  border-radius: 14px;
-  border: 1px solid var(--border-soft);
-  background: rgba(8, 10, 18, 0.65);
-  color: var(--text);
-  text-align: left;
-  transition: border-color 0.15s, box-shadow 0.2s, background 0.2s;
+  justify-content: center;
+  gap: 0.45rem;
 }
 
-.menu-tag .sec {
-  font-family: var(--font-neon);
-  font-size: 1.15rem;
-  color: var(--cyan);
-  min-width: 3.2rem;
+.drink-menu-board-title h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 4.6vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: #fff;
+  padding: 0.18rem 0.7rem;
+  border: 2px solid var(--dm-pink);
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(255, 22, 132, 0.75),
+    0 0 22px rgba(255, 22, 132, 0.35);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 22, 132, 0.9);
 }
 
-.menu-tag .catch {
-  flex: 1;
-  font-size: 0.92rem;
-  font-weight: 700;
+.drink-menu-mug {
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--dm-gold);
+  filter: drop-shadow(0 0 6px rgba(255, 195, 77, 0.75));
+  animation: drinkMugPulse 2.4s ease-in-out infinite;
 }
 
-.menu-tag .tag-chip {
+.drink-menu-lead {
+  margin: 0.1rem 0 0;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: var(--dm-cream);
+  text-shadow: 0 0 8px rgba(255, 22, 132, 0.35);
+}
+
+.drink-menu-hint {
+  margin: 0;
+  text-align: center;
   font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  border: 1px solid var(--border-soft);
-  border-radius: 999px;
-  padding: 0.2rem 0.55rem;
+  color: rgba(255, 243, 224, 0.72);
+}
+
+.drink-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  margin-top: 0.15rem;
+}
+
+.drink-row {
+  display: grid;
+  grid-template-columns: 2.7rem 2.1rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.28rem 0.45rem;
+  border-radius: 12px;
+  border: 1.5px solid rgba(40, 231, 255, 0.7);
+  background: rgba(16, 10, 22, 0.72);
+  color: var(--dm-cream);
+  text-align: left;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 8px rgba(40, 231, 255, 0.18);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease,
+    transform 0.18s ease;
+}
+
+.drink-row-sec {
+  font-family: var(--font-neon);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--dm-cyan);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(40, 231, 255, 0.75);
   white-space: nowrap;
 }
 
-.menu-tag.is-selected {
-  border-color: var(--pink);
-  box-shadow: var(--glow-pink);
-  background: rgba(255, 107, 155, 0.08);
+.drink-row-ico {
+  display: grid;
+  place-items: center;
 }
 
-.menu-tag.is-selected .sec {
-  color: var(--gold);
-  text-shadow: var(--glow-gold);
+.drink-ico {
+  width: 1.85rem;
+  height: 1.85rem;
+  filter: drop-shadow(0 0 5px rgba(255, 195, 77, 0.35));
 }
 
-.menu-tag.is-selected .tag-chip {
-  border-color: rgba(245, 201, 107, 0.45);
-  color: var(--gold);
+.drink-row-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.02rem;
+  min-width: 0;
+}
+
+.drink-row-catch {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: rgba(255, 243, 224, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drink-row-name {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 22, 132, 0.35);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drink-row-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--dm-pink);
+}
+
+.drink-row-label.is-recommend {
+  color: var(--dm-gold);
+}
+
+.drink-row-label.is-relax {
+  color: #6dffc0;
+}
+
+.drink-row-label.is-survive {
+  color: #c14dff;
+}
+
+.drink-label-ico {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex: 0 0 auto;
+}
+
+.drink-row.is-selected {
+  border-color: var(--dm-pink);
+  background:
+    linear-gradient(90deg, rgba(255, 22, 132, 0.22), rgba(255, 22, 132, 0.08) 55%, rgba(40, 20, 40, 0.5));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 0 1px rgba(255, 180, 220, 0.35),
+    0 0 14px rgba(255, 22, 132, 0.65),
+    0 0 28px rgba(255, 22, 132, 0.3);
+  transform: translateZ(0) scale(1.01);
+}
+
+.drink-row.is-selected .drink-row-sec {
+  color: var(--dm-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 195, 77, 0.85);
+}
+
+.drink-menu-actions {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 0.55rem;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+}
+
+.drink-btn-back,
+.drink-btn-go {
+  min-height: 48px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.98rem;
+}
+
+.drink-btn-back {
+  border: 2px solid var(--dm-cyan);
+  color: var(--dm-cream);
+  background: rgba(12, 10, 22, 0.75);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 0 12px rgba(40, 231, 255, 0.45);
+  text-shadow: 0 0 8px rgba(40, 231, 255, 0.55);
+}
+
+.drink-btn-go {
+  border: 2.5px solid #fff;
+  color: #210b1b;
+  background: linear-gradient(180deg, #ffe6a0 0%, #ffc34d 48%, #ff9a2e 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 0 0 1px rgba(255, 180, 220, 0.55),
+    0 0 16px rgba(255, 22, 132, 0.75),
+    0 0 28px rgba(255, 22, 132, 0.35);
+}
+
+@keyframes drinkMugPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px rgba(255, 195, 77, 0.55));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 10px rgba(255, 195, 77, 0.95));
+    transform: scale(1.06);
+  }
+}
+
+@media (max-height: 720px) {
+  .drink-menu-screen.playstyle-screen {
+    gap: 0.32rem;
+    padding-top: max(0.3rem, env(safe-area-inset-top, 0px));
+  }
+
+  .drink-menu-brand {
+    font-size: clamp(1.15rem, 5.5vw, 1.45rem);
+  }
+
+  .drink-menu-board {
+    padding: 0.4rem 0.42rem 0.45rem;
+    gap: 0.18rem;
+  }
+
+  .drink-row {
+    min-height: 2.7rem;
+    padding: 0.18rem 0.35rem;
+  }
+
+  .drink-row-name {
+    font-size: 0.82rem;
+  }
+
+  .drink-btn-back,
+  .drink-btn-go {
+    min-height: 44px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drink-menu-mug,
+  .drink-row {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 /* ---------- Phase D: Falling arcade (IZ-38 visual redesign) ---------- */
