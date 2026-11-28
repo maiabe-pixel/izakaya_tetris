@@ -71,7 +71,8 @@
 }
 
 /* ---------- Title (baked background image) ---------- */
-.app-shell:has(.title-bg) {
+.app-shell:has(.title-bg),
+.app-shell:has(.izakaya-bg) {
   width: 100%;
   max-width: none;
   height: 100dvh;
@@ -960,43 +961,321 @@
   letter-spacing: 0.02em;
 }
 
-/* ---------- Phase E: Izakaya neon ---------- */
+/* ---------- Phase E: Izakaya neon (IZ-36 + IZ-37 brush-up) ---------- */
 .izakaya-screen {
-  gap: 0.65rem;
+  --izk-pink: #ff1684;
+  --izk-gold: #ffad32;
+  --izk-cyan: #29dff2;
+  --izk-purple: #c14dff;
+  --izk-wine: #21101c;
+  --izk-text: #fff5e8;
+  --izk-cream: #fff5e8;
+  --izk-board: #080810;
+  --izk-neon-pink:
+    0 0 0 1px rgba(255, 255, 255, 0.85),
+    0 0 8px rgba(255, 22, 132, 0.95),
+    0 0 18px rgba(255, 22, 132, 0.55),
+    0 0 32px rgba(255, 22, 132, 0.28);
+  --izk-neon-gold:
+    0 0 0 1px rgba(255, 255, 255, 0.75),
+    0 0 8px rgba(255, 173, 50, 0.9),
+    0 0 16px rgba(255, 173, 50, 0.45);
+  --izk-neon-cyan:
+    0 0 0 1px rgba(255, 255, 255, 0.75),
+    0 0 8px rgba(41, 223, 242, 0.9),
+    0 0 16px rgba(41, 223, 242, 0.45);
+  gap: 0;
+  color: var(--izk-text);
+}
+
+.izakaya-bg {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.izakaya-bg-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding:
+    max(0px, env(safe-area-inset-top))
+    max(0px, env(safe-area-inset-right))
+    max(0px, env(safe-area-inset-bottom))
+    max(0px, env(safe-area-inset-left));
+  box-sizing: border-box;
+  /* Soft letterbox only — no heavy dark filter on art */
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 40%, rgba(40, 14, 28, 0.35), transparent 70%),
+    linear-gradient(180deg, #140810 0%, #0a0608 55%, #050308 100%);
+}
+
+.izakaya-bg-stage::before {
+  content: '';
+  position: absolute;
+  inset: -6%;
+  background: url('/images/izakaya-background.png') center / cover no-repeat;
+  filter: blur(26px) brightness(0.55) saturate(1);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Native art aspect ~941:1672 */
+.izakaya-bg-frame {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 941 / 1672;
+  width: min(
+    100%,
+    calc(
+      (100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))
+        * 941 / 1672
+    )
+  );
+  max-height: 100%;
+  height: auto;
+  overflow: hidden;
+  border-radius: 0;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+}
+
+.izakaya-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.izakaya-bg-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  /* Leave baked neon logo in the art */
+  padding: 17.5% 3.2% 2.2%;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.izakaya-bg-ui > * {
+  pointer-events: auto;
 }
 
 .izakaya-screen.is-placing {
-  /* Keep board + place controls in first view; hide long menus while timer runs */
   overflow: hidden;
   max-height: 100dvh;
 }
 
 .izakaya-screen.is-placing .izakaya-idle,
 .izakaya-screen.is-placing .izakaya-menu-actions,
-.izakaya-screen.is-placing .order-history-fold {
+.izakaya-screen.is-placing .order-history-fold,
+.izakaya-screen.is-placing .izakaya-side {
   display: none;
 }
 
-.izakaya-playfield {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: center;
+.izakaya-hud {
+  flex: 0 0 auto;
 }
 
-.neon-board-frame {
-  padding: 0.3rem;
+.izk-stat-grid {
+  gap: 0.32rem;
+}
+
+.izakaya-screen .izk-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  padding: 0.32rem 0.2rem 0.35rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 107, 155, 0.35);
-  background: rgba(8, 10, 18, 0.85);
+  background: rgba(16, 6, 14, 0.62);
+  border: 1.5px solid rgba(255, 245, 232, 0.22);
   box-shadow:
-    0 0 0 1px rgba(93, 228, 232, 0.15) inset,
-    0 0 22px rgba(255, 107, 155, 0.12);
+    inset 0 0 10px rgba(255, 255, 255, 0.08),
+    0 0 10px rgba(255, 22, 132, 0.12);
+  text-align: center;
+}
+
+.izakaya-screen .izk-stat .stat-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: inherit;
+  margin-bottom: 0.05rem;
+}
+
+.izakaya-screen .izk-stat .label {
+  font-size: 0.55rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 245, 232, 0.78);
+  text-align: center;
+}
+
+.izakaya-screen .izk-stat .value {
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 1.05;
+  text-align: center;
+  color: var(--izk-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 173, 50, 0.85),
+    0 0 14px rgba(255, 173, 50, 0.45);
+}
+
+.izakaya-screen .izk-stat.is-res {
+  border-color: rgba(255, 173, 50, 0.9);
+  color: var(--izk-gold);
+  box-shadow:
+    inset 0 0 12px rgba(255, 173, 50, 0.18),
+    var(--izk-neon-gold);
+}
+
+.izakaya-screen .izk-stat.is-order {
+  border-color: rgba(255, 22, 132, 0.92);
+  color: var(--izk-pink);
+  box-shadow:
+    inset 0 0 12px rgba(255, 22, 132, 0.18),
+    var(--izk-neon-pink);
+}
+
+.izakaya-screen .izk-stat.is-use {
+  border-color: rgba(255, 173, 50, 0.9);
+  color: var(--izk-gold);
+  box-shadow:
+    inset 0 0 12px rgba(255, 173, 50, 0.18),
+    var(--izk-neon-gold);
+}
+
+.izakaya-screen .izk-stat.is-remain {
+  border-color: rgba(255, 22, 132, 0.92);
+  color: var(--izk-pink);
+  box-shadow:
+    inset 0 0 12px rgba(255, 22, 132, 0.18),
+    var(--izk-neon-pink);
+}
+
+.izakaya-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow: hidden;
+}
+
+.izakaya-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+
+.izakaya-playfield {
+  flex: 0 1 46%;
+  width: 46%;
+  max-width: 46%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: center;
+  justify-content: center;
+  max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  align-self: stretch;
+}
+
+.izakaya-screen.is-placing .izakaya-main {
+  justify-content: center;
+}
+
+.izakaya-screen.is-placing .izakaya-playfield {
+  flex: 1 1 auto;
+  width: min(320px, 100%);
+  max-width: 100%;
+}
+
+.izakaya-side {
+  flex: 1 1 54%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.izakaya-board-frame.neon-board-frame,
+.izakaya-screen .neon-board-frame {
+  flex: 1 1 auto;
+  /* Shrink padding between outer frame and grid */
+  padding: 0.1rem;
+  border-radius: 12px;
+  border: 2px solid #ff4da6;
+  background: rgba(8, 8, 16, 0.94);
+  box-shadow:
+    inset 0 0 0 1px rgba(41, 223, 242, 0.75),
+    inset 0 0 10px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 12px rgba(255, 22, 132, 0.75),
+    0 0 26px rgba(255, 22, 132, 0.4),
+    0 0 40px rgba(255, 22, 132, 0.18);
+  max-height: 100%;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.izakaya-screen .board-wrap {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.izakaya-screen .board-wrap canvas {
+  border-radius: 6px;
+  border: none;
+  box-shadow: none;
+  background: var(--izk-board);
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
 }
 
 .izakaya-place-bar {
   display: flex;
-  width: min(320px, 100%);
+  width: min(300px, 100%);
   gap: 0.55rem;
   align-items: stretch;
 }
@@ -1008,31 +1287,35 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.45);
+  border: 1.5px solid rgba(255, 173, 50, 0.55);
+  background: rgba(8, 4, 12, 0.72);
   min-height: 52px;
+  box-shadow: 0 0 12px rgba(255, 173, 50, 0.22);
 }
 
 .neon-timer-label {
   font-family: var(--font-neon);
   font-size: 0.62rem;
   letter-spacing: 0.18em;
-  color: var(--muted);
+  color: rgba(255, 245, 232, 0.55);
 }
 
 .neon-timer-value {
   font-family: var(--font-neon);
   font-size: 1.35rem;
-  color: var(--gold);
+  color: var(--izk-gold);
+  text-shadow:
+    0 0 4px #fff,
+    0 0 12px rgba(255, 173, 50, 0.8);
 }
 
 .neon-timer.is-warn {
-  border-color: var(--pink);
+  border-color: var(--izk-pink);
   animation: warnPulse 0.7s ease infinite;
 }
 
 .neon-timer.is-warn .neon-timer-value {
-  color: var(--pink);
+  color: var(--izk-pink);
 }
 
 .place-rotate {
@@ -1040,43 +1323,197 @@
   min-height: 52px;
 }
 
-.order-slip {
-  padding: 0.85rem 0.85rem 0.95rem;
-  border-radius: 14px;
-  border: 1px dashed rgba(245, 201, 107, 0.45);
-  background:
-    linear-gradient(180deg, rgba(245, 201, 107, 0.08), transparent 40%),
-    rgba(12, 14, 22, 0.9);
+/* Order panel: crop PNG transparent margins, keep opaque aspect */
+.izakaya-screen .izk-order-panel.order-slip {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 1238 / 946;
+  width: 100%;
+  /* Content insets inside wood (after margin crop) */
+  padding: 12% 10% 9%;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.28rem;
+  min-height: 0;
+  flex: 0 0 auto;
+  box-shadow: none;
+  justify-content: flex-start;
 }
 
-.order-slip-head {
+.izakaya-screen .izk-order-panel.order-slip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* Scale up to crop ~9.5% side / asymmetric vertical transparent padding */
+  background: url('/images/order-panel.png') 50% 46% / 124% 109% no-repeat;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(255, 140, 40, 0.4));
+}
+
+.izakaya-screen .order-slip-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: clamp(0.7rem, 2.8vw, 0.86rem);
+  letter-spacing: 0.04em;
+  color: var(--izk-cream);
+  text-shadow: 0 0 6px rgba(255, 200, 120, 0.35);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.izakaya-screen .order-head-ico {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: var(--izk-gold);
+  flex: 0 0 auto;
+  filter: drop-shadow(0 0 4px rgba(255, 173, 50, 0.55));
+}
+
+.izakaya-screen .order-slip-field {
+  flex: 0 0 auto;
+  min-height: 0;
+  height: 2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 173, 50, 0.55);
+  background: rgba(42, 22, 14, 0.72);
+  color: var(--izk-cream);
+  font-size: 0.72rem;
+  padding: 0.3rem 0.55rem;
+}
+
+.izakaya-screen .order-slip-field::placeholder {
+  color: rgba(255, 245, 232, 0.42);
+}
+
+.izakaya-screen .order-name-hint {
+  flex: 0 0 auto;
+  font-size: 0.58rem;
+  margin: 0;
+  color: var(--izk-cream);
+  opacity: 0.85;
   text-align: center;
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  letter-spacing: 0.1em;
-  color: var(--gold);
-  text-shadow: 0 0 10px rgba(245, 201, 107, 0.35);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
-.order-slip-field::placeholder {
-  color: rgba(244, 231, 210, 0.4);
+.izakaya-screen .order-name-hint.is-ok {
+  opacity: 0.4;
 }
 
-.order-food {
-  border-color: rgba(255, 107, 155, 0.45);
+.izk-order-btns {
+  gap: 0.35rem;
+  margin-top: auto;
+  flex: 0 0 auto;
 }
 
-.order-drink {
-  border-color: rgba(93, 228, 232, 0.45);
+.izakaya-screen .order-food,
+.izakaya-screen .order-drink {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 34px;
+  height: 34px;
+  padding: 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.22rem;
+  white-space: nowrap;
+}
+
+.izakaya-screen .order-food span,
+.izakaya-screen .order-drink span {
+  white-space: nowrap;
+}
+
+.izakaya-screen .order-btn-svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex: 0 0 auto;
+}
+
+.izakaya-screen .order-food {
+  border: 1.5px solid #ff4da6;
+  color: #fff5e8;
+  background: linear-gradient(180deg, rgba(255, 70, 150, 0.5), rgba(70, 8, 36, 0.82));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 10px rgba(255, 22, 132, 0.55),
+    0 0 18px rgba(255, 22, 132, 0.28);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 22, 132, 0.75);
+}
+
+.izakaya-screen .order-drink {
+  border: 1.5px solid #29dff2;
+  color: #fff5e8;
+  background: linear-gradient(180deg, rgba(41, 200, 230, 0.42), rgba(8, 36, 52, 0.82));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 10px rgba(41, 223, 242, 0.5),
+    0 0 18px rgba(41, 223, 242, 0.25);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(41, 223, 242, 0.7);
+}
+
+.izakaya-screen .order-food:disabled,
+.izakaya-screen .order-drink:disabled {
+  opacity: 0.62;
+  filter: saturate(0.85);
+  cursor: not-allowed;
+}
+
+.izk-exclude {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.izk-exclude-label {
+  margin: 0;
+  text-align: center;
+  font-size: 0.58rem;
+  color: rgba(255, 245, 232, 0.7);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mino-card-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.4rem;
+  gap: 0.28rem;
+}
+
+.izk-exclude-row {
+  gap: 0.28rem;
+}
+
+.izk-exclude-row.is-three {
+  grid-template-columns: repeat(3, 1fr);
+  width: 76%;
+  margin: 0 auto;
 }
 
 .mino-shape-card {
@@ -1084,46 +1521,155 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.2rem;
-  min-height: 58px;
-  padding: 0.35rem 0.2rem;
-  border-radius: 12px;
+  gap: 0.1rem;
+  min-height: 42px;
+  padding: 0.22rem 0.12rem;
+  border-radius: 10px;
   border: 1px solid var(--border-soft);
   background: rgba(8, 10, 18, 0.7);
   color: var(--text);
-  font-size: 0.78rem;
+  font-size: 0.68rem;
   font-weight: 700;
 }
 
-.mino-shape-card.is-on {
-  border-color: var(--pink);
-  box-shadow: var(--glow-pink);
-  color: var(--pink);
-  background: rgba(255, 107, 155, 0.1);
+.izakaya-screen .izk-exclude-card {
+  min-height: 40px;
+  background: rgba(33, 16, 28, 0.72);
+  border: 1.5px solid rgba(255, 180, 210, 0.55);
+  color: #fff5e8;
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.06),
+    0 0 8px rgba(255, 140, 180, 0.22);
 }
 
-.draw-cta {
-  flex: 1.6;
-  font-size: 0.92rem;
+.izakaya-screen .izk-exclude-card.is-i,
+.izakaya-screen .izk-exclude-card.is-o,
+.izakaya-screen .izk-exclude-card.is-t,
+.izakaya-screen .izk-exclude-card.is-s,
+.izakaya-screen .izk-exclude-card.is-z,
+.izakaya-screen .izk-exclude-card.is-j,
+.izakaya-screen .izk-exclude-card.is-l {
+  border-color: rgba(255, 180, 210, 0.55);
+  color: #fff5e8;
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.06),
+    0 0 8px rgba(255, 140, 180, 0.22);
 }
 
-.undo-cta {
+.mino-shape-card.is-on,
+.izakaya-screen .izk-exclude-card.is-on {
+  background: rgba(60, 28, 18, 0.78);
+  border-color: rgba(255, 173, 50, 0.95);
+  color: #fff5e8;
+  box-shadow:
+    inset 0 0 10px rgba(255, 173, 50, 0.22),
+    var(--izk-neon-gold);
+  filter: none;
+  outline: none;
+}
+
+.izakaya-idle {
+  flex: 0 0 auto;
+}
+
+.izakaya-actions {
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+.izakaya-screen .draw-cta {
+  flex: 1.7;
+  min-height: 46px;
+  height: 46px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  border: 2.5px solid #ffffff;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(180deg, #ff6bb8 0%, #ff1684 52%, #c4005c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 0 0 1px rgba(255, 200, 230, 0.65),
+    0 0 14px rgba(255, 22, 132, 0.85),
+    0 0 28px rgba(255, 22, 132, 0.45),
+    0 0 42px rgba(255, 77, 166, 0.25);
+  text-shadow:
+    0 0 3px #fff,
+    0 1px 0 rgba(120, 0, 60, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.izakaya-screen .draw-cta:disabled {
+  opacity: 0.58;
+  filter: saturate(0.8);
+}
+
+.izakaya-screen .draw-cta-svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+}
+
+.izakaya-screen .undo-cta {
   flex: 1;
-  border-color: rgba(245, 201, 107, 0.35);
+  min-height: 46px;
+  height: 46px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border-radius: 999px;
+  border: 1.5px solid #ffad32;
+  color: #ffd98a;
+  background: linear-gradient(180deg, rgba(90, 42, 18, 0.95), rgba(36, 16, 10, 0.92));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 230, 160, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(255, 173, 50, 0.55),
+    0 0 22px rgba(255, 140, 40, 0.28);
+  text-shadow:
+    0 0 3px #fff8e0,
+    0 0 8px rgba(255, 173, 50, 0.65);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  white-space: nowrap;
+}
+
+.izakaya-screen .undo-cta:disabled {
+  opacity: 0.58;
+  filter: saturate(0.8);
+}
+
+.izakaya-screen .undo-cta-svg {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  color: #ffd98a;
 }
 
 .order-history-fold {
-  border: 1px solid var(--border-soft);
-  border-radius: 12px;
-  padding: 0.35rem 0.7rem 0.55rem;
-  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 180, 210, 0.35);
+  border-radius: 10px;
+  padding: 0.15rem 0.55rem 0.25rem;
+  background: rgba(33, 16, 28, 0.72);
+  flex: 0 0 auto;
+  max-height: 3.4rem;
+  overflow: auto;
+  /* ~74% of frame after UI inset; clears bottom-left beer */
+  margin-right: 0;
+  width: 79%;
+  margin-left: auto;
 }
 
 .order-history-fold summary {
   cursor: pointer;
-  color: var(--muted);
-  font-size: 0.85rem;
-  padding: 0.35rem 0;
+  color: rgba(255, 245, 232, 0.72);
+  font-size: 0.72rem;
+  padding: 0.2rem 0;
   list-style: none;
 }
 
@@ -1133,21 +1679,114 @@
 
 .order-history-fold summary::after {
   content: ' ▾';
-  color: var(--cyan);
+  color: rgba(255, 180, 210, 0.85);
 }
 
 .order-history-fold[open] summary::after {
   content: ' ▴';
 }
 
+.izakaya-menu-actions {
+  flex: 0 0 auto;
+  gap: 0.28rem;
+  /* 79% of inset body ≈ 72–75% of full art frame */
+  width: 79%;
+  margin-left: auto;
+  align-self: flex-end;
+}
+
+.izakaya-screen .izk-menu-btn {
+  min-height: 38px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 180, 210, 0.55);
+  background: rgba(18, 8, 16, 0.72);
+  color: var(--izk-text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 8px rgba(255, 22, 132, 0.18);
+}
+
+.izakaya-screen .izk-menu-svg {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  color: var(--izk-pink);
+  filter: drop-shadow(0 0 4px rgba(255, 22, 132, 0.7));
+}
+
+.izakaya-screen .izakaya-msg {
+  color: rgba(255, 245, 232, 0.78);
+  font-size: 0.72rem;
+}
+
 .stat-box.is-urgent {
-  border-color: var(--pink);
+  border-color: var(--izk-pink);
   animation: warnPulse 0.7s ease infinite;
 }
 
 .izakaya-screen.timer-warn .neon-board-frame {
-  border-color: rgba(255, 107, 155, 0.7);
-  box-shadow: 0 0 24px rgba(255, 107, 155, 0.28);
+  border-color: #ff4da6;
+  box-shadow:
+    inset 0 0 0 1px rgba(41, 223, 242, 0.85),
+    inset 0 0 10px rgba(255, 255, 255, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 18px rgba(255, 22, 132, 0.9),
+    0 0 34px rgba(255, 22, 132, 0.5);
+}
+
+.izakaya-screen .shape-pick-panel {
+  padding: 0.5rem;
+  border-radius: 12px;
+  background: rgba(8, 4, 12, 0.72);
+  border: 1px solid rgba(255, 22, 132, 0.35);
+}
+
+@media (min-width: 720px) {
+  .izakaya-bg-frame {
+    width: min(420px, calc((100dvh - 2rem) * 941 / 1672));
+    border-radius: 12px;
+    overflow: hidden;
+  }
+}
+
+@media (max-height: 720px) {
+  .izakaya-bg-ui {
+    padding-top: 16.5%;
+    gap: 0.28rem;
+  }
+
+  .izakaya-screen .izk-stat .value {
+    font-size: 0.92rem;
+  }
+
+  .izakaya-screen .izk-exclude-card {
+    min-height: 36px;
+  }
+
+  .izakaya-screen .draw-cta,
+  .izakaya-screen .undo-cta {
+    min-height: 40px;
+    height: 40px;
+    font-size: 0.72rem;
+  }
+
+  .izakaya-screen .izk-menu-btn {
+    min-height: 34px;
+    font-size: 0.7rem;
+  }
+
+  .izakaya-screen .order-food,
+  .izakaya-screen .order-drink {
+    height: 30px;
+    min-height: 30px;
+    font-size: 0.66rem;
+  }
 }
 
 @media (min-width: 900px) {
