@@ -264,19 +264,19 @@ export function TimeLimitScreen({
             );
           })}
         </div>
-      </div>
 
-      <div className="drink-menu-actions">
-        <button type="button" className="btn drink-btn-back" onClick={onBack}>
-          戻る
-        </button>
-        <button
-          type="button"
-          className="btn drink-btn-go"
-          onClick={onConfirm}
-        >
-          これでいく！
-        </button>
+        <div className="drink-menu-actions">
+          <button type="button" className="btn drink-btn-back" onClick={onBack}>
+            戻る
+          </button>
+          <button
+            type="button"
+            className="btn drink-btn-go"
+            onClick={onConfirm}
+          >
+            これでいく！
+          </button>
+        </div>
       </div>
     </section>
   );
