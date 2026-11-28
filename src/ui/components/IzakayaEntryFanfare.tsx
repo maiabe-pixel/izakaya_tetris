@@ -7,49 +7,10 @@ type Props = {
 const FANFARE_MS = 2800;
 const REDUCED_MS = 900;
 
-const CONFETTI_COLORS = ['#ff1684', '#ffc34d', '#28e7ff', '#c14dff', '#fff3e0'];
-
 function preferReducedMotion() {
   return (
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
-}
-
-function ConfettiBits() {
-  const bits = useMemo(
-    () =>
-      Array.from({ length: 28 }, (_, i) => {
-        const color = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
-        const left = 4 + ((i * 37) % 92);
-        const delay = 0.45 + (i % 8) * 0.04;
-        const dur = 1.1 + (i % 5) * 0.12;
-        const size = 6 + (i % 4) * 2;
-        const rot = (i * 47) % 360;
-        const kind = i % 5;
-        return { i, color, left, delay, dur, size, rot, kind };
-      }),
-    [],
-  );
-
-  return (
-    <div className="geri-fanfare-confetti" aria-hidden="true">
-      {bits.map((b) => (
-        <span
-          key={b.i}
-          className={`geri-confetti geri-confetti--${b.kind}`}
-          style={{
-            left: `${b.left}%`,
-            width: b.size,
-            height: b.kind === 0 ? b.size * 0.45 : b.size,
-            background: b.color,
-            animationDelay: `${b.delay}s`,
-            animationDuration: `${b.dur}s`,
-            ['--geri-rot' as string]: `${b.rot}deg`,
-          }}
-        />
-      ))}
-    </div>
   );
 }
 
@@ -155,7 +116,6 @@ export function IzakayaEntryFanfare({ onDone }: Props) {
     >
       <div className="geri-fanfare-bg" aria-hidden="true" />
       <ConcentrationRays />
-      <ConfettiBits />
       <div className="geri-fanfare-stage">
         <p className="geri-fanfare-mode">IZAKAYA MODE</p>
         <BeerMugs />

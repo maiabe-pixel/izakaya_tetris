@@ -1646,37 +1646,6 @@
   animation: geriRayPulse 0.55s ease forwards;
 }
 
-.geri-fanfare-confetti {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.geri-confetti {
-  position: absolute;
-  top: -8%;
-  border-radius: 2px;
-  opacity: 0;
-  transform: rotate(var(--geri-rot, 0deg));
-  animation-name: geriConfettiFall;
-  animation-timing-function: cubic-bezier(0.22, 0.7, 0.3, 1);
-  animation-fill-mode: both;
-}
-
-.geri-confetti--1 {
-  border-radius: 1px;
-  clip-path: polygon(0 0, 100% 0, 100% 35%, 35% 35%, 35% 100%, 0 100%);
-}
-
-.geri-confetti--2 {
-  border-radius: 50%;
-}
-
-.geri-confetti--3 {
-  clip-path: polygon(20% 0, 80% 0, 100% 50%, 80% 100%, 20% 100%, 0 50%);
-}
-
 .geri-fanfare-stage {
   position: relative;
   z-index: 2;
@@ -1831,21 +1800,6 @@
   }
 }
 
-@keyframes geriConfettiFall {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, -12vh, 0) rotate(var(--geri-rot, 0deg)) scale(0.6);
-  }
-  12% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.85;
-    transform: translate3d(0, 88vh, 0) rotate(calc(var(--geri-rot, 0deg) + 160deg))
-      scale(1);
-  }
-}
-
 @keyframes geriMugsIn {
   from {
     opacity: 0;
@@ -1976,10 +1930,6 @@
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;
     opacity: 1 !important;
-  }
-
-  .geri-confetti {
-    display: none;
   }
 
   .geri-fanfare-title {
