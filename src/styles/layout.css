@@ -192,8 +192,9 @@
   position: absolute;
   left: 28%;
   right: 22%;
-  top: 36%;
-  height: 28%;
+  /* Nudged down with recomposed beer band (IZ-47) */
+  top: 48%;
+  height: 22%;
   border-radius: 50%;
   background: radial-gradient(
     ellipse 48% 55% at 50% 48%,
@@ -209,8 +210,8 @@
   position: absolute;
   left: 38%;
   width: 18%;
-  top: 34%;
-  height: 8%;
+  top: 46%;
+  height: 7%;
   border-radius: 50%;
   background: radial-gradient(
     ellipse at 50% 50%,
@@ -233,30 +234,51 @@
 
 .title-fx-mino-cyan {
   left: 10%;
-  top: 58%;
+  top: 62%;
   background: radial-gradient(circle, rgba(60, 230, 245, 0.35), transparent 70%);
   animation-delay: 0s;
 }
 
 .title-fx-mino-pink {
   right: 14%;
-  top: 42%;
+  top: 50%;
   background: radial-gradient(circle, rgba(255, 80, 170, 0.32), transparent 70%);
   animation-delay: -1.3s;
 }
 
 .title-fx-mino-purple {
   right: 8%;
-  top: 58%;
+  top: 62%;
   background: radial-gradient(circle, rgba(190, 90, 255, 0.3), transparent 70%);
   animation-delay: -2.4s;
 }
 
 .title-fx-mino-gold {
   right: 18%;
-  top: 64%;
+  top: 66%;
   background: radial-gradient(circle, rgba(255, 200, 70, 0.28), transparent 70%);
   animation-delay: -3.2s;
+}
+
+/* IZ-47: うじとうえだ neon icons — between tagline and beer */
+.title-ujiueda-icons {
+  position: absolute;
+  left: 50%;
+  top: 30.5%;
+  width: 60%;
+  height: auto;
+  max-height: 17.5%;
+  object-fit: contain;
+  transform: translateX(-50%);
+  transform-origin: center center;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  animation:
+    titleUjiedaBob 4.6s ease-in-out infinite,
+    titleUjiedaPulse 5.2s ease-in-out infinite;
+  /* Asset already has neon; keep extra glow soft */
+  filter: drop-shadow(0 0 6px rgba(40, 220, 255, 0.18));
 }
 
 /* Layer 3 — % UI in the same frame */
@@ -474,13 +496,42 @@
   }
 }
 
+@keyframes titleUjiedaBob {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) rotate(-0.6deg);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-2.5px) rotate(0.8deg);
+  }
+}
+
+@keyframes titleUjiedaPulse {
+  0%,
+  100% {
+    opacity: 0.88;
+    filter: drop-shadow(0 0 5px rgba(40, 220, 255, 0.14));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 9px rgba(255, 80, 180, 0.22));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .title-fx-logo,
   .title-fx-beer,
   .title-fx-foam,
   .title-fx-mino,
-  .title-btn-start {
+  .title-btn-start,
+  .title-ujiueda-icons {
     animation: none !important;
+  }
+
+  .title-ujiueda-icons {
+    opacity: 1;
+    transform: translateX(-50%);
+    filter: none;
   }
 }
 

@@ -69,6 +69,16 @@ export function TitleScreen({
             <div className="title-fx-mino title-fx-mino-gold" />
           </div>
 
+          {/* Layer 2b — うじとうえだ neon icons (between tagline & beer; prototype) */}
+          <img
+            className="title-ujiueda-icons"
+            src="/images/title-ujiueda-icons.png"
+            alt=""
+            decoding="async"
+            draggable={false}
+            aria-hidden="true"
+          />
+
           {/* Layer 3 — controls (container-relative %) */}
           <div className="title-bg-ui">
             <button
