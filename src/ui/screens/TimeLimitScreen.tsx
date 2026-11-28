@@ -223,7 +223,6 @@ export function TimeLimitScreen({
       <div className="drink-menu-ambient" aria-hidden="true">
         <div className="drink-menu-ambient-glow" />
         <div className="drink-menu-ambient-sakura" />
-        <div className="drink-menu-ambient-lantern" />
       </div>
 
       <header className="drink-menu-header">

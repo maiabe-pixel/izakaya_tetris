@@ -762,31 +762,6 @@
   opacity: 0.85;
 }
 
-.drink-menu-ambient-lantern {
-  position: absolute;
-  top: 1.2%;
-  right: 3%;
-  width: 1.55rem;
-  height: 2.3rem;
-  border-radius: 0.35rem;
-  background: linear-gradient(180deg, #ff5a6a, #c41028);
-  box-shadow:
-    0 0 10px rgba(255, 60, 80, 0.7),
-    0 0 22px rgba(255, 40, 60, 0.35);
-}
-
-.drink-menu-ambient-lantern::after {
-  content: '酒';
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  color: #ffe6a0;
-  text-shadow: 0 0 6px rgba(255, 220, 120, 0.7);
-}
-
 .drink-menu-header,
 .drink-menu-board {
   position: relative;
