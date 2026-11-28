@@ -159,46 +159,55 @@ function DrinkSvg({ seconds }: { seconds: TimeLimitSeconds }) {
   );
 }
 
-function LabelMark({ kind }: { kind: DrinkMeta['labelKind'] }) {
+/** Lucide-style line icons: flame / zap / crown / music / shield-plus */
+function DifficultyIcon({ kind }: { kind: DrinkMeta['labelKind'] }) {
+  const common = {
+    className: 'drink-diff-ico',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 2,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true as const,
+  };
+
   if (kind === 'hard') {
     return (
-      <svg className="drink-label-ico" viewBox="0 0 20 20" aria-hidden="true">
-        <path d="M10 2c2 3 5 5 5 9a5 5 0 1 1-10 0c0-4 3-6 5-9z" fill="#ff1684" />
+      <svg {...common}>
+        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
       </svg>
     );
   }
   if (kind === 'challenge') {
     return (
-      <svg className="drink-label-ico" viewBox="0 0 20 20" aria-hidden="true">
-        <path d="M10 2l1.2 3.8H15l-3 2.3 1.1 3.7L10 9.8 6.9 11.8 8 8.1 5 5.8h3.8z" fill="#ff1684" />
+      <svg {...common}>
+        <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
       </svg>
     );
   }
   if (kind === 'recommend') {
     return (
-      <svg className="drink-label-ico" viewBox="0 0 20 20" aria-hidden="true">
-        <path d="M10 2l2 4 4.5.7-3.2 3.2.8 4.6L10 12.2 5.9 14.5l.8-4.6L3.5 6.7 8 6z" fill="#ffc34d" />
+      <svg {...common}>
+        <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" />
+        <path d="M5 21h14" />
       </svg>
     );
   }
   if (kind === 'relax') {
     return (
-      <svg className="drink-label-ico" viewBox="0 0 20 20" aria-hidden="true">
-        <path d="M4 12c2-4 10-4 12 0" fill="none" stroke="#6dffc0" strokeWidth="1.8" strokeLinecap="round" />
-        <circle cx="7" cy="8" r="1.2" fill="#6dffc0" />
-        <circle cx="13" cy="7" r="1.2" fill="#6dffc0" />
+      <svg {...common}>
+        <path d="M9 18V5l12-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="18" cy="16" r="3" />
       </svg>
     );
   }
   return (
-    <svg className="drink-label-ico" viewBox="0 0 20 20" aria-hidden="true">
-      <path
-        d="M7 9c0-2 1.2-3.5 3-3.5S13 7 13 9v1h2v6H5v-6h2V9z"
-        fill="none"
-        stroke="#c14dff"
-        strokeWidth="1.6"
-      />
-      <path d="M8 16v2M12 16v2" stroke="#c14dff" strokeWidth="1.6" strokeLinecap="round" />
+    <svg {...common}>
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+      <path d="M9 12h6" />
+      <path d="M12 9v6" />
     </svg>
   );
 }
@@ -248,7 +257,10 @@ export function TimeLimitScreen({
                 className={`drink-row${selected ? ' is-selected' : ''}`}
                 onClick={() => onChange(s)}
               >
-                <span className="drink-row-sec">{s}秒</span>
+                <span className="drink-row-sec">
+                  <span className="drink-row-sec-num">{s}</span>
+                  <span className="drink-row-sec-unit">秒</span>
+                </span>
                 <span className="drink-row-ico">
                   <DrinkSvg seconds={s} />
                 </span>
@@ -257,8 +269,8 @@ export function TimeLimitScreen({
                   <span className="drink-row-name">{meta.drink}</span>
                 </span>
                 <span className={`drink-row-label is-${meta.labelKind}`}>
-                  <LabelMark kind={meta.labelKind} />
-                  <span>{meta.label}</span>
+                  <DifficultyIcon kind={meta.labelKind} />
+                  <span className="drink-row-label-text">{meta.label}</span>
                 </span>
               </button>
             );
