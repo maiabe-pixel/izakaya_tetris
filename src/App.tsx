@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAudio } from './audio/useAudio';
 import {
   DEFAULT_TIME_LIMIT,
@@ -17,13 +17,17 @@ import {
 } from './game/izakaya/engine';
 import type { IzakayaState } from './game/izakaya/types';
 import { clearSession, loadSession, saveSession } from './game/save';
-import type { Screen } from './game/types';
+import type { Board, Screen } from './game/types';
 import { AppShell } from './ui/AppShell';
+import { IzakayaEntryFanfare } from './ui/components/IzakayaEntryFanfare';
 import { FallingScreen } from './ui/screens/FallingScreen';
 import { IzakayaScreen } from './ui/screens/IzakayaScreen';
 import { ResultScreen } from './ui/screens/ResultScreen';
 import { TimeLimitScreen } from './ui/screens/TimeLimitScreen';
 import { TitleScreen } from './ui/screens/TitleScreen';
+
+/** Existing GAME OVER hold before the entry fanfare (unchanged). */
+const GAME_OVER_HOLD_MS = 700;
 
 export default function App() {
   const audio = useAudio();
@@ -33,6 +37,9 @@ export default function App() {
   const [falling, setFalling] = useState<FallingState | null>(null);
   const [izakaya, setIzakaya] = useState<IzakayaState | null>(null);
   const [hasSave, setHasSave] = useState(() => !!loadSession());
+  const [fanfare, setFanfare] = useState(false);
+  const pendingBoardRef = useRef<Board | null>(null);
+  const goArmedRef = useRef(false);
 
   // Persist izakaya idle session
   useEffect(() => {
@@ -42,21 +49,35 @@ export default function App() {
     setHasSave(true);
   }, [izakaya, screen]);
 
-  // Falling → izakaya on game over
+  // Falling GAME OVER → hold → fanfare (izakaya starts after fanfare)
   useEffect(() => {
-    if (screen !== 'falling' || !falling?.gameOver) return;
+    if (screen !== 'falling' || !falling?.gameOver) {
+      goArmedRef.current = false;
+      return;
+    }
+    if (goArmedRef.current || fanfare) return;
+    goArmedRef.current = true;
     audio.sfx('gameOver');
-    const board = fallingBoardSnapshot(falling);
+    pendingBoardRef.current = fallingBoardSnapshot(falling);
     const t = window.setTimeout(() => {
-      audio.stopTrack();
-      const next = createIzakayaState(board, timeLimit);
-      setIzakaya(next);
-      setScreen('izakaya');
-      // May be deferred until next gesture on mobile — IzakayaScreen retries.
-      audio.playTrack('izakaya');
-    }, 700);
+      setFanfare(true);
+    }, GAME_OVER_HOLD_MS);
     return () => window.clearTimeout(t);
-  }, [screen, falling, timeLimit, audio]);
+  }, [screen, falling, fanfare, audio]);
+
+  const finishFanfare = useCallback(() => {
+    const board = pendingBoardRef.current;
+    pendingBoardRef.current = null;
+    setFanfare(false);
+    goArmedRef.current = false;
+    if (!board) return;
+    audio.stopTrack();
+    const next = createIzakayaState(board, timeLimit);
+    setIzakaya(next);
+    setScreen('izakaya');
+    // May be deferred until next gesture on mobile — IzakayaScreen retries.
+    audio.playTrack('izakaya');
+  }, [audio, timeLimit]);
 
   // Cleared → result
   useEffect(() => {
@@ -71,11 +92,32 @@ export default function App() {
 
   const goTitle = useCallback(() => {
     audio.stopTrack();
+    setFanfare(false);
+    pendingBoardRef.current = null;
+    goArmedRef.current = false;
     setFalling(null);
     setIzakaya(null);
     setScreen('title');
     setHasSave(!!loadSession());
   }, [audio]);
+
+  // DEV-only: force GAME OVER to exercise fanfare timing in local checks.
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    const w = window as Window & {
+      __izForceFallingGameOver?: () => void;
+    };
+    w.__izForceFallingGameOver = () => {
+      setFalling((s) => {
+        const base = s ?? createFallingState();
+        return { ...base, gameOver: true, active: null };
+      });
+      setScreen('falling');
+    };
+    return () => {
+      delete w.__izForceFallingGameOver;
+    };
+  }, []);
 
   return (
     <AppShell>
@@ -91,6 +133,7 @@ export default function App() {
             audio.unlock();
             const save = loadSession();
             if (!save) return;
+            // Save resume skips fanfare (in-session continue only).
             setIzakaya(restoreFromSave(save));
             setTimeLimit(save.timeLimit ?? DEFAULT_TIME_LIMIT);
             setScreen('izakaya');
@@ -123,6 +166,8 @@ export default function App() {
           timeLimit={timeLimit}
         />
       )}
+
+      {fanfare ? <IzakayaEntryFanfare onDone={finishFanfare} /> : null}
 
       {screen === 'izakaya' && izakaya && (
         <IzakayaScreen

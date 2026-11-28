@@ -72,7 +72,9 @@
 
 /* ---------- Title (baked background image) ---------- */
 .app-shell:has(.title-bg),
-.app-shell:has(.izakaya-bg) {
+.app-shell:has(.izakaya-bg),
+.app-shell:has(.falling-bg),
+.app-shell:has(.drink-menu-screen) {
   width: 100%;
   max-width: none;
   height: 100dvh;
@@ -161,103 +163,7 @@
   z-index: 0;
 }
 
-/* Layer 2 — local translucent glows only */
-.title-bg-fx {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.title-fx-logo {
-  position: absolute;
-  left: 14%;
-  right: 14%;
-  top: 6%;
-  height: 22%;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse 55% 48% at 50% 48%,
-    rgba(255, 90, 160, 0.22),
-    rgba(255, 120, 60, 0.08) 55%,
-    transparent 72%
-  );
-  animation: titleFxLogo 8s ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-
-.title-fx-beer {
-  position: absolute;
-  left: 28%;
-  right: 22%;
-  top: 36%;
-  height: 28%;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse 48% 55% at 50% 48%,
-    rgba(255, 180, 70, 0.2),
-    rgba(255, 140, 40, 0.06) 55%,
-    transparent 74%
-  );
-  animation: titleFxBeer 4.4s ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-
-.title-fx-foam {
-  position: absolute;
-  left: 38%;
-  width: 18%;
-  top: 34%;
-  height: 8%;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at 50% 50%,
-    rgba(255, 248, 240, 0.18),
-    transparent 70%
-  );
-  animation: titleFxFoam 3.6s ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-
-.title-fx-mino {
-  position: absolute;
-  width: 12%;
-  height: 7%;
-  border-radius: 40%;
-  opacity: 0.55;
-  mix-blend-mode: screen;
-  animation: titleFxMino 5.2s ease-in-out infinite;
-}
-
-.title-fx-mino-cyan {
-  left: 10%;
-  top: 58%;
-  background: radial-gradient(circle, rgba(60, 230, 245, 0.35), transparent 70%);
-  animation-delay: 0s;
-}
-
-.title-fx-mino-pink {
-  right: 14%;
-  top: 42%;
-  background: radial-gradient(circle, rgba(255, 80, 170, 0.32), transparent 70%);
-  animation-delay: -1.3s;
-}
-
-.title-fx-mino-purple {
-  right: 8%;
-  top: 58%;
-  background: radial-gradient(circle, rgba(190, 90, 255, 0.3), transparent 70%);
-  animation-delay: -2.4s;
-}
-
-.title-fx-mino-gold {
-  right: 18%;
-  top: 64%;
-  background: radial-gradient(circle, rgba(255, 200, 70, 0.28), transparent 70%);
-  animation-delay: -3.2s;
-}
-
-/* Layer 3 — % UI in the same frame */
+/* Buttons only — over wood counter (IZ-48 single baked bg) */
 .title-bg-ui {
   position: absolute;
   inset: 0;
@@ -286,7 +192,7 @@
 
 .title-btn-start {
   top: 72%;
-  width: 62%;
+  width: 64%;
   height: 7%;
   border: 2px solid #ffffff;
   color: #ffffff;
@@ -316,7 +222,7 @@
 
 .title-btn-continue {
   top: 81.3%;
-  width: 62%;
+  width: 64%;
   height: 5%;
   border: 1.5px solid rgba(255, 180, 210, 0.45);
   color: rgba(255, 245, 250, 0.92);
@@ -334,7 +240,7 @@
 
 .title-btn-audio {
   top: 88.1%;
-  width: 62%;
+  width: 64%;
   height: 5%;
   border: 1.5px solid rgba(255, 180, 210, 0.32);
   color: rgba(255, 240, 248, 0.78);
@@ -402,58 +308,6 @@
   color: #ffe8f2;
 }
 
-@keyframes titleFxLogo {
-  0%,
-  100% {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  48% {
-    opacity: 1;
-    transform: scale(1.03);
-  }
-  52% {
-    opacity: 0.82;
-    transform: scale(1.01);
-  }
-  56% {
-    opacity: 1;
-    transform: scale(1.025);
-  }
-}
-
-@keyframes titleFxBeer {
-  0%,
-  100% {
-    opacity: 0.75;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes titleFxFoam {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translateY(-4%);
-    opacity: 0.9;
-  }
-}
-
-@keyframes titleFxMino {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.75;
-  }
-}
-
 @keyframes titleCtaGlow {
   0%,
   100% {
@@ -473,10 +327,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .title-fx-logo,
-  .title-fx-beer,
-  .title-fx-foam,
-  .title-fx-mino,
   .title-btn-start {
     animation: none !important;
   }
@@ -702,181 +552,856 @@
   color: var(--muted);
 }
 
-/* Time-limit / 本日の遊び方 */
-.playstyle-screen {
+/* ---------- IZ-42/43: 本日の一杯 (time-limit / drink menu) ---------- */
+.drink-menu-screen.playstyle-screen {
+  --dm-pink: #ff1684;
+  --dm-cyan: #28e7ff;
+  --dm-gold: #ffc34d;
+  --dm-cream: #fff3e0;
   position: relative;
-  overflow: hidden;
-  padding: 1.1rem 1rem 1.2rem;
-  gap: 0.9rem;
-}
-
-.playstyle-screen h2 {
-  margin: 0;
-  text-align: center;
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  color: var(--ivory);
-  text-shadow: 0 0 14px rgba(93, 228, 232, 0.35);
-}
-
-.menu-tag-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.menu-tag {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  min-height: 56px;
-  width: 100%;
-  padding: 0.65rem 0.95rem;
-  border-radius: 14px;
-  border: 1px solid var(--border-soft);
-  background: rgba(8, 10, 18, 0.65);
-  color: var(--text);
-  text-align: left;
-  transition: border-color 0.15s, box-shadow 0.2s, background 0.2s;
-}
-
-.menu-tag .sec {
-  font-family: var(--font-neon);
-  font-size: 1.15rem;
-  color: var(--cyan);
-  min-width: 3.2rem;
-}
-
-.menu-tag .catch {
+  /* Avoid clipping neon glow; page scroll blocked via shell height */
+  overflow: visible;
   flex: 1;
-  font-size: 0.92rem;
-  font-weight: 700;
-}
-
-.menu-tag .tag-chip {
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  border: 1px solid var(--border-soft);
-  border-radius: 999px;
-  padding: 0.2rem 0.55rem;
-  white-space: nowrap;
-}
-
-.menu-tag.is-selected {
-  border-color: var(--pink);
-  box-shadow: var(--glow-pink);
-  background: rgba(255, 107, 155, 0.08);
-}
-
-.menu-tag.is-selected .sec {
-  color: var(--gold);
-  text-shadow: var(--glow-gold);
-}
-
-.menu-tag.is-selected .tag-chip {
-  border-color: rgba(245, 201, 107, 0.45);
-  color: var(--gold);
-}
-
-/* ---------- Phase D: Falling arcade ---------- */
-.falling-screen {
-  gap: 0.65rem;
-}
-
-.arcade-cabinet {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  padding: 0.75rem 0.7rem 0.85rem;
-  border-radius: 18px;
-  border: 2px solid rgba(93, 228, 232, 0.35);
-  background:
-    linear-gradient(180deg, rgba(93, 228, 232, 0.08), transparent 28%),
-    linear-gradient(180deg, #161a28, #0c0e16);
-  box-shadow:
-    0 0 0 1px rgba(255, 107, 155, 0.12) inset,
-    0 0 28px rgba(93, 228, 232, 0.12);
-}
-
-.arcade-marquee {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  padding: 0.35rem 0.5rem;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(245, 201, 107, 0.28);
-}
-
-.arcade-marquee-title {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  letter-spacing: 0.08em;
-  color: var(--ivory);
-  text-shadow: 0 0 12px rgba(255, 107, 155, 0.4);
-}
-
-.score-panel {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  width: min(100%, 420px);
+  margin: 0 auto;
+  padding:
+    max(0.4rem, env(safe-area-inset-top, 0px))
+    max(0.65rem, env(safe-area-inset-right, 0px))
+    max(0.45rem, env(safe-area-inset-bottom, 0px))
+    max(0.65rem, env(safe-area-inset-left, 0px));
   gap: 0.35rem;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -5%, rgba(255, 22, 132, 0.16), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 80%, rgba(40, 231, 255, 0.1), transparent 50%),
+    linear-gradient(180deg, #140810 0%, #0a060c 55%, #050308 100%);
 }
 
-.arcade-stage {
+.drink-menu-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.drink-menu-ambient-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 107, 155, 0.18), transparent 28%),
+    radial-gradient(circle at 88% 12%, rgba(255, 80, 60, 0.2), transparent 26%);
+}
+
+.drink-menu-ambient-sakura {
+  position: absolute;
+  top: -2%;
+  left: -4%;
+  width: 38%;
+  height: 22%;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(255, 140, 180, 0.45) 0 3px, transparent 4px),
+    radial-gradient(circle at 55% 25%, rgba(255, 120, 170, 0.4) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 70% 55%, rgba(255, 160, 190, 0.35) 0 3px, transparent 4px);
+  filter: blur(0.2px);
+  opacity: 0.85;
+}
+
+/* IZ-45: never show the old top-right 酒 lantern if a stale node remains */
+.drink-menu-ambient-lantern,
+.drink-menu-screen .drink-menu-ambient-lantern {
+  display: none !important;
+  content: none !important;
+}
+
+.drink-menu-ambient-lantern::before,
+.drink-menu-ambient-lantern::after {
+  content: none !important;
+  display: none !important;
+}
+
+.drink-menu-header,
+.drink-menu-board {
+  position: relative;
+  z-index: 1;
+}
+
+.drink-menu-header {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.04rem;
+  text-align: center;
 }
 
-.next-preview {
+.drink-menu-eyebrow {
+  font-family: var(--font-neon);
+  font-size: 0.55rem;
+  letter-spacing: 0.28em;
+  color: var(--dm-cyan);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(40, 231, 255, 0.75);
+}
+
+.drink-menu-brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 6.5vw, 1.85rem);
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  -webkit-text-stroke: 0.045em var(--dm-pink);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 22, 132, 0.95),
+    0 0 22px rgba(255, 22, 132, 0.65),
+    0 0 36px rgba(255, 22, 132, 0.35);
+}
+
+.drink-menu-tagline {
+  margin: 0.05rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.68rem, 2.8vw, 0.82rem);
+  letter-spacing: 0.08em;
+  color: var(--dm-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 195, 77, 0.7);
+}
+
+.drink-menu-board {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 0.55rem 0.55rem 0.55rem;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 77, 166, 0.85);
+  background: rgba(12, 6, 14, 0.78);
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 0 18px rgba(255, 22, 132, 0.35),
+    0 0 36px rgba(255, 22, 132, 0.18);
+  overflow: visible;
+}
+
+.drink-menu-board-title {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.55rem;
 }
 
-.next-preview-label {
-  font-family: var(--font-neon);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-  color: var(--cyan);
+.drink-menu-board-title h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  /* ~+20% vs IZ-42 */
+  font-size: clamp(1.26rem, 5.5vw, 1.62rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: #fff;
+  padding: 0.22rem 0.82rem;
+  border: 2px solid var(--dm-pink);
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(255, 22, 132, 0.75),
+    0 0 22px rgba(255, 22, 132, 0.35);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 22, 132, 0.9);
 }
 
-.next-preview-box {
-  min-width: 4.5rem;
-  min-height: 2.6rem;
+.drink-menu-mug {
+  width: 1.85rem;
+  height: 1.85rem;
+  color: var(--dm-gold);
+  filter: drop-shadow(0 0 6px rgba(255, 195, 77, 0.75));
+  animation: drinkMugPulse 2.4s ease-in-out infinite;
+}
+
+.drink-menu-lead {
+  flex: 0 0 auto;
+  margin: 0.05rem 0 0;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: var(--dm-cream);
+  text-shadow: 0 0 8px rgba(255, 22, 132, 0.35);
+}
+
+.drink-menu-hint {
+  flex: 0 0 auto;
+  margin: 0;
+  text-align: center;
+  font-size: 0.68rem;
+  color: rgba(255, 243, 224, 0.72);
+}
+
+.drink-menu-list {
+  display: flex;
+  flex-direction: column;
+  /* Even gaps; rows grow to fill leftover board height */
+  gap: 0.4rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: visible;
+  margin-top: 0.2rem;
+}
+
+.drink-row {
+  display: grid;
+  /* 4 cols L→R: time | drink SVG | copy | stacked difficulty */
+  grid-template-columns: 3.3rem 3.7rem minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 0.22rem;
+  width: 100%;
+  /* Outer row heights unchanged (flex fill) */
+  flex: 1 1 0;
+  min-height: 3.6rem;
+  padding: 0.3rem 0.35rem;
+  border-radius: 12px;
+  border: 1.5px solid rgba(40, 231, 255, 0.7);
+  background: rgba(16, 10, 22, 0.72);
+  color: var(--dm-cream);
+  text-align: left;
+  box-sizing: border-box;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 8px rgba(40, 231, 255, 0.18);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+}
+
+.drink-row-sec {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.04em;
+  font-family: var(--font-neon);
+  font-weight: 700;
+  line-height: 1;
+  /* digit size — unit inherits % of this */
+  font-size: 1.92rem;
+  color: var(--dm-cyan);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(40, 231, 255, 0.75);
+  white-space: nowrap;
+}
+
+.drink-row-sec-num {
+  font-size: 1em;
+}
+
+.drink-row-sec-unit {
+  /* 65–70% of digit */
+  font-size: 0.68em;
+  font-weight: 700;
+}
+
+.drink-row-ico {
   display: grid;
   place-items: center;
-  padding: 0.25rem 0.45rem;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.4);
 }
 
-.arcade-bezel {
-  position: relative;
-  padding: 0.35rem;
+.drink-ico {
+  /* ~1.35–1.5× vs IZ-43 2.75rem (fit long names) */
+  width: 3.7rem;
+  height: 3.7rem;
+  filter: drop-shadow(0 0 5px rgba(255, 195, 77, 0.35));
+}
+
+.drink-row-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.1rem;
+  min-width: 0;
+  overflow: visible;
+}
+
+.drink-row-catch {
+  /* ~1.2× */
+  font-size: 0.74rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: rgba(255, 243, 224, 0.78);
+  white-space: nowrap;
+}
+
+.drink-row-name {
+  font-family: var(--font-display);
+  /* ~1.3–1.4× of IZ-43 1.1rem */
+  font-size: 1.43rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 22, 132, 0.35);
+  white-space: nowrap;
+}
+
+.drink-row-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  padding-left: 0.1rem;
+  /* ~1.2× label */
+  font-size: 0.79rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: #ff3a5c;
+  filter: drop-shadow(0 0 6px rgba(255, 58, 92, 0.55));
+}
+
+.drink-row-label-text {
+  white-space: nowrap;
+}
+
+.drink-diff-ico {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+}
+
+.drink-row-label.is-hard {
+  color: #ff3a5c;
+  filter: drop-shadow(0 0 6px rgba(255, 58, 92, 0.55));
+}
+
+.drink-row-label.is-challenge {
+  color: #ff2eb8;
+  filter: drop-shadow(0 0 6px rgba(255, 46, 184, 0.55));
+}
+
+.drink-row-label.is-recommend {
+  color: var(--dm-gold);
+  filter: drop-shadow(0 0 6px rgba(255, 195, 77, 0.6));
+}
+
+.drink-row-label.is-relax {
+  color: #6dffc0;
+  filter: drop-shadow(0 0 6px rgba(109, 255, 192, 0.55));
+}
+
+.drink-row-label.is-survive {
+  color: #c14dff;
+  filter: drop-shadow(0 0 6px rgba(193, 77, 255, 0.55));
+}
+
+.drink-row.is-selected {
+  border-color: var(--dm-pink);
+  background:
+    linear-gradient(90deg, rgba(255, 22, 132, 0.22), rgba(255, 22, 132, 0.08) 55%, rgba(40, 20, 40, 0.5));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 0 1px rgba(255, 180, 220, 0.35),
+    0 0 14px rgba(255, 22, 132, 0.65),
+    0 0 28px rgba(255, 22, 132, 0.3);
+  /* No transform — avoid selection layout shift */
+}
+
+.drink-row.is-selected .drink-row-sec {
+  color: var(--dm-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 195, 77, 0.85);
+}
+
+.drink-menu-actions {
+  flex: 0 0 auto;
+  display: grid;
+  /* back ~35% / go ~65% */
+  grid-template-columns: 0.35fr 0.65fr;
+  gap: 0.5rem;
+  width: 100%;
+  margin: 0.15rem 0 0;
+}
+
+.drink-btn-back,
+.drink-btn-go {
+  min-height: 48px;
   border-radius: 12px;
-  border: 2px solid rgba(93, 228, 232, 0.4);
-  background: #0a0c14;
-  box-shadow: 0 0 18px rgba(93, 228, 232, 0.15);
+  font-weight: 800;
+  font-size: 0.98rem;
 }
 
-.arcade-bezel.fx-clear {
-  box-shadow: 0 0 28px rgba(245, 201, 107, 0.55);
+.drink-btn-back {
+  border: 2px solid var(--dm-cyan);
+  color: var(--dm-cream);
+  background: rgba(12, 10, 22, 0.75);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 0 12px rgba(40, 231, 255, 0.45);
+  text-shadow: 0 0 8px rgba(40, 231, 255, 0.55);
 }
 
-.arcade-bezel.fx-score {
-  box-shadow: 0 0 22px rgba(93, 228, 232, 0.45);
+.drink-btn-go {
+  border: 2.5px solid #fff;
+  color: #210b1b;
+  background: linear-gradient(180deg, #ffe6a0 0%, #ffc34d 48%, #ff9a2e 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 0 0 1px rgba(255, 180, 220, 0.55),
+    0 0 16px rgba(255, 22, 132, 0.75),
+    0 0 28px rgba(255, 22, 132, 0.35);
 }
 
-.arcade-bezel.fx-go {
-  box-shadow: 0 0 30px rgba(255, 107, 155, 0.45);
+@keyframes drinkMugPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px rgba(255, 195, 77, 0.55));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 10px rgba(255, 195, 77, 0.95));
+    transform: scale(1.06);
+  }
+}
+
+@media (max-height: 720px) {
+  .drink-menu-screen.playstyle-screen {
+    gap: 0.28rem;
+    padding-top: max(0.28rem, env(safe-area-inset-top, 0px));
+  }
+
+  .drink-menu-brand {
+    font-size: clamp(1.15rem, 5.5vw, 1.45rem);
+  }
+
+  .drink-menu-board {
+    padding: 0.4rem 0.42rem 0.42rem;
+    gap: 0.22rem;
+  }
+
+  .drink-menu-board-title h2 {
+    font-size: clamp(1.12rem, 4.8vw, 1.4rem);
+  }
+
+  .drink-menu-mug {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  .drink-menu-list {
+    gap: 0.28rem;
+  }
+
+  .drink-row {
+    min-height: 3.1rem;
+    padding: 0.18rem 0.28rem;
+    grid-template-columns: 2.9rem 3.2rem minmax(0, 1fr) max-content;
+    gap: 0.16rem;
+  }
+
+  .drink-row-sec {
+    font-size: 1.55rem;
+  }
+
+  .drink-ico {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  .drink-row-catch {
+    font-size: 0.66rem;
+  }
+
+  .drink-row-name {
+    font-size: 1.28rem;
+  }
+
+  .drink-row-label {
+    font-size: 0.7rem;
+    gap: 0.1rem;
+  }
+
+  .drink-diff-ico {
+    width: 28px;
+    height: 28px;
+  }
+
+  .drink-btn-back,
+  .drink-btn-go {
+    min-height: 44px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drink-menu-mug,
+  .drink-row {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Phase D: Falling arcade (IZ-38 visual redesign) ---------- */
+.falling-screen {
+  --fall-pink: #ff1684;
+  --fall-gold: #ffc34d;
+  --fall-orange: #ff941f;
+  --fall-cyan: #28e7ff;
+  --fall-cream: #fff3e0;
+  --fall-wine: #210b1b;
+  --fall-board: #080810;
+  gap: 0;
+  color: var(--fall-cream);
+}
+
+.falling-bg {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  /* Prefer visualViewport height (iOS Safari chrome) over 100vh */
+  height: var(--fall-vvh, 100dvh);
+  max-height: var(--fall-vvh, 100dvh);
+  overflow: visible;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.falling-bg-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  overflow: visible;
+  box-sizing: border-box;
+  /* Fallback under cover — no phone letterbox bars */
+  background: #0a0608;
+}
+
+.falling-bg-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/images/drop-mode-bg-v2.png') center / cover no-repeat;
+  filter: blur(28px) brightness(0.5) saturate(1.05);
+  opacity: 0.42;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Full-bleed cover — width decoupled from board */
+.falling-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+.falling-bg-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  padding:
+    max(0.35rem, env(safe-area-inset-top, 0px))
+    max(0.55rem, env(safe-area-inset-right, 0px))
+    max(0.35rem, env(safe-area-inset-bottom, 0px))
+    max(0.55rem, env(safe-area-inset-left, 0px));
+  box-sizing: border-box;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.falling-bg-ui > * {
+  pointer-events: auto;
+}
+
+.falling-screen .arcade-cabinet {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.falling-screen .arcade-marquee {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  padding: 0 0.2rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.falling-screen .fall-eyebrow {
+  font-family: var(--font-neon);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: var(--fall-cyan);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(40, 231, 255, 0.85),
+    0 0 14px rgba(40, 231, 255, 0.45);
+}
+
+.falling-screen .arcade-marquee-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.78rem, 3.4vw, 1.02rem);
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  color: #fff3e0;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 22, 132, 0.9),
+    0 0 16px rgba(255, 195, 77, 0.55),
+    0 0 24px rgba(255, 22, 132, 0.35);
+}
+
+/* 4-across status across full UI width */
+.falling-screen .score-panel.fall-stat-grid {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.28rem;
+  width: 100%;
+  margin: 0;
+}
+
+.falling-screen .fall-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.02rem;
+  min-width: 0;
+  padding: 0.18rem 0.12rem 0.2rem;
+  border-radius: 10px;
+  background: rgba(33, 11, 27, 0.72);
+  border: 1.5px solid rgba(255, 243, 224, 0.22);
+  text-align: center;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.08);
+}
+
+.falling-screen .fall-stat-ico {
+  width: 0.72rem;
+  height: 0.72rem;
+  color: inherit;
+  flex: 0 0 auto;
+}
+
+.falling-screen .fall-stat .label {
+  font-family: var(--font-ui);
+  font-size: 0.42rem;
+  letter-spacing: 0.05em;
+  color: var(--fall-cream);
+  opacity: 0.88;
+  line-height: 1;
+}
+
+.falling-screen .fall-stat .value {
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 0.82rem;
+  line-height: 1.05;
+  color: var(--fall-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 195, 77, 0.85),
+    0 0 14px rgba(255, 148, 31, 0.4);
+}
+
+.falling-screen .fall-stat.is-score,
+.falling-screen .fall-stat.is-lv {
+  border-color: rgba(255, 195, 77, 0.92);
+  color: var(--fall-gold);
+  box-shadow:
+    inset 0 0 12px rgba(255, 195, 77, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 10px rgba(255, 195, 77, 0.55),
+    0 0 18px rgba(255, 148, 31, 0.28);
+}
+
+.falling-screen .fall-stat.is-lines,
+.falling-screen .fall-stat.is-izakaya {
+  border-color: rgba(255, 22, 132, 0.92);
+  color: var(--fall-pink);
+  box-shadow:
+    inset 0 0 12px rgba(255, 22, 132, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 10px rgba(255, 22, 132, 0.6),
+    0 0 18px rgba(255, 22, 132, 0.28);
+}
+
+.falling-screen .arcade-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.16rem;
+  /* Never clip the board — size cells down instead */
+  overflow: visible;
+}
+
+.falling-screen .fall-next.next-preview {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+}
+
+.falling-screen .fall-next .next-preview-label {
+  font-family: var(--font-neon);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  color: var(--fall-gold);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 195, 77, 0.75),
+    0 0 12px rgba(40, 231, 255, 0.35);
+}
+
+.falling-screen .fall-next .next-preview-box {
+  min-width: 2.7rem;
+  min-height: 1.45rem;
+  display: grid;
+  place-items: center;
+  padding: 0.06rem 0.22rem;
+  border-radius: 6px;
+  border: 1.5px solid rgba(255, 195, 77, 0.75);
+  background: rgba(33, 11, 27, 0.72);
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 10px rgba(255, 195, 77, 0.35),
+    0 0 14px rgba(40, 231, 255, 0.22);
+}
+
+/* Transparent flex slot — neon border hugs the canvas, not empty space */
+.falling-screen .arcade-bezel.fall-board-frame {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.falling-screen .fall-board-budget {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Center when tall; clearance in JS keeps board above controls */
+  justify-content: center;
+  overflow: visible;
+}
+
+.falling-screen .fall-board-host.board-wrap {
+  margin: 0;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  padding: 0.08rem;
+  border-radius: 12px;
+  border: 2px solid #ff4da6;
+  background: rgba(8, 8, 16, 0.94);
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.75),
+    inset 0 0 10px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 8px rgba(255, 22, 132, 0.7),
+    0 0 16px rgba(255, 22, 132, 0.35);
+  box-sizing: border-box;
+}
+
+.falling-screen .fall-board-host canvas {
+  border: none;
+  border-radius: 6px;
+  box-shadow: none;
+  background: var(--fall-board);
+  /* Logical size set in JS from availW/10 × availH/20 */
+  max-width: none;
+  max-height: none;
+  display: block;
+}
+
+.falling-screen .fall-board-frame.fx-clear .fall-board-host {
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 28px rgba(255, 195, 77, 0.65);
+}
+
+.falling-screen .fall-board-frame.fx-score .fall-board-host {
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 22px rgba(40, 231, 255, 0.55);
+}
+
+.falling-screen .fall-board-frame.fx-go .fall-board-host {
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 231, 255, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 30px rgba(255, 22, 132, 0.55);
 }
 
 .arcade-fx {
@@ -893,15 +1418,15 @@
 }
 
 .arcade-fx-clear {
-  color: var(--gold);
+  color: var(--fall-gold, #ffc34d);
   font-size: 1.35rem;
-  text-shadow: 0 0 16px rgba(245, 201, 107, 0.8);
+  text-shadow: 0 0 16px rgba(255, 195, 77, 0.8);
 }
 
 .arcade-fx-score {
-  color: var(--cyan);
+  color: var(--fall-cyan, #28e7ff);
   font-size: 1.05rem;
-  text-shadow: 0 0 12px rgba(93, 228, 232, 0.7);
+  text-shadow: 0 0 12px rgba(40, 231, 255, 0.7);
 }
 
 .arcade-go {
@@ -919,46 +1444,547 @@
 
 .arcade-go-label {
   font-family: var(--font-neon);
-  color: var(--pink);
+  color: var(--fall-pink, #ff1684);
   letter-spacing: 0.2em;
   font-size: 0.95rem;
-  text-shadow: var(--glow-pink);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 12px rgba(255, 22, 132, 0.8);
 }
 
 .arcade-go-copy {
   font-family: var(--font-display);
-  color: var(--ivory);
+  color: var(--fall-cream, #fff3e0);
   font-size: 1.15rem;
   letter-spacing: 0.06em;
-  text-shadow: 0 0 14px rgba(245, 201, 107, 0.45);
+  text-shadow: 0 0 14px rgba(255, 195, 77, 0.45);
 }
 
-.arcade-go-hint {
-  margin-top: 0.15rem;
+.falling-screen .arcade-go-hint {
+  margin: 0;
+  text-align: center;
+  color: rgba(255, 243, 224, 0.78);
 }
 
-.arcade-pad {
+.falling-screen .arcade-pad.fall-pad {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.28rem;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0.18rem 0 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
 }
 
-.arcade-pad-row {
+.falling-screen .arcade-pad-row {
   display: flex;
-  gap: 0.45rem;
+  flex-wrap: nowrap;
+  gap: 0.28rem;
+  width: 100%;
 }
 
-.arcade-pad-row > .pad-btn {
-  flex: 1;
-  min-height: 52px;
-  font-size: 1.05rem;
+.falling-screen .arcade-pad-row > .pad-btn {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
-.pad-hard {
-  flex: 1.55;
-  min-height: 56px;
-  font-size: 1rem;
+.falling-screen .arcade-pad-row > .fall-pad-btn.is-gold {
+  flex: 0 0 calc(38% - 0.14rem);
+}
+
+.falling-screen .arcade-pad-row > .fall-pad-btn.is-hard.pad-hard {
+  flex: 0 0 calc(62% - 0.14rem);
+}
+
+.falling-screen .fall-pad-btn {
+  min-height: 44px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #fff3e0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  white-space: nowrap;
+  background: rgba(33, 11, 27, 0.78);
+}
+
+.falling-screen .fall-pad-btn .pad-ico {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+}
+
+.falling-screen .fall-pad-btn.is-cyan {
+  border: 1.5px solid var(--fall-cyan);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(40, 231, 255, 0.55),
+    0 0 20px rgba(40, 231, 255, 0.25);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(40, 231, 255, 0.7);
+}
+
+.falling-screen .fall-pad-btn.is-pink {
+  border: 1.5px solid var(--fall-pink);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(255, 22, 132, 0.55),
+    0 0 20px rgba(255, 22, 132, 0.25);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px rgba(255, 22, 132, 0.7);
+}
+
+.falling-screen .fall-pad-btn.is-gold {
+  border: 1.5px solid var(--fall-orange);
+  color: #ffe6b0;
+  background: linear-gradient(180deg, rgba(90, 42, 18, 0.92), rgba(36, 16, 10, 0.9));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 230, 160, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 12px rgba(255, 148, 31, 0.5),
+    0 0 20px rgba(255, 148, 31, 0.25);
+  text-shadow:
+    0 0 3px #fff8e0,
+    0 0 8px rgba(255, 195, 77, 0.65);
+}
+
+.falling-screen .fall-pad-btn.is-hard.pad-hard {
+  min-height: 44px;
+  border: 2.5px solid #ffffff;
+  color: #fff;
+  background: linear-gradient(180deg, #ff6bb8 0%, #ff1684 52%, #c4005c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 0 0 1px rgba(255, 200, 230, 0.65),
+    0 0 14px rgba(255, 22, 132, 0.85),
+    0 0 28px rgba(255, 22, 132, 0.45);
+  text-shadow:
+    0 0 3px #fff,
+    0 1px 0 rgba(120, 0, 60, 0.35);
+  font-size: 0.82rem;
   letter-spacing: 0.02em;
+}
+
+@media (min-width: 720px) {
+  .falling-bg-ui {
+    max-width: 440px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+  }
+}
+
+@media (max-height: 720px) {
+  .falling-screen .arcade-cabinet {
+    gap: 0.16rem;
+  }
+
+  .falling-screen .fall-pad-btn {
+    min-height: 44px;
+    font-size: 0.78rem;
+  }
+
+  .falling-screen .fall-pad-btn.is-hard.pad-hard {
+    min-height: 44px;
+    font-size: 0.74rem;
+  }
+
+  .falling-screen .fall-stat .value {
+    font-size: 0.74rem;
+  }
+
+  .falling-screen .fall-stat {
+    padding: 0.12rem 0.08rem 0.14rem;
+  }
+}
+
+/* ---------- IZ-41: Izakaya entry fanfare ---------- */
+.geri-fanfare {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  animation: geriFadeOut 0.3s ease 2.5s both;
+}
+
+.geri-fanfare-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(120, 24, 56, 0.55), transparent 42%),
+    radial-gradient(circle at 50% 50%, #4a1028 0%, #210b1b 55%, #12060e 100%);
+  animation: geriBgIn 0.25s ease both;
+}
+
+.geri-fanfare-rays {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  opacity: 0;
+  animation: geriRaysIn 0.45s ease 0.1s both;
+}
+
+.geri-ray-line {
+  stroke: #ffc34d;
+  stroke-width: 0.55;
+  stroke-opacity: 0.42;
+  opacity: 0;
+  animation: geriRayPulse 0.55s ease forwards;
+}
+
+.geri-fanfare-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.geri-confetti {
+  position: absolute;
+  top: -8%;
+  border-radius: 2px;
+  opacity: 0;
+  transform: rotate(var(--geri-rot, 0deg));
+  animation-name: geriConfettiFall;
+  animation-timing-function: cubic-bezier(0.22, 0.7, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.geri-confetti--1 {
+  border-radius: 1px;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 35% 35%, 35% 100%, 0 100%);
+}
+
+.geri-confetti--2 {
+  border-radius: 50%;
+}
+
+.geri-confetti--3 {
+  clip-path: polygon(20% 0, 80% 0, 100% 50%, 80% 100%, 20% 100%, 0 50%);
+}
+
+.geri-fanfare-stage {
+  position: relative;
+  z-index: 2;
+  width: min(92vw, 26rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  text-align: center;
+  padding: 1rem 0.5rem;
+}
+
+.geri-fanfare-mode {
+  margin: 0;
+  font-family: var(--font-neon);
+  font-size: clamp(0.62rem, 2.8vw, 0.78rem);
+  letter-spacing: 0.42em;
+  color: #ffc34d;
+  text-indent: 0.42em;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 195, 77, 0.85),
+    0 0 18px rgba(255, 148, 31, 0.45);
+  opacity: 0;
+  animation: geriPopIn 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) 0.35s both;
+}
+
+.geri-fanfare-mugs {
+  position: relative;
+  width: 7.5rem;
+  height: 4.6rem;
+  opacity: 0;
+  animation: geriMugsIn 0.4s ease 0.2s both;
+}
+
+.geri-mug {
+  position: absolute;
+  top: 0.2rem;
+  width: 3.6rem;
+  height: 4.1rem;
+  filter: drop-shadow(0 0 8px rgba(255, 195, 77, 0.45));
+}
+
+.geri-mug--left {
+  left: 0.15rem;
+  transform: rotate(-18deg);
+  animation: geriMugToastL 0.55s cubic-bezier(0.2, 1.35, 0.35, 1) 0.7s both;
+}
+
+.geri-mug--right {
+  right: 0.15rem;
+  transform: rotate(18deg);
+  animation: geriMugToastR 0.55s cubic-bezier(0.2, 1.35, 0.35, 1) 0.7s both;
+}
+
+.geri-spark {
+  opacity: 0;
+  animation: geriSpark 0.55s ease 0.75s both;
+}
+
+.geri-toast-burst {
+  position: absolute;
+  left: 50%;
+  top: 28%;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 10px #fff,
+    0 0 18px #ffc34d,
+    0 0 28px #ff1684;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.2);
+  animation: geriBurst 0.55s ease 0.78s both;
+}
+
+.geri-fanfare-title {
+  margin: 0;
+  width: 90%;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.55rem, 8.2vw, 2.35rem);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: #ffffff;
+  -webkit-text-stroke: 0.09em #ff1684;
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 8px rgba(255, 255, 255, 0.95),
+    0 0 16px rgba(255, 22, 132, 0.95),
+    0 0 28px rgba(255, 22, 132, 0.75),
+    0 0 42px rgba(255, 22, 132, 0.45),
+    0 0.08em 0 #b0004a,
+    0 0.14em 0 #7a0034,
+    0 0.2em 0.08em rgba(80, 0, 30, 0.45);
+  transform: rotate(-7deg);
+  opacity: 0;
+  animation: geriTitlePop 0.55s cubic-bezier(0.15, 1.55, 0.35, 1) 0.4s both;
+}
+
+.geri-fanfare-sub {
+  margin: 0.15rem 0 0;
+  opacity: 0;
+  animation: geriSubIn 0.4s ease 0.9s both;
+}
+
+.geri-fanfare-sub span {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: clamp(0.78rem, 3.4vw, 0.98rem);
+  color: #fff3e0;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 10px rgba(255, 22, 132, 0.75),
+    0 2px 0 rgba(176, 0, 74, 0.55);
+  padding-bottom: 0.18rem;
+  border-bottom: 2.5px solid #ff1684;
+  box-shadow: 0 3px 0 rgba(255, 22, 132, 0.35);
+}
+
+@keyframes geriBgIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes geriRaysIn {
+  from {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes geriRayPulse {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes geriConfettiFall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -12vh, 0) rotate(var(--geri-rot, 0deg)) scale(0.6);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.85;
+    transform: translate3d(0, 88vh, 0) rotate(calc(var(--geri-rot, 0deg) + 160deg))
+      scale(1);
+  }
+}
+
+@keyframes geriMugsIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes geriMugToastL {
+  0% {
+    transform: rotate(-18deg) translate(0, 0);
+  }
+  55% {
+    transform: rotate(-8deg) translate(10px, -6px);
+  }
+  100% {
+    transform: rotate(-14deg) translate(4px, -2px);
+  }
+}
+
+@keyframes geriMugToastR {
+  0% {
+    transform: rotate(18deg) translate(0, 0);
+  }
+  55% {
+    transform: rotate(8deg) translate(-10px, -6px);
+  }
+  100% {
+    transform: rotate(14deg) translate(-4px, -2px);
+  }
+}
+
+@keyframes geriSpark {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+@keyframes geriBurst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3.2);
+  }
+}
+
+@keyframes geriPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes geriTitlePop {
+  0% {
+    opacity: 0;
+    transform: rotate(-7deg) scale(0.55);
+  }
+  65% {
+    opacity: 1;
+    transform: rotate(-7deg) scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-7deg) scale(1);
+  }
+}
+
+@keyframes geriSubIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes geriFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geri-fanfare {
+    animation: geriFadeOut 0.2s ease 0.7s both;
+  }
+
+  .geri-fanfare-bg,
+  .geri-fanfare-rays,
+  .geri-fanfare-mugs,
+  .geri-fanfare-mode,
+  .geri-fanfare-title,
+  .geri-fanfare-sub,
+  .geri-mug--left,
+  .geri-mug--right,
+  .geri-spark,
+  .geri-toast-burst,
+  .geri-ray-line {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    opacity: 1 !important;
+  }
+
+  .geri-confetti {
+    display: none;
+  }
+
+  .geri-fanfare-title {
+    transform: rotate(-7deg);
+  }
 }
 
 /* ---------- Phase E: Izakaya neon (IZ-36 + IZ-37 brush-up) ---------- */
