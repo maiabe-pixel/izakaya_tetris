@@ -28,8 +28,8 @@ function PlayIcon() {
 }
 
 /**
- * Title = baked art background + local FX masks + absolute % UI.
- * Do not redraw logo / beer / minos / décor in CSS/SVG.
+ * Title = one baked art background + absolute % buttons only.
+ * Do not redraw logo / tagline / ujiueda / beer / minos / décor.
  */
 export function TitleScreen({
   hasSave,
@@ -49,7 +49,7 @@ export function TitleScreen({
     <section className="screen title-screen title-bg">
       <div className="title-bg-stage">
         <div className="title-bg-frame">
-          {/* Layer 1 — baked scene (1024×1536, aspect 2/3) */}
+          {/* Single baked scene (1024×1536, aspect 2/3) */}
           <img
             className="title-bg-image"
             src="/images/title-background.png"
@@ -58,28 +58,7 @@ export function TitleScreen({
             draggable={false}
           />
 
-          {/* Layer 2 — local translucent glow only (no global grade) */}
-          <div className="title-bg-fx" aria-hidden="true">
-            <div className="title-fx-logo" />
-            <div className="title-fx-beer" />
-            <div className="title-fx-foam" />
-            <div className="title-fx-mino title-fx-mino-cyan" />
-            <div className="title-fx-mino title-fx-mino-pink" />
-            <div className="title-fx-mino title-fx-mino-purple" />
-            <div className="title-fx-mino title-fx-mino-gold" />
-          </div>
-
-          {/* Layer 2b — うじとうえだ neon icons (between tagline & beer; prototype) */}
-          <img
-            className="title-ujiueda-icons"
-            src="/images/title-ujiueda-icons.png"
-            alt=""
-            decoding="async"
-            draggable={false}
-            aria-hidden="true"
-          />
-
-          {/* Layer 3 — controls (container-relative %) */}
+          {/* Controls only — over wood counter */}
           <div className="title-bg-ui">
             <button
               type="button"
