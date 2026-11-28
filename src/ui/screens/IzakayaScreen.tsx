@@ -37,92 +37,126 @@ type Props = {
 const EXCLUDE_TOP: MinoType[] = ['I', 'O', 'T', 'S'];
 const EXCLUDE_BOT: MinoType[] = ['Z', 'J', 'L'];
 
+/** Lucide-style thick stroke icons (stroke 2.5–3). Display-only. */
 function StatIcon({ kind }: { kind: 'res' | 'order' | 'use' | 'time' }) {
   if (kind === 'res') {
+    /* Stock: stacked squares (gold) */
     return (
-      <svg className="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <ellipse cx="12" cy="14" rx="7" ry="5" fill="#6dff7a" opacity="0.95" />
-        <ellipse cx="9" cy="13" rx="2.2" ry="1.4" fill="#3aa84a" />
-        <ellipse cx="14" cy="15" rx="2" ry="1.2" fill="#3aa84a" />
-        <path
-          d="M12 6c0 3 2 5 2 5"
-          stroke="#8dff9a"
-          strokeWidth="1.6"
-          fill="none"
-          strokeLinecap="round"
+      <svg
+        className="stat-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect
+          x="3.5"
+          y="9.5"
+          width="11"
+          height="11"
+          rx="1.8"
+          stroke="currentColor"
+          strokeWidth="2.75"
+        />
+        <rect
+          x="9.5"
+          y="3.5"
+          width="11"
+          height="11"
+          rx="1.8"
+          stroke="currentColor"
+          strokeWidth="2.75"
         />
       </svg>
     );
   }
   if (kind === 'order') {
+    /* Order: clipboard (pink) */
     return (
-      <svg className="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <svg
+        className="stat-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
         <rect
-          x="6"
-          y="3"
-          width="12"
-          height="18"
+          x="5"
+          y="4.5"
+          width="14"
+          height="16.5"
           rx="2"
-          fill="none"
           stroke="currentColor"
-          strokeWidth="1.7"
+          strokeWidth="2.75"
         />
         <path
-          d="M9 8h6M9 12h6M9 16h4"
+          d="M9 4.5h6v2.2a1.2 1.2 0 0 1-1.2 1.2h-3.6A1.2 1.2 0 0 1 9 6.7V4.5z"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M8.5 12h7M8.5 16h5"
+          stroke="currentColor"
+          strokeWidth="2.5"
           strokeLinecap="round"
         />
       </svg>
     );
   }
   if (kind === 'use') {
+    /* Used: beer mug (gold) */
     return (
-      <svg className="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <svg
+        className="stat-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
         <path
-          d="M7 9h10l-.8 9.2a2 2 0 0 1-2 1.8H9.8a2 2 0 0 1-2-1.8L7 9z"
-          fill="#ffc45c"
-          stroke="#ffe6a8"
-          strokeWidth="1"
+          d="M6.5 8.5h9.5l-.7 10.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6.5 8.5z"
+          stroke="currentColor"
+          strokeWidth="2.75"
+          strokeLinejoin="round"
         />
         <path
-          d="M8 9c0-2.2 1.8-4 4-4s4 1.8 4 4"
-          fill="none"
-          stroke="#ffe6a8"
-          strokeWidth="1.5"
+          d="M16 10.5h2.4a2.2 2.2 0 0 1 2.2 2.2v2.6a2.2 2.2 0 0 1-2.2 2.2H15.8"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
         />
-        <ellipse
-          cx="12"
-          cy="9.2"
-          rx="4.2"
-          ry="1.4"
-          fill="#fff8e8"
-          opacity="0.9"
+        <path
+          d="M8 8.5c0-2.4 1.9-4.2 4.2-4.2S16.4 6.1 16.4 8.5"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
         />
       </svg>
     );
   }
+  /* Remaining: stacked cards (pink) */
   return (
-    <svg className="stat-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="stat-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <rect
-        x="4"
-        y="6"
-        width="10"
+        x="3.5"
+        y="6.5"
+        width="11"
         height="14"
-        rx="1.5"
-        fill="none"
+        rx="1.6"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="2.75"
       />
       <rect
-        x="10"
-        y="4"
-        width="10"
+        x="9.5"
+        y="3.5"
+        width="11"
         height="14"
-        rx="1.5"
-        fill="rgba(255,22,132,0.2)"
+        rx="1.6"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="2.75"
       />
     </svg>
   );
@@ -130,18 +164,22 @@ function StatIcon({ kind }: { kind: 'res' | 'order' | 'use' | 'time' }) {
 
 function ReceiptIcon() {
   return (
-    <svg className="order-head-ico" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="order-head-ico"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
         d="M7 3.5h10v17l-2-1.2-2 1.2-2-1.2-2 1.2-2-1.2V3.5z"
-        fill="none"
         stroke="currentColor"
-        strokeWidth="1.6"
+        strokeWidth="2.5"
         strokeLinejoin="round"
       />
       <path
-        d="M10 8h4M10 11.5h4M10 15h3"
+        d="M10 8.5h4M10 12h4M10 15.5h3"
         stroke="currentColor"
-        strokeWidth="1.4"
+        strokeWidth="2.5"
         strokeLinecap="round"
       />
     </svg>
@@ -149,16 +187,38 @@ function ReceiptIcon() {
 }
 
 function MealIcon() {
+  /* Fork + knife */
   return (
-    <svg className="order-btn-svg" viewBox="0 0 24 24" aria-hidden="true">
-      <ellipse cx="12" cy="15" rx="7.5" ry="5.2" fill="#6dff7a" />
-      <ellipse cx="9.2" cy="14" rx="2.4" ry="1.5" fill="#2f9a45" />
-      <ellipse cx="14.5" cy="16" rx="2.2" ry="1.3" fill="#2f9a45" />
+    <svg
+      className="order-btn-svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
-        d="M12 6.5c.2 3.2 2.4 5.2 2.4 5.2"
-        stroke="#b8ffc4"
-        strokeWidth="1.5"
-        fill="none"
+        d="M6 3.5v6.2c0 1.4.9 2.3 2 2.3h0V20.5"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5 3.5v4M7 3.5v4M9 3.5v4"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M15.5 3.5 18 9.2V20.5"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 9.2h5.2"
+        stroke="currentColor"
+        strokeWidth="2.5"
         strokeLinecap="round"
       />
     </svg>
@@ -167,25 +227,29 @@ function MealIcon() {
 
 function BeerIcon() {
   return (
-    <svg className="order-btn-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="order-btn-svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
-        d="M7.5 9h9l-.7 9.5a2 2 0 0 1-2 1.7H10.2a2 2 0 0 1-2-1.7L7.5 9z"
-        fill="#ffc45c"
-        stroke="#ffe6a8"
-        strokeWidth="1"
+        d="M6.5 8.5h9.5l-.7 10.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6.5 8.5z"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinejoin="round"
       />
       <path
-        d="M8.5 9c0-2.1 1.7-3.8 3.8-3.8S16.1 6.9 16.1 9"
-        fill="none"
-        stroke="#ffe6a8"
-        strokeWidth="1.4"
+        d="M16 10.5h2.4a2.2 2.2 0 0 1 2.2 2.2v2.6a2.2 2.2 0 0 1-2.2 2.2H15.8"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
       />
-      <ellipse cx="12.2" cy="9.1" rx="4" ry="1.35" fill="#fff8e8" />
       <path
-        d="M16.5 11.2h2.2a1.6 1.6 0 0 1 1.6 1.6v3.2a1.6 1.6 0 0 1-1.6 1.6H16"
-        fill="none"
-        stroke="#ffe6a8"
-        strokeWidth="1.3"
+        d="M8 8.5c0-2.4 1.9-4.2 4.2-4.2S16.4 6.1 16.4 8.5"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -193,73 +257,95 @@ function BeerIcon() {
 
 function CardsIcon() {
   return (
-    <svg className="draw-cta-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="draw-cta-svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="izkFateCardGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#ff7ab8" />
+          <stop offset="100%" stopColor="#ff1684" />
+        </linearGradient>
+      </defs>
       <rect
-        x="4"
-        y="6"
-        width="10"
+        x="3.5"
+        y="6.5"
+        width="11"
         height="14"
         rx="1.6"
-        fill="rgba(255,255,255,0.12)"
+        fill="url(#izkFateCardGrad)"
         stroke="#fff"
-        strokeWidth="1.5"
+        strokeWidth="2.5"
+        opacity="0.92"
       />
       <rect
-        x="9"
+        x="9.5"
         y="3.5"
-        width="10"
+        width="11"
         height="14"
         rx="1.6"
-        fill="rgba(255,22,132,0.35)"
+        fill="url(#izkFateCardGrad)"
         stroke="#fff"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M12.5 8.2h3.2M12.5 11h3.2"
-        stroke="#fff"
-        strokeWidth="1.2"
-        strokeLinecap="round"
+        strokeWidth="2.5"
       />
     </svg>
   );
 }
 
 function RewindIcon() {
+  /* Undo arrow */
   return (
-    <svg className="undo-cta-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="undo-cta-svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
-        d="M7.5 8.5H5.2V6.2"
-        fill="none"
+        d="M9.5 7.5 5.5 11.5 9.5 15.5"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="2.75"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M6 12a7 7 0 1 0 1.6-4.5L5.2 8.5"
-        fill="none"
+        d="M5.5 11.5H14a5 5 0 0 1 0 10H11"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="2.75"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-function NorenIcon() {
+function StoreIcon() {
   return (
-    <svg className="izk-menu-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="izk-menu-svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
-        d="M4 5h16"
+        d="M4 9.5 5.6 4.8h12.8L20 9.5"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="2.5"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
-        d="M6 5v12c0 1.2.8 1.6 1.5.7L9 15.2l1.5 2.5c.7.9 1.5.5 1.5-.7V5M13 5v12c0 1.2.8 1.6 1.5.7L16 15.2l1.5 2.5c.7.9 1.5.5 1.5-.7V5"
-        fill="none"
+        d="M4 9.5h16v10.2H4z"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.5 19.7v-5.2h5v5.2"
+        stroke="currentColor"
+        strokeWidth="2.5"
         strokeLinejoin="round"
       />
     </svg>
@@ -268,19 +354,22 @@ function NorenIcon() {
 
 function ResetIcon() {
   return (
-    <svg className="izk-menu-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="izk-menu-svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
         d="M19.2 12a7.2 7.2 0 1 1-2.1-5.1"
-        fill="none"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="2.6"
         strokeLinecap="round"
       />
       <path
         d="M19.5 4.8v4.4h-4.4"
-        fill="none"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -290,20 +379,23 @@ function ResetIcon() {
 
 function HomeIcon() {
   return (
-    <svg className="izk-menu-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="izk-menu-svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
         d="M4.5 11.2 12 4.8l7.5 6.4"
-        fill="none"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M7 10.8V19h10v-8.2"
-        fill="none"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="2.6"
         strokeLinejoin="round"
       />
     </svg>
@@ -475,7 +567,7 @@ export function IzakayaScreen({
               <div className="stat-grid izk-stat-grid">
                 <div className="stat-box izk-stat is-res">
                   <StatIcon kind="res" />
-                  <div className="label">資源</div>
+                  <div className="label">ストック</div>
                   <div className="value">{state.resources}</div>
                 </div>
                 <div className="stat-box izk-stat is-order">
@@ -572,39 +664,41 @@ export function IzakayaScreen({
                         <ReceiptIcon />
                         <span>本日のご注文</span>
                       </div>
-                      <input
-                        className="field order-slip-field"
-                        placeholder="例）枝豆 / ハイボール"
-                        aria-label="注文の名前（必須）"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                      <p
-                        className={`hint order-name-hint${
-                          nameOk ? ' is-ok' : ''
-                        }`}
-                      >
-                        名前を入れてから伝票を切ってください
-                      </p>
-                      <div className="row izk-order-btns">
-                        <button
-                          type="button"
-                          className="btn order-food"
-                          disabled={!nameOk}
-                          onClick={() => submitOrder('food')}
+                      <div className="order-slip-body">
+                        <input
+                          className="field order-slip-field"
+                          placeholder="例）枝豆 / ハイボール"
+                          aria-label="注文の名前（必須）"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                        <p
+                          className={`hint order-name-hint${
+                            nameOk ? ' is-ok' : ''
+                          }`}
                         >
-                          <MealIcon />
-                          <span>食べた！</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="btn order-drink"
-                          disabled={!nameOk}
-                          onClick={() => submitOrder('drink')}
-                        >
-                          <BeerIcon />
-                          <span>飲んだ！</span>
-                        </button>
+                          名前を入れてから伝票を切ってください
+                        </p>
+                        <div className="row izk-order-btns">
+                          <button
+                            type="button"
+                            className="btn order-food"
+                            disabled={!nameOk}
+                            onClick={() => submitOrder('food')}
+                          >
+                            <MealIcon />
+                            <span>食べた！</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="btn order-drink"
+                            disabled={!nameOk}
+                            onClick={() => submitOrder('drink')}
+                          >
+                            <BeerIcon />
+                            <span>飲んだ！</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -702,7 +796,7 @@ export function IzakayaScreen({
                     className="btn izk-menu-btn"
                     onClick={onResetIzakaya}
                   >
-                    <NorenIcon />
+                    <StoreIcon />
                     <span>居酒屋だけやり直す</span>
                   </button>
                   <button
