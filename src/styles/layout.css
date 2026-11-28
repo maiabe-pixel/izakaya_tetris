@@ -2385,8 +2385,8 @@
   position: absolute;
   left: 17%;
   right: 17%;
-  /* Optical center of arched plaque sits slightly below wood mid */
-  top: 10.85%;
+  /* Small arched tab wood mid ≈ 10.0–10.3%; keep clear of top neon tube */
+  top: 10.25%;
   height: auto;
   transform: translateY(-50%);
   z-index: 1;
@@ -2400,8 +2400,8 @@
   white-space: nowrap;
   font-family: var(--font-ui);
   font-weight: 800;
-  /* Fit inside tab wood band (~5% panel H); avoid downward overflow into neon */
-  font-size: clamp(0.52rem, 5.9cqh, 0.84rem);
+  /* Keep glyphs inside ~5% tab wood band so they clear neon tubes */
+  font-size: clamp(0.48rem, 4.9cqh, 0.8rem);
   letter-spacing: 0.04em;
   color: var(--izk-cream);
   text-shadow: 0 0 6px rgba(255, 200, 120, 0.35);
