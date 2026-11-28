@@ -2076,79 +2076,72 @@
   gap: 0.32rem;
 }
 
+/* Unified status chrome; accent via border/icon only */
 .izakaya-screen .izk-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.05rem;
-  padding: 0.32rem 0.2rem 0.35rem;
-  border-radius: 12px;
-  background: rgba(16, 6, 14, 0.62);
-  border: 1.5px solid rgba(255, 245, 232, 0.22);
+  gap: 0.06rem;
+  min-height: 3.35rem;
+  padding: 0.34rem 0.18rem 0.36rem;
+  border-radius: 11px;
+  background: rgba(12, 6, 14, 0.7);
+  border: 1.5px solid rgba(255, 245, 232, 0.28);
   box-shadow:
-    inset 0 0 10px rgba(255, 255, 255, 0.08),
-    0 0 10px rgba(255, 22, 132, 0.12);
+    inset 0 0 10px rgba(255, 255, 255, 0.07),
+    0 0 10px rgba(0, 0, 0, 0.25);
   text-align: center;
 }
 
 .izakaya-screen .izk-stat .stat-icon {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.24rem; /* ~1.3× prior 0.95rem */
+  height: 1.24rem;
   color: inherit;
-  margin-bottom: 0.05rem;
+  margin-bottom: 0.02rem;
+  filter: drop-shadow(0 0 4px currentColor);
 }
 
 .izakaya-screen .izk-stat .label {
-  font-size: 0.55rem;
-  letter-spacing: 0.06em;
-  color: rgba(255, 245, 232, 0.78);
+  font-size: 0.52rem;
+  letter-spacing: 0.04em;
+  color: rgba(255, 245, 232, 0.82);
   text-align: center;
+  line-height: 1.1;
 }
 
 .izakaya-screen .izk-stat .value {
-  font-family: var(--font-ui);
-  font-weight: 800;
-  font-size: 1.05rem;
+  font-family: var(--font-neon);
+  font-weight: 700;
+  font-size: 1.08rem;
   line-height: 1.05;
   text-align: center;
-  color: var(--izk-gold);
+  color: #ffe08a;
   text-shadow:
-    0 0 3px #fff,
-    0 0 8px rgba(255, 173, 50, 0.85),
-    0 0 14px rgba(255, 173, 50, 0.45);
+    0 0 3px #fff8e0,
+    0 0 8px rgba(255, 173, 50, 0.95),
+    0 0 16px rgba(255, 173, 50, 0.55),
+    0 0 24px rgba(255, 140, 40, 0.3);
 }
 
-.izakaya-screen .izk-stat.is-res {
-  border-color: rgba(255, 173, 50, 0.9);
-  color: var(--izk-gold);
-  box-shadow:
-    inset 0 0 12px rgba(255, 173, 50, 0.18),
-    var(--izk-neon-gold);
-}
-
-.izakaya-screen .izk-stat.is-order {
-  border-color: rgba(255, 22, 132, 0.92);
-  color: var(--izk-pink);
-  box-shadow:
-    inset 0 0 12px rgba(255, 22, 132, 0.18),
-    var(--izk-neon-pink);
-}
-
+.izakaya-screen .izk-stat.is-res,
 .izakaya-screen .izk-stat.is-use {
-  border-color: rgba(255, 173, 50, 0.9);
+  border-color: rgba(255, 173, 50, 0.88);
   color: var(--izk-gold);
   box-shadow:
-    inset 0 0 12px rgba(255, 173, 50, 0.18),
-    var(--izk-neon-gold);
+    inset 0 0 12px rgba(255, 173, 50, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 10px rgba(255, 173, 50, 0.35);
 }
 
+.izakaya-screen .izk-stat.is-order,
 .izakaya-screen .izk-stat.is-remain {
-  border-color: rgba(255, 22, 132, 0.92);
+  border-color: rgba(255, 22, 132, 0.88);
   color: var(--izk-pink);
   box-shadow:
-    inset 0 0 12px rgba(255, 22, 132, 0.18),
-    var(--izk-neon-pink);
+    inset 0 0 12px rgba(255, 22, 132, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 10px rgba(255, 22, 132, 0.35);
 }
 
 .izakaya-body {
@@ -2299,24 +2292,23 @@
   min-height: 52px;
 }
 
-/* Order panel: crop PNG transparent margins, keep opaque aspect */
+/* Order panel: crop PNG transparent margins, keep opaque aspect.
+   Heading sits in wooden tab via panel-% (supersedes PR #4 alignment). */
 .izakaya-screen .izk-order-panel.order-slip {
   position: relative;
   isolation: isolate;
+  container-type: size;
+  container-name: order-panel;
   aspect-ratio: 1238 / 946;
   width: 100%;
-  /* Content insets inside wood (after margin crop) */
-  padding: 12% 10% 9%;
+  padding: 0;
   border: none;
   border-radius: 0;
   background: transparent;
-  display: flex;
-  flex-direction: column;
-  gap: 0.28rem;
+  display: block;
   min-height: 0;
   flex: 0 0 auto;
   box-shadow: none;
-  justify-content: flex-start;
 }
 
 .izakaya-screen .izk-order-panel.order-slip::before {
@@ -2330,85 +2322,138 @@
   filter: drop-shadow(0 0 8px rgba(255, 140, 40, 0.4));
 }
 
+/* Wooden tab: gold / warm-white + soft neon (CSS only) */
 .izakaya-screen .order-slip-head {
+  position: absolute;
+  left: 17%;
+  right: 17%;
+  top: 10.25%;
+  height: auto;
+  transform: translateY(-50%);
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.28rem;
-  flex: 0 0 auto;
+  gap: 0.22em;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   white-space: nowrap;
   font-family: var(--font-ui);
   font-weight: 800;
-  font-size: clamp(0.7rem, 2.8vw, 0.86rem);
+  font-size: clamp(0.48rem, 4.9cqh, 0.8rem);
   letter-spacing: 0.04em;
-  color: var(--izk-cream);
-  text-shadow: 0 0 6px rgba(255, 200, 120, 0.35);
-  margin: 0;
-  line-height: 1.15;
+  color: #fff4e0;
+  text-shadow:
+    0 0 2px #fff8ec,
+    0 0 6px rgba(255, 200, 120, 0.85),
+    0 0 12px rgba(255, 173, 50, 0.55),
+    0 0 18px rgba(255, 140, 40, 0.3);
+  line-height: 1;
+}
+
+.izakaya-screen .order-slip-body {
+  position: absolute;
+  left: 11%;
+  right: 11%;
+  top: 29%;
+  bottom: 10%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+  gap: 1.5cqh;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 1cqh 0;
 }
 
 .izakaya-screen .order-head-ico {
-  width: 0.95rem;
-  height: 0.95rem;
-  color: var(--izk-gold);
+  width: 0.9em;
+  height: 0.9em;
+  color: #ffd27a;
   flex: 0 0 auto;
-  filter: drop-shadow(0 0 4px rgba(255, 173, 50, 0.55));
+  filter: drop-shadow(0 0 5px rgba(255, 173, 50, 0.75));
 }
 
 .izakaya-screen .order-slip-field {
   flex: 0 0 auto;
+  width: 100%;
   min-height: 0;
-  height: 2rem;
+  height: clamp(1.55rem, 14cqh, 2rem);
   border-radius: 8px;
-  border: 1px solid rgba(255, 173, 50, 0.55);
-  background: rgba(42, 22, 14, 0.72);
-  color: var(--izk-cream);
-  font-size: 0.72rem;
-  padding: 0.3rem 0.55rem;
+  border: 1.5px solid rgba(255, 173, 50, 0.75);
+  background: rgba(10, 6, 12, 0.62);
+  color: #ffffff;
+  font-size: clamp(0.62rem, 5cqh, 0.72rem);
+  padding: 0.25em 0.55em;
+  box-sizing: border-box;
+  box-shadow:
+    inset 0 0 8px rgba(0, 0, 0, 0.35),
+    0 0 6px rgba(255, 173, 50, 0.22);
+  outline: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .izakaya-screen .order-slip-field::placeholder {
-  color: rgba(255, 245, 232, 0.42);
+  color: rgba(255, 245, 232, 0.72);
+  opacity: 1;
+}
+
+.izakaya-screen .order-slip-field:focus {
+  border-color: #ffc45c;
+  box-shadow:
+    inset 0 0 8px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 10px rgba(255, 173, 50, 0.75),
+    0 0 20px rgba(255, 173, 50, 0.4);
 }
 
 .izakaya-screen .order-name-hint {
   flex: 0 0 auto;
-  font-size: 0.58rem;
+  font-size: clamp(0.48rem, 4.4cqh, 0.62rem);
   margin: 0;
   color: var(--izk-cream);
-  opacity: 0.85;
+  opacity: 0.9;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  line-height: 1.3;
+  word-break: keep-all;
+  max-width: 100%;
 }
 
 .izakaya-screen .order-name-hint.is-ok {
   opacity: 0.4;
 }
 
-.izk-order-btns {
+.izakaya-screen .izk-order-btns {
+  display: flex;
+  align-items: stretch;
   gap: 0.35rem;
-  margin-top: auto;
+  margin-top: 0;
   flex: 0 0 auto;
+  width: 100%;
 }
 
 .izakaya-screen .order-food,
 .izakaya-screen .order-drink {
   flex: 1 1 0;
   min-width: 0;
-  min-height: 34px;
-  height: 34px;
-  padding: 0 0.35rem;
-  font-size: 0.72rem;
+  min-height: clamp(28px, 22cqh, 34px);
+  height: clamp(28px, 22cqh, 34px);
+  padding: 0 0.28rem;
+  font-size: clamp(0.58rem, 5cqh, 0.72rem);
   font-weight: 800;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.22rem;
+  gap: 0.18em;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .izakaya-screen .order-food span,
@@ -2417,63 +2462,85 @@
 }
 
 .izakaya-screen .order-btn-svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 0.95em;
+  height: 0.95em;
   flex: 0 0 auto;
 }
 
+/* 食べた！: fork+knife pink neon / wine bg */
 .izakaya-screen .order-food {
   border: 1.5px solid #ff4da6;
-  color: #fff5e8;
-  background: linear-gradient(180deg, rgba(255, 70, 150, 0.5), rgba(70, 8, 36, 0.82));
+  color: #ff8ec8;
+  background: linear-gradient(180deg, rgba(90, 20, 48, 0.92), rgba(42, 8, 24, 0.95));
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    0 0 0 1px rgba(255, 200, 230, 0.3),
     0 0 10px rgba(255, 22, 132, 0.55),
     0 0 18px rgba(255, 22, 132, 0.28);
   text-shadow:
     0 0 3px #fff,
-    0 0 8px rgba(255, 22, 132, 0.75);
+    0 0 8px rgba(255, 22, 132, 0.85);
 }
 
+.izakaya-screen .order-food .order-btn-svg {
+  color: #ff8ec8;
+  filter: drop-shadow(0 0 4px rgba(255, 22, 132, 0.9));
+}
+
+/* 飲んだ！: beer mug cyan neon / dark blue bg */
 .izakaya-screen .order-drink {
   border: 1.5px solid #29dff2;
-  color: #fff5e8;
-  background: linear-gradient(180deg, rgba(41, 200, 230, 0.42), rgba(8, 36, 52, 0.82));
+  color: #7ef0ff;
+  background: linear-gradient(180deg, rgba(12, 40, 68, 0.95), rgba(6, 18, 40, 0.96));
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    0 0 0 1px rgba(180, 245, 255, 0.28),
     0 0 10px rgba(41, 223, 242, 0.5),
     0 0 18px rgba(41, 223, 242, 0.25);
   text-shadow:
     0 0 3px #fff,
-    0 0 8px rgba(41, 223, 242, 0.7);
+    0 0 8px rgba(41, 223, 242, 0.8);
+}
+
+.izakaya-screen .order-drink .order-btn-svg {
+  color: #7ef0ff;
+  filter: drop-shadow(0 0 4px rgba(41, 223, 242, 0.9));
 }
 
 .izakaya-screen .order-food:disabled,
 .izakaya-screen .order-drink:disabled {
-  opacity: 0.62;
-  filter: saturate(0.85);
+  opacity: 0.7;
+  filter: saturate(0.75) brightness(0.92);
   cursor: not-allowed;
+  color: rgba(255, 245, 232, 0.78);
+  text-shadow: none;
 }
 
 .izk-exclude {
   display: flex;
   flex-direction: column;
-  gap: 0.22rem;
+  gap: 0.18rem;
   flex: 1 1 auto;
   min-height: 0;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .izk-exclude-label {
   margin: 0;
   text-align: center;
-  font-size: 0.58rem;
-  color: rgba(255, 245, 232, 0.7);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.5rem;
+  color: rgba(255, 245, 232, 0.72);
+  letter-spacing: 0.01em;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  line-height: 1.25;
+  width: 100%;
+  word-break: keep-all;
 }
 
 .mino-card-grid {
@@ -2483,12 +2550,16 @@
 }
 
 .izk-exclude-row {
-  gap: 0.28rem;
+  gap: 0.16rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .izk-exclude-row.is-three {
   grid-template-columns: repeat(3, 1fr);
-  width: 76%;
+  width: 75%;
+  max-width: 75%;
   margin: 0 auto;
 }
 
@@ -2509,37 +2580,76 @@
 }
 
 .izakaya-screen .izk-exclude-card {
-  min-height: 40px;
-  background: rgba(33, 16, 28, 0.72);
+  min-width: 0;
+  min-height: 42px;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.14rem 0.04rem;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: rgba(18, 8, 16, 0.78);
   border: 1.5px solid rgba(255, 180, 210, 0.55);
   color: #fff5e8;
+  font-size: 0.62rem;
   box-shadow:
     inset 0 0 8px rgba(255, 255, 255, 0.06),
-    0 0 8px rgba(255, 140, 180, 0.22);
+    0 0 6px rgba(255, 140, 180, 0.16);
 }
 
-.izakaya-screen .izk-exclude-card.is-i,
-.izakaya-screen .izk-exclude-card.is-o,
-.izakaya-screen .izk-exclude-card.is-t,
-.izakaya-screen .izk-exclude-card.is-s,
-.izakaya-screen .izk-exclude-card.is-z,
-.izakaya-screen .izk-exclude-card.is-j,
+.izakaya-screen .izk-exclude-card .mino-glyph {
+  display: block;
+  max-width: 100%;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 auto;
+  filter:
+    drop-shadow(0 0 2px rgba(255, 255, 255, 0.45))
+    drop-shadow(0 0 5px rgba(255, 255, 255, 0.25));
+  /* Slight visual bump without overflowing 4-col cell (I is widest) */
+  transform: scale(1.08);
+  transform-origin: center;
+}
+
+/* Per-piece neon frames */
+.izakaya-screen .izk-exclude-card.is-i {
+  border-color: #2ee6ff;
+  box-shadow: inset 0 0 8px rgba(46, 230, 255, 0.12), 0 0 8px rgba(46, 230, 255, 0.4);
+}
+.izakaya-screen .izk-exclude-card.is-o {
+  border-color: #f5d547;
+  box-shadow: inset 0 0 8px rgba(245, 213, 71, 0.12), 0 0 8px rgba(245, 213, 71, 0.4);
+}
+.izakaya-screen .izk-exclude-card.is-t {
+  border-color: #c46bff;
+  box-shadow: inset 0 0 8px rgba(196, 107, 255, 0.12), 0 0 8px rgba(196, 107, 255, 0.4);
+}
+.izakaya-screen .izk-exclude-card.is-s {
+  border-color: #4dff8a;
+  box-shadow: inset 0 0 8px rgba(77, 255, 138, 0.12), 0 0 8px rgba(77, 255, 138, 0.4);
+}
+.izakaya-screen .izk-exclude-card.is-z {
+  border-color: #ff5c8a;
+  box-shadow: inset 0 0 8px rgba(255, 92, 138, 0.12), 0 0 8px rgba(255, 92, 138, 0.4);
+}
+.izakaya-screen .izk-exclude-card.is-j {
+  border-color: #4f7cff;
+  box-shadow: inset 0 0 8px rgba(79, 124, 255, 0.12), 0 0 8px rgba(79, 124, 255, 0.4);
+}
 .izakaya-screen .izk-exclude-card.is-l {
-  border-color: rgba(255, 180, 210, 0.55);
-  color: #fff5e8;
-  box-shadow:
-    inset 0 0 8px rgba(255, 255, 255, 0.06),
-    0 0 8px rgba(255, 140, 180, 0.22);
+  border-color: #ff9a3c;
+  box-shadow: inset 0 0 8px rgba(255, 154, 60, 0.12), 0 0 8px rgba(255, 154, 60, 0.4);
 }
 
 .mino-shape-card.is-on,
 .izakaya-screen .izk-exclude-card.is-on {
-  background: rgba(60, 28, 18, 0.78);
-  border-color: rgba(255, 173, 50, 0.95);
+  background: rgba(60, 28, 18, 0.86);
+  border-color: #ffc45c !important;
   color: #fff5e8;
   box-shadow:
-    inset 0 0 10px rgba(255, 173, 50, 0.22),
-    var(--izk-neon-gold);
+    inset 0 0 12px rgba(255, 173, 50, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 10px rgba(255, 173, 50, 0.85),
+    0 0 18px rgba(255, 140, 40, 0.35) !important;
   filter: none;
   outline: none;
 }
@@ -2562,7 +2672,7 @@
   border: 2.5px solid #ffffff;
   border-radius: 999px;
   color: #fff;
-  background: linear-gradient(180deg, #ff6bb8 0%, #ff1684 52%, #c4005c 100%);
+  background: linear-gradient(180deg, #ff7ac4 0%, #ff1684 52%, #c4005c 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
     0 0 0 1px rgba(255, 200, 230, 0.65),
@@ -2579,15 +2689,41 @@
   white-space: nowrap;
 }
 
+.izakaya-screen .draw-cta:not(:disabled) {
+  animation: izkFatePulse 1.6s ease-in-out infinite;
+}
+
 .izakaya-screen .draw-cta:disabled {
   opacity: 0.58;
   filter: saturate(0.8);
+  animation: none;
 }
 
 .izakaya-screen .draw-cta-svg {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.15rem;
+  height: 1.15rem;
   flex: 0 0 auto;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.85));
+}
+
+@keyframes izkFatePulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 0 0 1px rgba(255, 200, 230, 0.65),
+      0 0 14px rgba(255, 22, 132, 0.85),
+      0 0 28px rgba(255, 22, 132, 0.45),
+      0 0 42px rgba(255, 77, 166, 0.25);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 0 0 2px rgba(255, 255, 255, 0.85),
+      0 0 18px rgba(255, 22, 132, 1),
+      0 0 34px rgba(255, 22, 132, 0.6),
+      0 0 52px rgba(255, 77, 166, 0.4);
+  }
 }
 
 .izakaya-screen .undo-cta {
@@ -2599,7 +2735,7 @@
   border-radius: 999px;
   border: 1.5px solid #ffad32;
   color: #ffd98a;
-  background: linear-gradient(180deg, rgba(90, 42, 18, 0.95), rgba(36, 16, 10, 0.92));
+  background: linear-gradient(180deg, rgba(72, 36, 16, 0.96), rgba(28, 12, 8, 0.95));
   box-shadow:
     inset 0 0 0 1px rgba(255, 230, 160, 0.35),
     0 0 0 1px rgba(255, 255, 255, 0.35),
@@ -2621,10 +2757,11 @@
 }
 
 .izakaya-screen .undo-cta-svg {
-  width: 1rem;
-  height: 1rem;
+  width: 1.05rem;
+  height: 1.05rem;
   flex: 0 0 auto;
   color: #ffd98a;
+  filter: drop-shadow(0 0 4px rgba(255, 173, 50, 0.75));
 }
 
 .order-history-fold {
@@ -2664,33 +2801,41 @@
 
 .izakaya-menu-actions {
   flex: 0 0 auto;
-  gap: 0.28rem;
-  /* 79% of inset body ≈ 72–75% of full art frame */
+  gap: 0.22rem;
+  /* 79% of inset body ≈ 72–75% of full art frame — clears beer/edamame */
   width: 79%;
   margin-left: auto;
   align-self: flex-end;
+  padding: 0.28rem 0.35rem 0.32rem;
+  border-radius: 14px;
+  background: rgba(10, 4, 12, 0.58);
+  border: 1px solid rgba(255, 180, 210, 0.22);
+  box-shadow:
+    inset 0 0 12px rgba(255, 255, 255, 0.04),
+    0 0 10px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
 }
 
 .izakaya-screen .izk-menu-btn {
-  min-height: 38px;
+  min-height: 34px;
   border-radius: 999px;
-  border: 1.5px solid rgba(255, 180, 210, 0.55);
-  background: rgba(18, 8, 16, 0.72);
+  border: 1.5px solid rgba(255, 180, 210, 0.5);
+  background: rgba(22, 10, 20, 0.55);
   color: var(--izk-text);
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 8px rgba(255, 22, 132, 0.18);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 6px rgba(255, 22, 132, 0.14);
 }
 
 .izakaya-screen .izk-menu-svg {
-  width: 1rem;
-  height: 1rem;
+  width: 1.05rem;
+  height: 1.05rem;
   flex: 0 0 auto;
   color: var(--izk-pink);
   filter: drop-shadow(0 0 4px rgba(255, 22, 132, 0.7));
@@ -2741,8 +2886,13 @@
     font-size: 0.92rem;
   }
 
+  .izakaya-screen .izk-stat .stat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
   .izakaya-screen .izk-exclude-card {
-    min-height: 36px;
+    min-height: 40px;
   }
 
   .izakaya-screen .draw-cta,
@@ -2753,15 +2903,14 @@
   }
 
   .izakaya-screen .izk-menu-btn {
-    min-height: 34px;
-    font-size: 0.7rem;
+    min-height: 30px;
+    font-size: 0.68rem;
   }
 
   .izakaya-screen .order-food,
   .izakaya-screen .order-drink {
-    height: 30px;
-    min-height: 30px;
-    font-size: 0.66rem;
+    /* Keep both buttons equal; cqh clamp from base rule still applies */
+    font-size: clamp(0.55rem, 4.8cqh, 0.66rem);
   }
 }
 
